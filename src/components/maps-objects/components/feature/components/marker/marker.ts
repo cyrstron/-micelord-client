@@ -1,7 +1,6 @@
 import {observer} from 'mobx-react';
 import { Component } from 'react';
 import {WrappedProps} from '../../hocs/with-full-feature-ctx';
-import {MarkerProps} from './marker.d';
 import {MarkerStore} from './stores';
 
 @observer

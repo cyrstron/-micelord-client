@@ -2,12 +2,6 @@ import {withDumbFeatureCtx} from '../../hocs/with-dumb-feature-ctx';
 import {withFullFeatureCtx} from '../../hocs/with-full-feature-ctx';
 import {withSmartFeatureCtx} from '../../hocs/with-smart-feature-ctx';
 import {Polygon} from './polygon';
-import {
-  PolygonEventHandler,
-  PolygonEventName,
-  PolygonHandlerName,
-  PolygonProps,
-} from './polygon.d';
 import {PolygonService} from './services';
 import {PolygonStore} from './stores';
 

@@ -3,12 +3,6 @@ import {withDumbFeatureCtx} from '../../hocs/with-dumb-feature-ctx';
 import {withFullFeatureCtx} from '../../hocs/with-full-feature-ctx';
 import {withSmartFeatureCtx} from '../../hocs/with-smart-feature-ctx';
 import {Marker} from './marker';
-import {
-  MarkerEventHandler,
-  MarkerEventName,
-  MarkerHandlerName,
-  MarkerProps,
-} from './marker.d';
 import {MarkerService} from './services';
 import {MarkerStore} from './stores';
 

@@ -1,5 +1,13 @@
-export {DumbMap, Map, MapStore, withMapCtx} from './components/map';
-export {DumbCtrlMap, CtrlMap, CtrlMapStore, withCtrlMapCtx} from './components/ctrl-map';
+export {
+  DumbMap, 
+  Map, 
+  MapStore, 
+  withMapCtx,
+  DumbCtrlMap,
+  CtrlMap,
+  CtrlMapStore,
+  withCtrlMapCtx,
+} from './components/map';
 export {
   CustomOverlay,
   SmartCustomOverlay,

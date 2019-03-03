@@ -1,7 +1,6 @@
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import {WrappedProps} from '../../hocs/with-full-feature-ctx';
-import {PolygonProps} from './polygon.d';
 import {PolygonStore} from './stores';
 
 @observer

@@ -1,14 +1,7 @@
 import {action} from 'mobx';
-import {MapService} from '../../../../map';
 import {FeatureStore} from '../../../stores';
-import {
-  PolygonEventHandler,
-  PolygonEventName,
-  polygonEventNames,
-  PolygonHandlerName,
-  PolygonProps,
-} from '../polygon.d';
 import {groupPolygonProps, PolygonService} from '../services';
+import {polygonEventNames} from '../services';
 
 export class PolygonStore extends FeatureStore<
   google.maps.Polygon,

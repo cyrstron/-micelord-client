@@ -1,9 +1,4 @@
-import isEqual from 'lodash/isEqual';
 import { MapsObjectService } from '../../../services';
-import {
-  MapEventHandler,
-  MapEventName,
-} from '../map.d';
 
 export class MapService extends MapsObjectService<
   google.maps.Map,

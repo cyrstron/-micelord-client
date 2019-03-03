@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx';
-import { MapStore } from '../../map';
+import { MapStore } from '../../../stores';
 
 export class CtrlMapStore extends MapStore {
   @observable bounds?: google.maps.LatLngBoundsLiteral;

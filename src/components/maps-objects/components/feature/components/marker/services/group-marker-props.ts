@@ -1,5 +1,4 @@
 import {filterObject} from '../../../../../services';
-import {MarkerEventsProps} from '../marker.d';
 
 interface SortedMarkerProps {
   options?: google.maps.MarkerOptions;

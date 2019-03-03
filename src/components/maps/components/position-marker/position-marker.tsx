@@ -1,7 +1,7 @@
 import {inject, observer} from 'mobx-react';
 import React, {Component} from 'react';
-import {GeolocationStore} from '../../../../stores';
-import {SmartMarker} from '../../../maps-objects';
+import {GeolocationStore} from '@stores/geolocation';
+import {SmartMarker} from '@maps/feature';
 
 interface MarkerProps {
   geolocationStore?: GeolocationStore;
@@ -17,6 +17,7 @@ export class PositionMarker extends Component<MarkerProps> {
 
     this.geolocationStore = props.geolocationStore!;
   }
+  
   render() {
     const {position} = this.geolocationStore;
 

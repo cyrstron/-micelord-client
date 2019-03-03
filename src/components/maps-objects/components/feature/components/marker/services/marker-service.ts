@@ -1,9 +1,5 @@
 import {MapService} from '../../../../map';
 import {FeatureService} from '../../../services';
-import {
-  MarkerEventHandler,
-  MarkerEventName,
-} from '../marker.d';
 
 export class MarkerService extends FeatureService<
   google.maps.Marker,

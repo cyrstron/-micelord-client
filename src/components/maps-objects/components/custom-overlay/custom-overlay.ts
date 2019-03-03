@@ -1,9 +1,12 @@
 import {observer} from 'mobx-react';
-import React, {Component} from 'react';
+import React, {Component, ReactNode} from 'react';
 import {createPortal} from 'react-dom';
-import {CustomOverlayProps} from './custom-overlay.d';
 import {WrappedProps} from './hocs/with-full-overlay-ctx';
 import {CustomOverlayStore} from './stores';
+
+export type CustomOverlayProps = google.custom.CustomOverlayOptions & {
+    children?: ReactNode | null;
+  };
 
 type Props = CustomOverlayProps & WrappedProps<CustomOverlayStore>;
 

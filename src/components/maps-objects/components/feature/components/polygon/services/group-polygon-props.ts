@@ -1,8 +1,4 @@
 import {filterObject} from '../../../../../services';
-import {
-  PolygonEventHandler,
-  PolygonEventsProps,
-} from '../polygon.d';
 
 interface SortedPolygonProps {
   options?: google.maps.PolygonOptions;

@@ -1,4 +1,4 @@
-export type MapsObjectHandlerName = 'onClick' |
+type MapsObjectHandlerName = 'onClick' |
   'onDblClick' |
   'onDrag' |
   'onDragStart' |
@@ -7,7 +7,7 @@ export type MapsObjectHandlerName = 'onClick' |
   'onMouseOver' |
   'onRightClick';
 
-export type MapsObjectEventName = 'click' |
+type MapsObjectEventName = 'click' |
   'dblclick' |
   'drag' |
   'dragstart' |
@@ -16,7 +16,7 @@ export type MapsObjectEventName = 'click' |
   'mouseover' |
   'rightclick';
 
-export interface MapsObjectEventProps {
+interface MapsObjectEventProps {
   onClick?: google.maps.MapMouseEventHandler;
   onDblClick?: google.maps.MapMouseEventHandler;
   onDrag?: google.maps.MapMouseEventHandler;
@@ -26,16 +26,3 @@ export interface MapsObjectEventProps {
   onMouseOver?: google.maps.MapMouseEventHandler;
   onRightClick?: google.maps.MapMouseEventHandler;
 }
-
-export const mapsObjectEventNames: {
-  [key in MapsObjectHandlerName]: MapsObjectEventName;
-} = {
-  onClick: 'click',
-  onDblClick: 'dblclick',
-  onDrag: 'drag',
-  onDragStart: 'dragstart', 
-  onDragEnd: 'dragend',
-  onMouseOut: 'mouseout',
-  onMouseOver: 'mouseover',
-  onRightClick: 'rightclick',
-};

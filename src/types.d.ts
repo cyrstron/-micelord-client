@@ -1,5 +1,12 @@
-/// <reference types="react-scripts" />
-/// <reference types="@micelord/grider" />
+declare module '*.scss' {
+  const content: {[className: string]: string};
+  export default content;
+}
+
+declare module '*.css' {
+  const content: {[className: string]: string};
+  export default content;
+}
 
 declare namespace geo {
   interface Location {
@@ -104,7 +111,7 @@ declare namespace google.maps {
 }
 
 declare namespace google.custom {
-  interface GridMapType extends google.maps.MapType {
+  interface GridMapType {
     index: number;
     map: google.maps.Map | null;
     getTile(
@@ -114,7 +121,7 @@ declare namespace google.custom {
     ): Element | null;
     setMap(map: google.maps.Map | null): void;
     remove(): void;
-  };
+  }
 
   interface GridMapTypeOptions {
     width: number,
@@ -140,7 +147,7 @@ declare namespace google.custom {
   
   type CustomOverlayConstructor = new(
     options: CustomOverlayOptions,
-  ) => CustomOverlayInterface;
+  ) => CustomOverlay;
   
   interface CustomOverlay extends google.maps.OverlayView {
     getContainer(): HTMLDivElement | void;

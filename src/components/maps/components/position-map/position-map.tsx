@@ -3,21 +3,24 @@ import { observable } from 'mobx';
 import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
 import {createStaticGrider, StaticGrider} from '@micelord/grider';
-import {GeolocationStore} from '../../../../stores';
-import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '../../../maps-objects';
-import {SmartGridMapType} from '../../../maps-objects';
-import {SmartPolygon} from '../../../maps-objects';
-import {SmartCustomOverlay} from '../../../maps-objects';
-import {WrappedProps as MapCtxProps} from '../../../maps-objects/hocs/with-smart-map-ctx';
+import {GeolocationStore} from '@stores/geolocation';
+import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
+import {SmartGridMapType} from '@maps/grid-map-type';
+import {SmartPolygon} from '@maps/feature';
+import {SmartCustomOverlay} from '@maps/custom-overlay';
 import {PositionMarker} from '../position-marker';
 
-import styles from './position-map.module.css';
+import styles from './position-map.scss';
 
 const cx = classNames.bind(styles);
 
 interface PositionMapProps {
   geolocationStore?: GeolocationStore;
   children?: ReactNode;
+}
+
+type Props = PositionMapProps & {
+  mapStore: CtrlMapStore,
 }
 
 const umbrellaPath = `
@@ -43,20 +46,21 @@ const umbrellaPath = `
 
 @inject('geolocationStore')
 @observer
-export class PositionMapWrapped extends Component<PositionMapProps & MapCtxProps<CtrlMapStore>> {
+export class PositionMapWrapped extends Component<Props> {
   grider: StaticGrider;
   geolocationStore: GeolocationStore;
   mapStore: CtrlMapStore;
   gridAdded: boolean = false;
   @observable poly?: google.maps.LatLngLiteral[];
 
-  constructor(props: PositionMapProps & MapCtxProps<CtrlMapStore>) {
+  constructor(props: Props) {
     super(props);
 
     this.grider = createStaticGrider({
-      cellSize: 3000,
+      cellSize: 30000,
       type: 'hex',
       correction: 'merc',
+      isHorizontal: true,
     });
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;

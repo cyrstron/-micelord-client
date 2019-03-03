@@ -1,14 +1,8 @@
+
 import {action} from 'mobx';
-import {MapService} from '../../../../map';
 import {FeatureStore} from '../../../stores';
-import {
-  MarkerEventHandler,
-  MarkerEventName,
-  markerEventNames,
-  MarkerHandlerName,
-  MarkerProps,
-} from '../marker.d';
 import {groupMarkerProps, MarkerService} from '../services';
+import {markerEventNames} from '../services';
 
 export class MarkerStore extends FeatureStore<
   google.maps.Marker,

@@ -1,12 +1,16 @@
 import {observer} from 'mobx-react';
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import {WrappedProps} from '../../hocs/with-smart-map-ctx';
-import {MapProps} from './map.d';
+import {MapStore} from './stores';
 
-export type MapExtendedProps<MapStore> = MapProps & WrappedProps<MapStore>;
+export type MapComponentProps = MapProps & {
+  children?: ReactNode | null;
+};
+
+type Props = WrappedProps<MapStore> & MapComponentProps;
 
 @observer
-export class Map<MapStore> extends Component<MapExtendedProps<MapStore>, {}> {
+export class Map extends Component<Props, {}> {
   mapContainer?: HTMLDivElement;
 
   componentDidMount() {
@@ -30,7 +34,7 @@ export class Map<MapStore> extends Component<MapExtendedProps<MapStore>, {}> {
     children: _children,
     className: _className,
     ...prevProps
-  }: MapExtendedProps<MapStore>) {
+  }: Props) {
     const {
       defaultCenter,
       mapStore,

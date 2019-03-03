@@ -1,11 +1,12 @@
 import React from 'react';
 import {
   MapContext,
-  WrappedProps as MapWrappedProps,
+  WrappedProps,
 } from './with-smart-map-ctx';
+import { MapStore } from '../';
 
-export const withDumbMapCtx = <Store, Props extends {}>(
-  Wrapped: React.ComponentType<Props & MapWrappedProps<Store>>,
+export const withDumbMapCtx = <Store extends MapStore, Props extends {}>(
+  Wrapped: React.ComponentType<Props & WrappedProps<Store>>,
 ) => {
   const WithDumbMapCtx = (props: Props) => (
     <MapContext.Consumer>

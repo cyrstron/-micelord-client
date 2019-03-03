@@ -1,11 +1,4 @@
-import {
-	FeatureEventName,
-	FeatureHandlerName,
-	featureEventNames,
-	FeatureEventsProps
-} from '../../feature.d';
-
-export interface PolygonEventsProps extends FeatureEventsProps {
+type PolygonEventsProps = FeatureEventsProps & {
 	onMouseDown?: google.maps.MapPolyEventHandler,
 	onMouseMove?: google.maps.MapPolyEventHandler,
 	onMouseUp?: google.maps.MapPolyEventHandler,    
@@ -16,30 +9,24 @@ export interface PolygonEventsProps extends FeatureEventsProps {
 	onRightClick?: google.maps.MapPolyEventHandler,
 }
   
-export type PolygonEventHandler = google.maps.MapMouseEventHandler |
+type PolygonEventHandler = google.maps.MapMouseEventHandler |
 	google.maps.MapPolyEventHandler;
 
-export type PolygonProps = google.maps.PolygonOptions & 
+type PolygonProps = google.maps.PolygonOptions & 
 	PolygonEventsProps & {
 		paths: geo.Location[]
 	};
   
-export type PolygonEventName = FeatureEventName &    
+type PolygonEventName = FeatureEventName |  
 	'mousedown' |
 	'mousemove'	|
 	'mouseup';
 	
-export type PolygonHandlerName = FeatureHandlerName &
+type PolygonHandlerName = FeatureHandlerName |
 	'onMouseDown' |
 	'onMouseMove' | 
 	'onMouseUp';
 
-export const polygonEventNames: {
+type PolygonEventNames = {
 	[key in PolygonHandlerName]: PolygonEventName;
-} = {
-	...featureEventNames,
-	onMouseDown: 'mousedown',
-	onMouseMove: 'mousemove',
-	onMouseUp: 'mouseup'
 };
-  	

@@ -8,18 +8,18 @@ export interface GoogleStoreProps {
   googleMapsStore?: GoogleMapsStore;
 }
 
-export interface WrappedProps<Store> {
-  mapStore: Store & MapStore;
+export interface WrappedProps<Store extends MapStore> {
+  mapStore: Store
 }
 
 export interface ContextValue {
-  mapStore?: MapStore & any;
+  mapStore?: any,
 }
 
 export const MapContext = createContext<ContextValue>({});
 
-export const withSmartMapCtx = <Store extends {}>(
-  Store: new(google: Google) => Store & MapStore,
+export const withSmartMapCtx = <Store extends MapStore>(
+  Store: new(google: Google) => Store,
 ) => <Props extends {}>(
   Wrapped: React.ComponentType<Props & WrappedProps<Store>>,
 ) => {
@@ -28,7 +28,7 @@ export const withSmartMapCtx = <Store extends {}>(
   class WithSmartMapCtx extends Component<Props & GoogleStoreProps, {}> {
     @observable isStoreCreated: boolean = false;
     googleMapsStore: GoogleMapsStore;
-    mapStore?: Store & MapStore;
+    mapStore?: Store;
 
     constructor(props: Props & GoogleStoreProps) {
       super(props);
@@ -61,7 +61,7 @@ export const withSmartMapCtx = <Store extends {}>(
           value={{mapStore}}
         >
           <Wrapped
-            mapStore={mapStore as Store & MapStore}
+            mapStore={mapStore as Store}
             {...props as Props}
           />
         </MapContext.Provider>

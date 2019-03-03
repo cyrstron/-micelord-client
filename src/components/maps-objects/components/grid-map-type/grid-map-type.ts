@@ -1,7 +1,6 @@
 import {observer} from 'mobx-react';
 import React, {Component} from 'react';
-import {createPortal} from 'react-dom';
-import {GridMapTypeProps} from './grid-map-type.d';
+import {GridMapTypeProps} from './types';
 import {WrappedProps} from './hocs/with-full-map-type-ctx';
 import {GridMapTypeStore} from './stores';
 

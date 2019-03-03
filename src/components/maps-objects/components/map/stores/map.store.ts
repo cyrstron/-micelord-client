@@ -1,12 +1,5 @@
 import {action} from 'mobx';
-import {
-  MapEventHandler,
-  MapEventName,
-  mapEventNames,
-  MapEventsProps,
-  MapHandlerName,
-} from '../map.d';
-import {groupMapProps, MapService} from '../services';
+import {groupMapProps, MapService, mapEventNames} from '../services';
 import {MapsObjectStore} from './../../../stores';
 
 declare global {

@@ -1,14 +1,7 @@
-import {
-	FeatureEventName,
-	FeatureHandlerName,
-	featureEventNames,
-	FeatureEventsProps
-} from '../../feature.d';
-
-export type MarkerEventHandler = google.maps.MapEventHandler | 
+type MarkerEventHandler = google.maps.MapEventHandler | 
   google.maps.MouseEvent;
 
-export interface MarkerEventsProps extends FeatureEventsProps {
+type MarkerEventsProps = FeatureEventsProps & {
   onAnimationChanged?: google.maps.MapEventHandler;
   onClickableChanged?: google.maps.MapEventHandler;
   onCursorChanged?: google.maps.MapEventHandler;
@@ -24,13 +17,13 @@ export interface MarkerEventsProps extends FeatureEventsProps {
   onZIndexChanged?: google.maps.MapEventHandler;
 }
 
-export type MarkerProps = google.maps.MarkerOptions & 
+type MarkerProps = google.maps.MarkerOptions & 
   MarkerEventsProps & {
     position: geo.Location;
     title: string;
   };
 
-export type MarkerEventName = FeatureEventName &
+type MarkerEventName = FeatureEventName |
   'animation_changed' | 
   'clickable_changed' | 
   'cursor_changed' | 
@@ -45,7 +38,7 @@ export type MarkerEventName = FeatureEventName &
   'visible_changed' | 
   'zindex_changed';
   
-export type MarkerHandlerName = FeatureHandlerName &
+type MarkerHandlerName = FeatureHandlerName |
   'onAnimationChanged' | 
   'onClickableChanged' | 
   'onCursorChanged' | 
@@ -60,21 +53,6 @@ export type MarkerHandlerName = FeatureHandlerName &
   'onVisibleChanged' | 
   'onZIndexChanged';
 
-export const markerEventNames: {
+type MarkerEventNames = {
   [key in MarkerHandlerName]: MarkerEventName;
-} = {
-  ...featureEventNames,
-  onAnimationChanged: 'animation_changed',
-  onClickableChanged: 'clickable_changed',
-  onCursorChanged: 'cursor_changed',
-  onDraggableChanged: 'draggable_changed',
-  onFlatChanged: 'flat_changed',
-  onIconChanged: 'icon_changed',
-  onMouseDown: 'mousedown',
-  onMouseUp: 'mouseup',
-  onPositionChanged: 'position_changed',
-  onShapeChanged: 'shape_changed',
-  onTitleChanged: 'title_changed',
-  onVisibleChanged: 'visible_changed',
-  onZIndexChanged: 'zindex_changed',
-};
+}

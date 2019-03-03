@@ -1,14 +1,14 @@
 import throttle from 'lodash/throttle';
-import React, {Component} from 'react';
-import {Map} from '../map';
-import {MapExtendedProps} from '../map/map';
+import React, {Component, ReactNode} from 'react';
+import {Map, MapComponentProps} from '../../map';
 import {CtrlMapStore} from './stores';
+import {WrappedProps} from '../../../../hocs/with-smart-map-ctx';
 
-interface CtrlMapProps extends MapExtendedProps<CtrlMapStore> {
-  mapStore: CtrlMapStore;
-}
+export type CtrlMapProps = MapComponentProps;
 
-export class CtrlMap extends Component<CtrlMapProps, {}> {
+type Props = MapComponentProps & WrappedProps<CtrlMapStore>;
+
+export class CtrlMap extends Component<Props, {}> {
   onBoundsChanged = throttle(() => {
     const {
       onBoundsChanged,

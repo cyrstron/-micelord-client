@@ -1,5 +1,5 @@
 import {GridMapType} from './grid-map-type';
-import {GridMapTypeProps} from './grid-map-type.d';
+import {GridMapTypeProps} from './types';
 import {withDumbMapTypeCtx} from './hocs';
 import {withFullMapTypeCtx} from './hocs';
 import {withSmartMapTypeCtx} from './hocs';

@@ -1,28 +1,40 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "module": "commonjs", 
     "lib": [
+      "esnext",
       "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+      "dom.iterable"
+    ], 
     "allowJs": true,
-    "skipLibCheck": true,
+    "jsx": "react",  
+    "sourceMap": true, 
+    "outDir": "./dist",  
+    "removeComments": true, 
+    "downlevelIteration": true, 
+    "strict": true,                   
+    "noImplicitAny": true, 
+    "moduleResolution": "node", 
+    "baseUrl": "./src",           
+    "paths": {
+      "@stores/*": ["stores/*"],
+      "@services/*": ["services/*"],
+      "@components/*": ["components/*"],
+      "@maps/*": ["components/maps-objects/components/*"],
+    },    
+    "typeRoots": [
+      "node_modules/@types",
+      "./src/**/*"
+    ],
+    "allowSyntheticDefaultImports": true, 
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "noEmit": true,
-    "jsx": "preserve",
-    "isolatedModules": true,
-    "downlevelIteration": true,
+    "experimentalDecorators": true,   
+    "emitDecoratorMetadata": true
   },
   "include": [
-    "src",
-    "main/ambient/google.maps/google.maps.d.ts"
+    "./src/**/*",
+    "./node_modules/@micelord/grider",
+    "tsconfig.json"
   ]
 }
