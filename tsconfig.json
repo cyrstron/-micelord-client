@@ -21,7 +21,7 @@
       "@stores/*": ["stores/*"],
       "@services/*": ["services/*"],
       "@components/*": ["components/*"],
-      "@maps/*": ["components/maps-objects/components/*"],
+      "@maps/*": ["components/maps-objects/components/*"]
     },    
     "typeRoots": [
       "node_modules/@types",

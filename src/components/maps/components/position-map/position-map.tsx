@@ -8,7 +8,9 @@ import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-object
 import {SmartGridMapType} from '@maps/grid-map-type';
 import {SmartPolygon} from '@maps/feature';
 import {SmartCustomOverlay} from '@maps/custom-overlay';
+
 import {PositionMarker} from '../position-marker';
+import {Borderline} from '../borderline';
 
 import styles from './position-map.scss';
 
@@ -113,6 +115,7 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}
         >
+          <Borderline grider={this.grider} />
           <SmartGridMapType />
           <PositionMarker />
           {this.poly && (
