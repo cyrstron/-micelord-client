@@ -35,6 +35,10 @@ declare namespace google.maps {
     new(options: google.maps.PolygonOptions): google.maps.Polygon;
   }
 
+  interface PolylineConstructor {
+    new(options: google.maps.PolylineOptions): google.maps.Polyline;
+  }
+
   interface LatLngConstructor {
     new(lat: number, lng: number): google.maps.LatLng;
   }
@@ -172,6 +176,7 @@ declare namespace google {
     Map: google.maps.MapConstructor;
     Marker: google.maps.MarkerConstructor;
     Polygon: google.maps.PolygonConstructor;
+    Polyline: google.maps.PolylineConstructor;
     LatLng: google.maps.LatLngConstructor;
     LatLngBounds: google.maps.LatLngBoundsConstructor;
     OverlayView: google.maps.OverlayViewConstructor;

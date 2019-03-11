@@ -57,9 +57,6 @@ export class PositionMapWrapped extends Component<Props> {
     lat: 55,
     lng: 30,
   }, {
-    lat: 52.5,
-    lng: 32.5,
-  }, {
     lat: 50,
     lng: 35,
   }, {
@@ -158,8 +155,11 @@ export class PositionMapWrapped extends Component<Props> {
     };
 
     console.log(coord);
+    console.log(utils.geography.polyContainsPoint(this.border, coord));
 
-    const poly = this.grider.buildPolyByGeoPoint(coord);
+
+
+    // const poly = this.grider.buildPolyByGeoPoint(coord);
 
     // const intersects = this.border.reduce((
     //   intersects: google.maps.LatLngLiteral[], 
@@ -191,7 +191,7 @@ export class PositionMapWrapped extends Component<Props> {
 
     // this.intersects = intersects;
 
-    this.poly = poly;
+    // this.poly = poly;
   }
 
   onCenterClick = (): void => {
@@ -222,7 +222,11 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}
         >
-          {/* <Borderline grider={this.grider} border={this.border}/> */}
+          <Borderline 
+            grider={this.grider} 
+            border={this.border}            
+            onClick={this.onClick}
+          />
           <SmartGridMapType />
           <PositionMarker />
           {this.poly && (
@@ -230,7 +234,7 @@ export class PositionMapWrapped extends Component<Props> {
               paths={this.poly}
             />
           )}
-          <SmartPolygon
+          {/* <SmartPolygon
             paths={this.border}
             strokeColor='#ff0000'
           />
@@ -241,7 +245,7 @@ export class PositionMapWrapped extends Component<Props> {
           <SmartPolygon
             paths={this.border1}
             strokeColor='#00ff00'
-          />
+          /> */}
           {this.intersects.map((point: google.maps.LatLngLiteral, index: number) => (
             <SmartMarker 
               key={index}

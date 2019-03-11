@@ -6,6 +6,13 @@ export {
   PolygonStore,
 } from './components/polygon';
 export {
+  Polyline,
+  SmartPolyline,
+  DumbPolyline,
+  withSmartPolylineCtx,
+  PolylineStore,
+} from './components/polyline';
+export {
   Marker,
   SmartMarker,
   DumbMarker,
