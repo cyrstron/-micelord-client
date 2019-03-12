@@ -11,6 +11,7 @@ import {SmartCustomOverlay} from '@maps/custom-overlay';
 
 import {PositionMarker} from '../position-marker';
 import {Borderline} from '../borderline';
+import {EqDevpoly} from '../eqation-devpoly/equation-devpoly';
 
 import styles from './position-map.scss';
 
@@ -226,6 +227,10 @@ export class PositionMapWrapped extends Component<Props> {
             grider={this.grider} 
             border={this.border}            
             onClick={this.onClick}
+          />
+          <EqDevpoly 
+            border={this.border}
+            grider={this.grider} 
           />
           <SmartGridMapType />
           <PositionMarker />
