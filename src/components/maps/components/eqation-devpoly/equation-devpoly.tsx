@@ -25,10 +25,10 @@ export class EqDevpoly extends Component<Props> {
     ): google.maps.LatLngLiteral[] => {
       const nextPoint = this.props.border[index + 1] || this.props.border[0];
 
-      const latStep = (point.lat - nextPoint.lat) / 5;
+      const latStep = (point.lat - nextPoint.lat) / 10;
 
-      for (let mul = 0; mul < 5; mul += 1) {
-        const nextLat = point.lat + latStep * mul;
+      for (let mul = 0; mul < 10; mul += 1) {
+        const nextLat = point.lat - latStep * mul;
 
         poly.push({
           lat: nextLat,
@@ -46,19 +46,66 @@ export class EqDevpoly extends Component<Props> {
     ): google.maps.LatLngLiteral[] => {
       const nextPoint = this.props.border[index + 1] || this.props.border[0];
 
-      const lngStep = (point.lng - nextPoint.lng) / 5;
+      const lngStep = (point.lng - nextPoint.lng) / 10;
 
-      for (let mul = 0; mul < 5; mul += 1) {
-        const nextLng = point.lng + lngStep * mul;
+      for (let mul = 0; mul < 10; mul += 1) {
+        const nextLng = point.lng - lngStep * mul;
 
         poly.push({
-          lat: nextLng,
-          lng: this.utils.geography.calcLatByLngOnLox(nextLng, [point, nextPoint])
+          lng: nextLng,
+          lat: this.utils.geography.calcLatByLngOnLox(nextLng, [point, nextPoint])
         });
       }
 
       return poly;
     }, []);
+
+    const strictPoly = this.props.border.reduce((
+      poly: google.maps.LatLngLiteral[],
+      point: google.maps.LatLngLiteral,
+      index: number,
+    ): google.maps.LatLngLiteral[] => {
+      const nextPoint = this.props.border[index + 1] || this.props.border[0];
+
+      const latStep = (point.lat - nextPoint.lat) / 10;
+
+      if (latStep === 0) {
+        const lngStep = (point.lng - nextPoint.lng) / 10;
+   
+        const equationY = this.utils.geometry.calcYLineEquation([
+          [point.lng, point.lat], 
+          [nextPoint.lng, nextPoint.lat]
+        ]);
+
+        for (let mul = 0; mul < 10; mul += 1) {
+          const nextLng = point.lng - lngStep * mul;
+
+          poly.push({
+            lng: nextLng,
+            lat: equationY(nextLng)
+          });
+        }
+
+      } else {        
+        const equationX = this.utils.geometry.calcXLineEquation([
+          [point.lng, point.lat], 
+          [nextPoint.lng, nextPoint.lat]
+        ])
+
+        for (let mul = 0; mul < 10; mul += 1) {
+          const nextLat = point.lat - latStep * mul;
+
+          poly.push({
+            lng: equationX(nextLat),
+            lat: nextLat
+          });
+        }
+      }
+
+
+      return poly;
+    }, []);
+    console.log(latPoly);
     // const paths = this.props.grider.buildInnerFigure(border);
 
     return ([
@@ -68,9 +115,15 @@ export class EqDevpoly extends Component<Props> {
       //   strokeWeight={2}
       //   onClick={this.props.onClick}
       // />,
+      // <SmartPolygon
+      //   paths={latPoly}
+      //   strokeColor='#000066'
+      //   strokeWeight={2}
+      //   onClick={this.props.onClick}
+      // />,
       <SmartPolygon
-        paths={latPoly}
-        strokeColor='#000066'
+        paths={strictPoly}
+        strokeColor='#660066'
         strokeWeight={2}
         onClick={this.props.onClick}
       />

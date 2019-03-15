@@ -58,10 +58,16 @@ export class PositionMapWrapped extends Component<Props> {
     lat: 55,
     lng: 30,
   }, {
+    lat: 52.5,
+    lng: 35,
+  }, {
     lat: 50,
     lng: 35,
   }, {
     lat: 55,
+    lng: 60,
+  }, {
+    lat: 60,
     lng: 40,
   }, {
     lat: 60,
