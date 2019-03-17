@@ -1,4 +1,4 @@
-import {filterObject} from '../../../../../services';
+import {filterObject} from '@components/maps-objects/services';
 
 interface SortedPolylineProps {
   options?: google.maps.PolylineOptions;

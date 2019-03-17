@@ -18,6 +18,7 @@ export class EqDevpoly extends Component<Props> {
     this.paths = [...this.props.border, this.props.border[0]];
   }
   render() {
+    const divider = 10;
     const lngPoly = this.props.border.reduce((
       poly: google.maps.LatLngLiteral[],
       point: google.maps.LatLngLiteral,
@@ -27,38 +28,43 @@ export class EqDevpoly extends Component<Props> {
 
       const latStep = (point.lat - nextPoint.lat) / 10;
 
-      for (let mul = 0; mul < 10; mul += 1) {
-        const nextLat = point.lat - latStep * mul;
+      if (latStep === 0) {
+        const lngStep = (point.lng - nextPoint.lng) / 10;
+   
+        const equationY = this.utils.geography.calcLatLoxEquation([
+          point, 
+          nextPoint
+        ]);
 
-        poly.push({
-          lat: nextLat,
-          lng: this.utils.geography.calcLngByLatOnLox(nextLat, [point, nextPoint])
-        });
+        for (let mul = 0; mul < 10; mul += 1) {
+          const nextLng = point.lng - lngStep * mul;
+
+          poly.push({
+            lng: nextLng,
+            lat: equationY(nextLng)
+          });
+        }
+
+      } else {        
+        const equationX = this.utils.geography.calcLngLoxEquation([
+          point,
+          nextPoint
+        ])
+
+        for (let mul = 0; mul < 10; mul += 1) {
+          const nextLat = point.lat - latStep * mul;
+
+          poly.push({
+            lng: equationX(nextLat),
+            lat: nextLat
+          });
+        }
       }
+
 
       return poly;
     }, []);
 
-    const latPoly = this.props.border.reduce((
-      poly: google.maps.LatLngLiteral[],
-      point: google.maps.LatLngLiteral,
-      index: number,
-    ): google.maps.LatLngLiteral[] => {
-      const nextPoint = this.props.border[index + 1] || this.props.border[0];
-
-      const lngStep = (point.lng - nextPoint.lng) / 10;
-
-      for (let mul = 0; mul < 10; mul += 1) {
-        const nextLng = point.lng - lngStep * mul;
-
-        poly.push({
-          lng: nextLng,
-          lat: this.utils.geography.calcLatByLngOnLox(nextLng, [point, nextPoint])
-        });
-      }
-
-      return poly;
-    }, []);
 
     const strictPoly = this.props.border.reduce((
       poly: google.maps.LatLngLiteral[],
@@ -105,28 +111,23 @@ export class EqDevpoly extends Component<Props> {
 
       return poly;
     }, []);
-    console.log(latPoly);
-    // const paths = this.props.grider.buildInnerFigure(border);
 
     return ([
       // <SmartPolygon
+      //   key="lngPoly"
       //   paths={lngPoly}
       //   strokeColor='#660000'
       //   strokeWeight={2}
       //   onClick={this.props.onClick}
       // />,
       // <SmartPolygon
-      //   paths={latPoly}
-      //   strokeColor='#000066'
+      //   key="strictPoly"
+      //   paths={strictPoly}
+      //   strokeColor='#660066'
       //   strokeWeight={2}
       //   onClick={this.props.onClick}
-      // />,
-      <SmartPolygon
-        paths={strictPoly}
-        strokeColor='#660066'
-        strokeWeight={2}
-        onClick={this.props.onClick}
-      />
+      //   zIndex={-1}
+      // />
     ]);
   }
 }

@@ -6,7 +6,7 @@ import {createStaticGrider, StaticGrider, utils} from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
 import {SmartGridMapType} from '@maps/grid-map-type';
-import {SmartPolygon, SmartMarker} from '@maps/feature';
+import {SmartPolygon, SmartMarker, SmartPolyline} from '@maps/feature';
 import {SmartCustomOverlay} from '@maps/custom-overlay';
 
 import {PositionMarker} from '../position-marker';
@@ -77,12 +77,12 @@ export class PositionMapWrapped extends Component<Props> {
     lat: 60,
     lng: 30,
   }, {
-  //   lat: 56.25,
-  //   lng: 31.25,
-  // }, {
-  //   lat: 52.5,
-  //   lng: 32.5,
-  // }, {
+    lat: 56.25,
+    lng: 31.25,
+  }, {
+    lat: 52.5,
+    lng: 32.5,
+  }, {
     lat: 45,
     lng: 35,
   }, {
@@ -161,44 +161,39 @@ export class PositionMapWrapped extends Component<Props> {
       lng: e.latLng.lng(),
     };
 
-    console.log(coord);
-    console.log(utils.geography.polyContainsPoint(this.border, coord));
+    const poly = this.grider.buildPolyByGeoPoint(coord);
 
+    const intersects = this.border.reduce((
+      intersects: google.maps.LatLngLiteral[], 
+      point: google.maps.LatLngLiteral, 
+      index: number
+    ): google.maps.LatLngLiteral[] => {
+      const nextPoint = this.border[index + 1] || this.border[0];
+      const sectionA: [
+        google.maps.LatLngLiteral,
+        google.maps.LatLngLiteral
+      ] = [point, nextPoint];
 
+      poly.forEach((polyPoint, index) => {
+        const nextPolyPoint = poly[index + 1] || poly[0];
+        const sectionB: [
+          google.maps.LatLngLiteral,
+          google.maps.LatLngLiteral
+        ]  = [polyPoint, nextPolyPoint];
 
-    // const poly = this.grider.buildPolyByGeoPoint(coord);
+        const intersect = utils.geography.calcSectionsIntersect(sectionA, sectionB);
 
-    // const intersects = this.border.reduce((
-    //   intersects: google.maps.LatLngLiteral[], 
-    //   point: google.maps.LatLngLiteral, 
-    //   index: number
-    // ): google.maps.LatLngLiteral[] => {
-    //   const nextPoint = this.border[index + 1] || this.border[0];
-    //   const sectionA: [
-    //     google.maps.LatLngLiteral,
-    //     google.maps.LatLngLiteral
-    //   ] = [point, nextPoint];
+        if (!intersect) return;
 
-    //   poly.forEach((polyPoint, index) => {
-    //     const nextPolyPoint = poly[index + 1] || poly[0];
-    //     const sectionB: [
-    //       google.maps.LatLngLiteral,
-    //       google.maps.LatLngLiteral
-    //     ]  = [polyPoint, nextPolyPoint];
+        intersects.push(intersect);
+      });
 
-    //     const intersect = utils.geography.calcSectionsIntersect(sectionA, sectionB);
+      return intersects;
+    }, []);
 
-    //     if (!intersect) return;
+    this.intersects = intersects;
 
-    //     intersects.push(intersect);
-    //   });
-
-    //   return intersects;
-    // }, []);
-
-    // this.intersects = intersects;
-
-    // this.poly = poly;
+    this.poly = poly;
   }
 
   onCenterClick = (): void => {
