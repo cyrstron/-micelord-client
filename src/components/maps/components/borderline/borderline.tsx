@@ -14,16 +14,21 @@ export class Borderline extends Component<Props> {
   constructor(props: Props) {
     super(props);
 
-    this.paths = [...this.props.border, this.props.border[0]];
+    const {
+      grider,
+      border
+    } = props;
+
+    this.paths = grider.buildInnerFigure(border);
   }
   render() {
-
-    // const paths = this.props.grider.buildInnerFigure(border);
-
     return (
       <SmartPolygon
         paths={this.paths}
-        strokeColor='#000'
+        strokeColor='#880000'
+        strokeOpacity={0.4}
+        fillColor='#880000'
+        fillOpacity={0.2}
         strokeWeight={2}
         onClick={this.props.onClick}
       />

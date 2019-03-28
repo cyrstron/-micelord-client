@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import { observable } from 'mobx';
 import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
-import {createStaticGrider, StaticGrider, utils} from '@micelord/grider';
+import {createStaticGrider, StaticGrider, utils, grider, Grider} from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
 import {SmartGridMapType} from '@maps/grid-map-type';
@@ -54,95 +54,41 @@ export class PositionMapWrapped extends Component<Props> {
   geolocationStore: GeolocationStore;
   mapStore: CtrlMapStore;
   gridAdded: boolean = false;
-  border: google.maps.LatLngLiteral[] = [{
-    lat: 55,
-    lng: 30,
-  }, {
-    lat: 52.5,
-    lng: 35,
-  }, {
-    lat: 50,
-    lng: 35,
-  }, {
-    lat: 55,
-    lng: 60,
-  }, {
-    lat: 60,
-    lng: 40,
-  }, {
-    lat: 60,
-    lng: 35,
-  }];
-  border1: google.maps.LatLngLiteral[] = [{
-    lat: 60,
-    lng: 30,
-  }, {
-    lat: 56.25,
-    lng: 31.25,
-  }, {
-    lat: 52.5,
-    lng: 32.5,
-  }, {
-    lat: 45,
-    lng: 35,
-  }, {
-    lat: 60,
-    lng: 40,
-  }, {
-    lat: 65,
-    lng: 35,
-  }];
-  border2: google.maps.LatLngLiteral[] = [{
-    lat: 60,
-    lng: 30,
-  }, {
-    lat: 45,
-    lng: 35,
-  }, {
-    lat: 60,
-    lng: 40,
-  }, {
-    lat: 65,
-    lng: 35,
-  }];
-  @observable poly?: google.maps.LatLngLiteral[];
-  @observable intersects: google.maps.LatLngLiteral[] = this.border.reduce((
-    intersects: google.maps.LatLngLiteral[], 
-    point: google.maps.LatLngLiteral, 
-    index: number
-  ): google.maps.LatLngLiteral[] => {
-    const nextPoint = this.border[index + 1] || this.border[0];
-    const sectionA: [
-      google.maps.LatLngLiteral,
-      google.maps.LatLngLiteral
-    ] = [point, nextPoint];
-
-    this.border1.forEach((polyPoint, index) => {
-      const nextPolyPoint = this.border1[index + 1] || this.border1[0];
-      const sectionB: [
-        google.maps.LatLngLiteral,
-        google.maps.LatLngLiteral
-      ]  = [polyPoint, nextPolyPoint];
-
-      const intersect = utils.geography.calcSectionsIntersect(sectionA, sectionB);
-
-      if (!intersect) return;
-
-      intersects.push(intersect);
-    });
-
-    return intersects;
-  }, []);;
+  startPoint: google.maps.LatLngLiteral | undefined;
+  border: google.maps.LatLngLiteral[] = [
+    {lat: 55, lng: 60}, 
+    {lat: 60, lng: 40},  
+    {lat: 60, lng: 35},
+    {lat: 55, lng: 30}, 
+    {lat: 52.5, lng: 35}, 
+    {lat: 50, lng: 35},
+  ];
+  borderline: google.maps.LatLngLiteral[] = [];
+  @observable poly?: google.maps.LatLngLiteral[] = [
+    {lat: 55.2091195, lng: 31.875},
+    {lat: 55.2091195, lng: 30},
+    {lat: 53.5853219, lng: 29.0625},
+    {lat: 51.9615242, lng: 30},
+    {lat: 51.9615242, lng: 31.875},
+    {lat: 53.5853219, lng: 32.8125},
+  ];
+  @observable intersects: google.maps.LatLngLiteral[] = [];
 
   constructor(props: Props) {
     super(props);
 
     this.grider = createStaticGrider({
-      cellSize: 300000,
+      cellSize: 50000, // outer: 100000, 40000, inner: 40000
       type: 'hex',
       correction: 'none',
       isHorizontal: true,
     });
+    this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
+      this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
+      this.grider.buildPolyByGeoPoint(this.border[0]),
+      this.border,
+      this.grider.params
+    );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
   }
@@ -162,36 +108,6 @@ export class PositionMapWrapped extends Component<Props> {
     };
 
     const poly = this.grider.buildPolyByGeoPoint(coord);
-
-    const intersects = this.border.reduce((
-      intersects: google.maps.LatLngLiteral[], 
-      point: google.maps.LatLngLiteral, 
-      index: number
-    ): google.maps.LatLngLiteral[] => {
-      const nextPoint = this.border[index + 1] || this.border[0];
-      const sectionA: [
-        google.maps.LatLngLiteral,
-        google.maps.LatLngLiteral
-      ] = [point, nextPoint];
-
-      poly.forEach((polyPoint, index) => {
-        const nextPolyPoint = poly[index + 1] || poly[0];
-        const sectionB: [
-          google.maps.LatLngLiteral,
-          google.maps.LatLngLiteral
-        ]  = [polyPoint, nextPolyPoint];
-
-        const intersect = utils.geography.calcSectionsIntersect(sectionA, sectionB);
-
-        if (!intersect) return;
-
-        intersects.push(intersect);
-      });
-
-      return intersects;
-    }, []);
-
-    this.intersects = intersects;
 
     this.poly = poly;
   }
@@ -224,15 +140,6 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}
         >
-          <Borderline 
-            grider={this.grider} 
-            border={this.border}            
-            onClick={this.onClick}
-          />
-          <EqDevpoly 
-            border={this.border}
-            grider={this.grider} 
-          />
           <SmartGridMapType />
           <PositionMarker />
           {this.poly && (
@@ -240,18 +147,6 @@ export class PositionMapWrapped extends Component<Props> {
               paths={this.poly}
             />
           )}
-          {/* <SmartPolygon
-            paths={this.border}
-            strokeColor='#ff0000'
-          />
-          <SmartPolygon
-            paths={this.border2}
-            strokeColor='#0000ff'
-          />
-          <SmartPolygon
-            paths={this.border1}
-            strokeColor='#00ff00'
-          /> */}
           {this.intersects.map((point: google.maps.LatLngLiteral, index: number) => (
             <SmartMarker 
               key={index}
@@ -259,7 +154,26 @@ export class PositionMapWrapped extends Component<Props> {
               title={`lat: ${point.lat}, lng: ${point.lng}`} 
             />
           ))}
+          {this.startPoint && (            
+            <SmartMarker 
+              position={this.startPoint}
+              title='First point'
+            />
+          )}
+          <SmartPolygon 
+            paths={this.grider.buildPolyByGeoPoint(this.border[0])}
+            strokeColor='#006600'
+          />
           {this.props.children}
+          <Borderline 
+            border={this.border}
+            grider={this.grider}
+          />
+          <SmartPolygon 
+            onClick={this.onClick}
+            paths={this.border}
+            strokeColor='#000066'
+          />
           <SmartCustomOverlay
             bounds={{
               east: 38.35,

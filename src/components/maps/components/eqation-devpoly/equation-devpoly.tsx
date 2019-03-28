@@ -54,17 +54,19 @@ export class EqDevpoly extends Component<Props> {
         for (let mul = 0; mul < 10; mul += 1) {
           const nextLat = point.lat - latStep * mul;
 
-          poly.push({
-            lng: equationX(nextLat),
-            lat: nextLat
-          });
+          const lng = equationX(nextLat);
+
+          if (lng !== undefined) {
+            poly.push({
+              lng,
+              lat: nextLat
+            });
+          }
         }
       }
 
-
       return poly;
     }, []);
-
 
     const strictPoly = this.props.border.reduce((
       poly: google.maps.LatLngLiteral[],
@@ -101,10 +103,14 @@ export class EqDevpoly extends Component<Props> {
         for (let mul = 0; mul < 10; mul += 1) {
           const nextLat = point.lat - latStep * mul;
 
-          poly.push({
-            lng: equationX(nextLat),
-            lat: nextLat
-          });
+          const lng = equationX(nextLat);
+
+          if (lng !== undefined) {
+            poly.push({
+              lng,
+              lat: nextLat
+            });
+          }
         }
       }
 
