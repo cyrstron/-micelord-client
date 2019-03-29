@@ -11,6 +11,7 @@ import {SmartCustomOverlay} from '@maps/custom-overlay';
 
 import {PositionMarker} from '../position-marker';
 import {Borderline} from '../borderline';
+import {SvgOverlay} from '../svg-overlay/svg-overlay';
 import {EqDevpoly} from '../eqation-devpoly/equation-devpoly';
 
 import styles from './position-map.scss';
@@ -83,12 +84,12 @@ export class PositionMapWrapped extends Component<Props> {
       correction: 'none',
       isHorizontal: true,
     });
-    this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
-      this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
-      this.grider.buildPolyByGeoPoint(this.border[0]),
-      this.border,
-      this.grider.params
-    );
+    // this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
+    //   this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
+    //   this.grider.buildPolyByGeoPoint(this.border[0]),
+    //   this.border,
+    //   this.grider.params
+    // );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
   }
@@ -174,25 +175,14 @@ export class PositionMapWrapped extends Component<Props> {
             paths={this.border}
             strokeColor='#000066'
           />
-          <SmartCustomOverlay
+          <SvgOverlay
             bounds={{
               east: 38.35,
               north: 51,
               south: 49,
               west: 33.39,
             }}
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='100%'
-              height='100%'
-              viewBox='0 0 32 32'
-              aria-labelledby='title'
-            >
-              <title id='title'>Umbrella Icon</title>
-              <path d={umbrellaPath}/>
-            </svg>
-          </SmartCustomOverlay>
+          />
         </DumbCtrlMap>
         <button onClick={this.onCenterClick}>Center</button>
       </>
