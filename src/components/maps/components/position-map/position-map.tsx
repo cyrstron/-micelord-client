@@ -79,17 +79,17 @@ export class PositionMapWrapped extends Component<Props> {
     super(props);
 
     this.grider = createStaticGrider({
-      cellSize: 50000, // outer: 100000, 40000, inner: 40000
+      cellSize: 40000, // outer: 100000, 40000, inner: 40000
       type: 'hex',
       correction: 'none',
       isHorizontal: true,
     });
-    // this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
-    //   this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
-    //   this.grider.buildPolyByGeoPoint(this.border[0]),
-    //   this.border,
-    //   this.grider.params
-    // );
+    this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
+      this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
+      this.grider.buildPolyByGeoPoint(this.border[0]),
+      this.border,
+      this.grider.params
+    );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
   }
