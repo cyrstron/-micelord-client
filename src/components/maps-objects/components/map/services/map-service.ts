@@ -12,6 +12,7 @@ export class MapService extends MapsObjectService<
     options: google.maps.MapOptions,
   ) {
     const object: google.maps.Map = new google.maps.Map(container, options);
+
     super(google, object);
   }
 

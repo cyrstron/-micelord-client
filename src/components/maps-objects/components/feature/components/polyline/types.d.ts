@@ -14,7 +14,7 @@ type PolylineEventHandler = google.maps.MapMouseEventHandler |
 
 type PolylineProps = google.maps.PolylineOptions & 
 	PolylineEventsProps & {
-		paths: geo.Location[]
+		path: geo.Location[]
 	};
   
 type PolylineEventName = FeatureEventName |  

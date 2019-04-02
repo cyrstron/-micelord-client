@@ -10,7 +10,7 @@ export class GoogleMapsActions {
     document.body.append(script);
 
     return new Promise<void>((res, rej) => {
-      script.addEventListener('load', () => {
+      script.addEventListener('load', () => {        
         res();
       });
       script.addEventListener('error', (): void => {

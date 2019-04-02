@@ -1,34 +1,50 @@
 import React, {Component} from 'react';
-import {SmartPolyline, SmartPolygon} from '@maps/feature';
+import {SmartPolyline} from '@maps/feature';
 import {StaticGrider} from '@micelord/grider';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react';
 
 interface Props {
   grider: StaticGrider;
   border: google.maps.LatLngLiteral[];
+  outer?: boolean;
   onClick?: google.maps.MapPolyEventHandler;
 }
 
+@observer
 export class Borderline extends Component<Props> {
-  paths: google.maps.LatLngLiteral[];
+  @observable path: google.maps.LatLngLiteral[];
 
   constructor(props: Props) {
     super(props);
 
     const {
       grider,
-      border
+      border,
+      outer,
     } = props;
 
-    this.paths = grider.buildInnerFigure(border);
+    this.path = grider.buildFigure(border, !outer);
   }
+
+  componentDidUpdate(prevProps: Props) {
+    const {
+      border,
+      grider,
+      outer,
+    } = this.props;
+
+    if (prevProps.border === border) return;
+
+    this.path = grider.buildFigure(border, !outer);
+  }
+
   render() {
     return (
-      <SmartPolygon
-        paths={this.paths}
+      <SmartPolyline
+        path={this.path}
         strokeColor='#880000'
         strokeOpacity={0.4}
-        fillColor='#880000'
-        fillOpacity={0.2}
         strokeWeight={2}
         onClick={this.props.onClick}
       />

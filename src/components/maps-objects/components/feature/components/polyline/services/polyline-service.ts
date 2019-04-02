@@ -15,8 +15,6 @@ export class PolylineService extends FeatureService<
     const map = mapService.getObject();
     const object = new google.maps.Polyline({map, ...options});
 
-    object.setMap(map);
-
     super(google, object, mapService);
   }
 }

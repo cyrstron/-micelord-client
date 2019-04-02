@@ -36,7 +36,7 @@ class App extends Component<{}, {string: string}> {
           {string}
         </header>
         <PositionMap/>
-        <DevTools />
+        {/* <DevTools /> */}
       </div>
     );
   }

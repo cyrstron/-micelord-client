@@ -11,7 +11,7 @@ import {SmartCustomOverlay} from '@maps/custom-overlay';
 
 import {PositionMarker} from '../position-marker';
 import {Borderline} from '../borderline';
-import {EqDevpoly} from '../eqation-devpoly/equation-devpoly';
+import {EditableBorderline} from '../editable-borderline';
 
 import styles from './position-map.scss';
 
@@ -45,7 +45,7 @@ const umbrellaPath = `
   15-9.995v-1.506c0-0.283 0.224-0.499
   0.5-0.499 0.268 0 0.5 0.224 0.5
   0.499v1.506c8.329 0.17 15 4.58 15 9.995h-5z
-  `;
+`;
 
 @inject('geolocationStore')
 @observer
@@ -55,7 +55,7 @@ export class PositionMapWrapped extends Component<Props> {
   mapStore: CtrlMapStore;
   gridAdded: boolean = false;
   startPoint: google.maps.LatLngLiteral | undefined;
-  border: google.maps.LatLngLiteral[] = [
+  @observable border: google.maps.LatLngLiteral[] = [
     {lat: 55, lng: 60}, 
     {lat: 60, lng: 40},  
     {lat: 60, lng: 35},
@@ -64,24 +64,17 @@ export class PositionMapWrapped extends Component<Props> {
     {lat: 50, lng: 35},
   ];
   borderline: google.maps.LatLngLiteral[] = [];
-  @observable poly?: google.maps.LatLngLiteral[] = [
-    {lat: 55.2091195, lng: 31.875},
-    {lat: 55.2091195, lng: 30},
-    {lat: 53.5853219, lng: 29.0625},
-    {lat: 51.9615242, lng: 30},
-    {lat: 51.9615242, lng: 31.875},
-    {lat: 53.5853219, lng: 32.8125},
-  ];
+  @observable poly?: google.maps.LatLngLiteral[];
   @observable intersects: google.maps.LatLngLiteral[] = [];
 
   constructor(props: Props) {
     super(props);
 
     this.grider = createStaticGrider({
-      cellSize: 50000, // outer: 100000, 40000, inner: 40000
-      type: 'hex',
-      correction: 'none',
-      isHorizontal: true,
+      cellSize: 50000, // inner: 50000 - hex & rect - chack cleaner
+      type: 'rect',
+      correction: 'merc',
+      // isHorizontal: true,
     });
     this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
       this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
@@ -107,6 +100,8 @@ export class PositionMapWrapped extends Component<Props> {
       lng: e.latLng.lng(),
     };
 
+    console.log(this.grider.calcGridCenterPointByGeoPoint(coord));
+
     const poly = this.grider.buildPolyByGeoPoint(coord);
 
     this.poly = poly;
@@ -118,6 +113,10 @@ export class PositionMapWrapped extends Component<Props> {
     if (!position) return;
 
     this.mapStore.panTo(position);
+  }
+
+  onBorderChange = (newBorder: google.maps.LatLngLiteral[]) => {
+    this.border = newBorder;
   }
 
   render() {
@@ -168,11 +167,11 @@ export class PositionMapWrapped extends Component<Props> {
           <Borderline 
             border={this.border}
             grider={this.grider}
+            outer
           />
-          <SmartPolygon 
-            onClick={this.onClick}
-            paths={this.border}
-            strokeColor='#000066'
+          <EditableBorderline
+            border={this.border}
+            onPathChange={this.onBorderChange}
           />
           <SmartCustomOverlay
             bounds={{

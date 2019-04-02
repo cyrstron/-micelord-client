@@ -31,4 +31,21 @@ export class PolylineStore extends FeatureStore<
 
     this.setService(service, handlers);
   }
+
+  getPathObj(): google.maps.MVCArray<google.maps.LatLng> | undefined {
+    if (!this.service) return;
+
+    return this.service.getObject().getPath();
+  }
+
+  getPath(): google.maps.LatLngLiteral[] | undefined {
+    if (!this.service) return;
+
+    const pathLatLngs = this.service.getObject().getPath().getArray();
+
+    return pathLatLngs.map(latLng => ({
+      lat: latLng.lat(),
+      lng: latLng.lng(),
+    }));
+  }
 }
