@@ -74,7 +74,7 @@ export class PositionMapWrapped extends Component<Props> {
 
     this.grider = createStaticGrider({
       cellSize: 50000, // inner: 50000 - hex & rect - chack cleaner
-      type: 'rect',
+      type: 'hex',
       correction: 'merc',
       // isHorizontal: true,
     });

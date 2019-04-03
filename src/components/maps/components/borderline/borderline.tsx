@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SmartPolyline} from '@maps/feature';
+import {SmartPolyline, SmartMarker} from '@maps/feature';
 import {StaticGrider} from '@micelord/grider';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
@@ -13,39 +13,52 @@ interface Props {
 
 @observer
 export class Borderline extends Component<Props> {
-  @observable path: google.maps.LatLngLiteral[];
+  @observable path: google.maps.LatLngLiteral[] = [];
+  @observable selfIntersects: google.maps.LatLngLiteral[] = [];
 
   constructor(props: Props) {
     super(props);
 
-    const {
-      grider,
-      border,
-      outer,
-    } = props;
-
-    this.path = grider.buildFigure(border, !outer);
+    this.updatePath();
   }
 
   componentDidUpdate(prevProps: Props) {
     const {
       border,
-      grider,
-      outer,
     } = this.props;
 
     if (prevProps.border === border) return;
+
+    this.updatePath();
+  }
+
+  private updatePath() {
+    const {
+      grider,
+      border,
+      outer,
+    } = this.props;
+
+    this.selfIntersects = grider.figureBuilder.validator.getItselfIntersectsPoint(border);
 
     this.path = grider.buildFigure(border, !outer);
   }
 
   render() {
+    if (this.selfIntersects.length > 0) {
+      return this.selfIntersects.map((intersect) => (
+        <SmartMarker 
+          position={intersect}
+          title="Invalid intersecion!"
+        />
+      ))
+    }
+
     return (
       <SmartPolyline
         path={this.path}
         strokeColor='#880000'
-        strokeOpacity={0.4}
-        strokeWeight={2}
+        strokeWeight={3}
         onClick={this.props.onClick}
       />
     );

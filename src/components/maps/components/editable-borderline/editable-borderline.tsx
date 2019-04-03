@@ -13,7 +13,7 @@ export class DumbEditableBorderline extends Component<Props> {
   
   componentDidMount() {
     const {
-      featureStore
+      featureStore,
     } = this.props;
 
     const pathObj = featureStore.getPathObj();
@@ -31,7 +31,7 @@ export class DumbEditableBorderline extends Component<Props> {
 
   componentDidUpdate() {
     const {
-      featureStore
+      featureStore,
     } = this.props;
 
     const pathObj = featureStore.getPathObj();
