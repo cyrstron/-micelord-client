@@ -39,9 +39,13 @@ export class Borderline extends Component<Props> {
       outer,
     } = this.props;
 
-    this.selfIntersects = grider.figureBuilder.validator.getItselfIntersectsPoint(border);
+    const shape = [...border];
 
-    this.path = grider.buildFigure(border, !outer);
+    console.log(shape)
+
+    this.selfIntersects = grider.figureBuilder.validator.getItselfIntersectsPoint(shape);
+
+    this.path = grider.buildFigure(shape, !outer);
   }
 
   render() {

@@ -25,8 +25,6 @@ export class DumbEditableBorderline extends Component<Props> {
     pathObj.addListener('insert_at', this.onDragBorder);
     pathObj.addListener('remove_at', this.onDragBorder);
     pathObj.addListener('set_at', this.onDragBorder);
-
-    console.log(featureStore.getPath())
   }
 
   componentDidUpdate() {
@@ -41,8 +39,6 @@ export class DumbEditableBorderline extends Component<Props> {
     pathObj.addListener('insert_at', this.onDragBorder);
     pathObj.addListener('remove_at', this.onDragBorder);
     pathObj.addListener('set_at', this.onDragBorder);
-
-    console.log(featureStore.getPath())
   }
   
   onDragBorder: google.maps.MapMouseEventHandler = debounce(() => {

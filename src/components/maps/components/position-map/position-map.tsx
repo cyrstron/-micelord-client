@@ -58,12 +58,12 @@ export class PositionMapWrapped extends Component<Props> {
   gridAdded: boolean = false;
   startPoint: google.maps.LatLngLiteral | undefined;
   @observable border: google.maps.LatLngLiteral[] = [
-    {lat: 55, lng: 60}, 
-    {lat: 60, lng: 40},  
-    {lat: 60, lng: 35},
-    {lat: 55, lng: 30}, 
-    {lat: 52.5, lng: 35}, 
-    {lat: 50, lng: 35},
+    {lat: 47.06676604567628, lng: 36.796875}, 
+    {lat: 54.317706011018224, lng: 40.7470703125},  
+    {lat: 53.01600312774294, lng: 29.0234375},
+    {lat: 54.51822185091831, lng: 24.814453125}, 
+    {lat: 49.20018618540992, lng: 24.0576171875}, 
+    {lat: 51.419106281049466, lng: 38.2080078125},
   ];
   borderline: google.maps.LatLngLiteral[] = [];
   @observable poly?: google.maps.LatLngLiteral[];
@@ -102,9 +102,37 @@ export class PositionMapWrapped extends Component<Props> {
       lng: e.latLng.lng(),
     };
 
-    console.log(this.grider.calcGridCenterPointByGeoPoint(coord));
-
     const poly = this.grider.buildPolyByGeoPoint(coord);
+
+    console.log(poly)
+
+    this.intersects = this.border.reduce((
+      intersects: google.maps.LatLngLiteral[],
+      pointA: google.maps.LatLngLiteral,
+      index: number,
+    ) => {
+      const nextPointA = this.border[index + 1] || this.border[0];
+      const sideA: [google.maps.LatLngLiteral, google.maps.LatLngLiteral] = [pointA, nextPointA];
+
+      const polyIntersects = poly.reduce((
+        polyIntersects: google.maps.LatLngLiteral[],
+        pointB: google.maps.LatLngLiteral,
+        index: number,
+      ) => {
+        const nextPointB = poly[index + 1] || poly[0];
+        const sideB: [google.maps.LatLngLiteral, google.maps.LatLngLiteral]  = [pointB, nextPointB];
+
+        const intersect = utils.geography.calcSectionsIntersect(sideA, sideB);
+
+        if (intersect) {
+          polyIntersects.push(intersect);
+        }
+
+        return polyIntersects;
+      }, []);
+
+      return [...intersects, ...polyIntersects];
+    }, []);
 
     this.poly = poly;
   }
