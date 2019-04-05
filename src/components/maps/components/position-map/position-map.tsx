@@ -57,6 +57,7 @@ export class PositionMapWrapped extends Component<Props> {
   mapStore: CtrlMapStore;
   gridAdded: boolean = false;
   startPoint: google.maps.LatLngLiteral | undefined;
+  @observable projections: google.maps.LatLngLiteral[] = [];
   @observable border: google.maps.LatLngLiteral[] = [
     {lat: 47.06676604567628, lng: 36.796875}, 
     {lat: 54.317706011018224, lng: 40.7470703125},  
@@ -106,33 +107,46 @@ export class PositionMapWrapped extends Component<Props> {
 
     console.log(poly)
 
-    this.intersects = this.border.reduce((
-      intersects: google.maps.LatLngLiteral[],
-      pointA: google.maps.LatLngLiteral,
-      index: number,
-    ) => {
-      const nextPointA = this.border[index + 1] || this.border[0];
-      const sideA: [google.maps.LatLngLiteral, google.maps.LatLngLiteral] = [pointA, nextPointA];
+    // this.projections = poly.reduce((
+    //   projections: google.maps.LatLngLiteral[], 
+    //   point: google.maps.LatLngLiteral
+    // ): google.maps.LatLngLiteral[] => {
+    //   const closest = utils.geography.closestPointOnSection(point, [this.border[0], this.border[1]]);
 
-      const polyIntersects = poly.reduce((
-        polyIntersects: google.maps.LatLngLiteral[],
-        pointB: google.maps.LatLngLiteral,
-        index: number,
-      ) => {
-        const nextPointB = poly[index + 1] || poly[0];
-        const sideB: [google.maps.LatLngLiteral, google.maps.LatLngLiteral]  = [pointB, nextPointB];
+    //   if (closest) {
+    //     projections.push(closest);
+    //   }
 
-        const intersect = utils.geography.calcSectionsIntersect(sideA, sideB);
+    //   return projections;
+    // }, [])
 
-        if (intersect) {
-          polyIntersects.push(intersect);
-        }
+    // this.intersects = this.border.reduce((
+    //   intersects: google.maps.LatLngLiteral[],
+    //   pointA: google.maps.LatLngLiteral,
+    //   index: number,
+    // ) => {
+    //   const nextPointA = this.border[index + 1] || this.border[0];
+    //   const sideA: [google.maps.LatLngLiteral, google.maps.LatLngLiteral] = [pointA, nextPointA];
 
-        return polyIntersects;
-      }, []);
+    //   const polyIntersects = poly.reduce((
+    //     polyIntersects: google.maps.LatLngLiteral[],
+    //     pointB: google.maps.LatLngLiteral,
+    //     index: number,
+    //   ) => {
+    //     const nextPointB = poly[index + 1] || poly[0];
+    //     const sideB: [google.maps.LatLngLiteral, google.maps.LatLngLiteral]  = [pointB, nextPointB];
 
-      return [...intersects, ...polyIntersects];
-    }, []);
+    //     const intersect = utils.geography.calcSectionsIntersect(sideA, sideB);
+
+    //     if (intersect) {
+    //       polyIntersects.push(intersect);
+    //     }
+
+    //     return polyIntersects;
+    //   }, []);
+
+    //   return [...intersects, ...polyIntersects];
+    // }, []);
 
     this.poly = poly;
   }
@@ -176,6 +190,13 @@ export class PositionMapWrapped extends Component<Props> {
               paths={this.poly}
             />
           )}
+          {this.projections.map((point, index) => (       
+            <SmartMarker 
+              key={index}
+              position={point}
+              title={`Closest-${index}`}
+            />
+          ))}
           {this.intersects.map((point: google.maps.LatLngLiteral, index: number) => (
             <SmartMarker 
               key={index}
@@ -197,7 +218,7 @@ export class PositionMapWrapped extends Component<Props> {
           <Borderline 
             border={this.border}
             grider={this.grider}
-            outer
+            // outer
           />
           <EditableBorderline
             border={this.border}

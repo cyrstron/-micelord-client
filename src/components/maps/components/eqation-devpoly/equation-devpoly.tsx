@@ -39,9 +39,13 @@ export class EqDevpoly extends Component<Props> {
         for (let mul = 0; mul < 10; mul += 1) {
           const nextLng = point.lng - lngStep * mul;
 
+          const lat = equationY(nextLng);
+
+          if (!lat) continue;
+
           poly.push({
             lng: nextLng,
-            lat: equationY(nextLng)
+            lat,
           });
         }
 
@@ -88,9 +92,13 @@ export class EqDevpoly extends Component<Props> {
         for (let mul = 0; mul < 10; mul += 1) {
           const nextLng = point.lng - lngStep * mul;
 
+          const lat = equationY(nextLng);
+
+          if (!lat) continue;
+
           poly.push({
             lng: nextLng,
-            lat: equationY(nextLng)
+            lat,
           });
         }
 

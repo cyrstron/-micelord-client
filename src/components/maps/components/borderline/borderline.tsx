@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SmartPolyline, SmartMarker} from '@maps/feature';
+import {SmartPolyline, SmartMarker, SmartPolygon} from '@maps/feature';
 import {StaticGrider} from '@micelord/grider';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
@@ -15,6 +15,7 @@ interface Props {
 export class Borderline extends Component<Props> {
   @observable path: google.maps.LatLngLiteral[] = [];
   @observable selfIntersects: google.maps.LatLngLiteral[] = [];
+  @observable closeCells: google.maps.LatLngLiteral[][] = [];
 
   constructor(props: Props) {
     super(props);
@@ -43,7 +44,8 @@ export class Borderline extends Component<Props> {
 
     console.log(shape)
 
-    this.selfIntersects = grider.figureBuilder.validator.getItselfIntersectsPoint(shape);
+    this.selfIntersects = grider.figureBuilder.validator.getSelfIntersectsPoints(shape);
+    this.closeCells = grider.figureBuilder.validator.getTooCloseCells(shape, grider.params);
 
     this.path = grider.buildFigure(shape, !outer);
   }
@@ -54,6 +56,18 @@ export class Borderline extends Component<Props> {
         <SmartMarker 
           position={intersect}
           title="Invalid intersecion!"
+        />
+      ))
+    }
+
+    if (this.closeCells.length > 0) {
+      return this.closeCells.map((cell) => (
+        <SmartPolygon 
+          paths={cell}
+          strokeColor='#aa0000'
+          strokeOpacity={0.6}
+          fillColor='#aa0000'
+          fillOpacity={0.2}
         />
       ))
     }
