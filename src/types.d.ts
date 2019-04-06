@@ -115,7 +115,7 @@ declare namespace google.maps {
 }
 
 declare namespace google.custom {
-  interface GridMapType {
+  interface TilesOverlay {
     index: number;
     map: google.maps.Map | null;
     getTile(
@@ -127,7 +127,13 @@ declare namespace google.custom {
     remove(): void;
   }
 
-  interface GridMapTypeOptions {
+  interface TilesOverlayOptions {
+    registerTile: (
+      node: Node, 
+      payload: {tileCoord: google.maps.Point, zoom: number}
+    ) => void,
+    unregisterTile: (node: Node) => void,
+    tagName?: string,
     width: number,
     height?: number,
     widthUnit?: string,
@@ -138,7 +144,7 @@ declare namespace google.custom {
     map?: google.maps.Map,
   }
 
-  type GridMapTypeConstructor = new(options: GridMapTypeOptions) => GridMapType;
+  type TilesOverlayConstructor = new(options: TilesOverlayOptions) => TilesOverlay;
 
   interface CustomOverlayOptions {
     map?: google.maps.Map;
@@ -184,7 +190,7 @@ declare namespace google {
     Size: google.maps.SizeConstructor;
   }
   interface Custom {
-    GridMapType: google.custom.GridMapTypeConstructor;
+    TilesOverlay: google.custom.TilesOverlayConstructor;
     CustomOverlay: google.custom.CustomOverlayConstructor;
     boundsToLiteral(
       bounds: google.maps.LatLngBounds,

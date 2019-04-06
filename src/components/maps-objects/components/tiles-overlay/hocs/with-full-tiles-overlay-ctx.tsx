@@ -10,12 +10,12 @@ import {
 import {MapService, MapStore} from '../../map';
 
 export interface WrappedProps<Store> {
-  mapTypeStore: Store & {
+  overlayStore: Store & {
     remove(): void;
   };
 }
 
-export const withFullMapTypeCtx = <Store extends {
+export const withFullTilesOverlayCtx = <Store extends {
   remove(): void;
 }>(
   OverlayStore: new(google: Google, mapService: MapService) => Store,
@@ -24,8 +24,8 @@ export const withFullMapTypeCtx = <Store extends {
 ) => {
   @inject('googleMapsStore')
   @observer
-  class WithFullFeatureCtx extends Component<Props & WrappedMapProps<MapStore> & GoogleStoreProps, {}> {
-    @observable mapTypeStore?: Store;
+  class WithFullTilesOverlayCtx extends Component<Props & WrappedMapProps<MapStore> & GoogleStoreProps, {}> {
+    @observable overlayStore?: Store;
 
     componentDidMount() {
       const {
@@ -35,32 +35,32 @@ export const withFullMapTypeCtx = <Store extends {
 
       const {google} = googleMapsStore as GoogleMapsStore;
 
-      this.mapTypeStore = new OverlayStore(google as Google, mapStore.service as MapService);
+      this.overlayStore = new OverlayStore(google as Google, mapStore.service as MapService);
     }
 
     componentWillUnmount() {
-      const {mapTypeStore} = this;
+      const {overlayStore} = this;
 
-      if (!mapTypeStore) return;
+      if (!overlayStore) return;
 
-      mapTypeStore.remove();
+      overlayStore.remove();
     }
 
     render() {
-      const {mapTypeStore} = this;
+      const {overlayStore} = this;
       const {
         mapStore,
         googleMapsStore,
         ...props
       } = this.props;
 
-      if (!mapTypeStore) return null;
+      if (!overlayStore) return null;
 
       return (
-        <Wrapped mapTypeStore={mapTypeStore} {...props as Props}/>
+        <Wrapped overlayStore={overlayStore} {...props as Props}/>
       );
     }
   }
 
-  return withDumbMapCtx<MapStore, Props>(WithFullFeatureCtx);
+  return withDumbMapCtx<MapStore, Props>(WithFullTilesOverlayCtx);
 };

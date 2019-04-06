@@ -1,24 +1,30 @@
-export const createGridMapTypeClass = (google: Google): google.custom.GridMapTypeConstructor => {
-  class GridMapType implements google.custom.GridMapType {
+export const createTilesOverlayClass = (google: Google): google.custom.TilesOverlayConstructor => {
+  class TilesOverlay implements google.custom.TilesOverlay {
+    registerTile: (
+      node: Node,      
+      payload: {tileCoord: google.maps.Point, zoom: number}
+    ) => void;
+    unregisterTile: (node: Node) => void;
     index: number;
     size: google.maps.Size;
     map: google.maps.Map | null = null;
-    maxZoom?: number;
-    minZoom?: number;
+    tagName: string;
 
     constructor({
+      registerTile,
+      unregisterTile,
       index,
       height,
       width,
       heightUnit,
       widthUnit,
-      maxZoom,
-      minZoom,
+      tagName,
       map,
-    }: google.custom.GridMapTypeOptions) {
+    }: google.custom.TilesOverlayOptions) {
       this.index = index;
-      this.maxZoom = maxZoom;
-      this.minZoom = minZoom;
+      this.tagName = tagName || 'div';
+      this.registerTile = registerTile;
+      this.unregisterTile = unregisterTile;
 
       this.size = this.calcTileSize({
         height,
@@ -43,32 +49,21 @@ export const createGridMapTypeClass = (google: Google): google.custom.GridMapTyp
       zoom: number,
       ownerDocument: Document,
     ): Element | null {
-      if (
-        (this.maxZoom && zoom > this.maxZoom) ||
-        (this.minZoom && zoom < this.minZoom)
-      ) {
-        return null;
-      }
+      const x = tileCoord.x / Math.pow(2, zoom);
+      const y = tileCoord.y / Math.pow(2, zoom);
 
-      const x = ((tileCoord.x / Math.pow(2, zoom)) - 0.5) * 360;
-      const y = (0.5 - (tileCoord.y / Math.pow(2, zoom))) * 180;
+      const container = ownerDocument.createElement(this.tagName);
 
-      const container = ownerDocument.createElement('svg');
-
-      container.innerHTML = `(${y}, ${x})`;
       container.style.width = '100%';
       container.style.height = '100%';
-      container.style.fontSize = '10';
-      container.style.borderStyle = 'dashed';
-      container.style.display = 'block';
-      container.style.borderWidth = '1px';
-      container.style.borderColor = '#00AA00';
+
+      this.registerTile(container, {tileCoord, zoom});
 
       return container;
     }
 
     releaseTile(tile: Node) {
-      //
+      this.unregisterTile(tile);
     }
 
     setMap(map: google.maps.Map | null) {
@@ -132,5 +127,5 @@ export const createGridMapTypeClass = (google: Google): google.custom.GridMapTyp
     }
   }
 
-  return GridMapType;
+  return TilesOverlay;
 };

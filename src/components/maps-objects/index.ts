@@ -16,12 +16,12 @@ export {
   CustomOverlayStore,
 } from './components/custom-overlay';
 export {
-  GridMapType,
-  SmartGridMapType,
+  TilesOverlay,
+  SmartTilesOverlay,
   DumbGridMapType,
   withSmartGridMapTypeCtx,
-  GridMapTypeStore,
-} from './components/grid-map-type';
+  TilesOverlayStore,
+} from './components/tiles-overlay';
 export {
   Polygon,
   SmartPolygon,

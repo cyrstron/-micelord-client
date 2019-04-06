@@ -5,8 +5,8 @@ import {WrappedProps} from './hocs/with-full-overlay-ctx';
 import {CustomOverlayStore} from './stores';
 
 export type CustomOverlayProps = google.custom.CustomOverlayOptions & {
-    children?: ReactNode | null;
-  };
+  children?: ReactNode | null;
+};
 
 type Props = CustomOverlayProps & WrappedProps<CustomOverlayStore>;
 
