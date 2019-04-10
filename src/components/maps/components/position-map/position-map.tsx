@@ -2,11 +2,18 @@ import classNames from 'classnames/bind';
 import { observable } from 'mobx';
 import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
-import {createStaticGrider, StaticGrider, utils, grider, Grider} from '@micelord/grider';
+import {
+  createStaticGrider, 
+  StaticGrider, 
+  utils, 
+  grider, 
+  Grider,
+  tileBuilder
+} from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
 import {GridOverlay} from '../grid-overlay/grid-overlay';
-import {SmartPolygon} from '@maps/feature';
+import {SmartPolygon, SmartPolyline} from '@maps/feature';
 
 import {PositionMarker} from '../position-marker';
 import {Borderline} from '../borderline';
@@ -45,6 +52,7 @@ export class PositionMapWrapped extends Component<Props> {
   ];
   borderline: google.maps.LatLngLiteral[] = [];
   @observable poly?: google.maps.LatLngLiteral[];
+  @observable tile?: google.maps.LatLngLiteral[][];
   @observable intersects: google.maps.LatLngLiteral[] = [];
 
   constructor(props: Props) {
@@ -80,7 +88,9 @@ export class PositionMapWrapped extends Component<Props> {
       lng: e.latLng.lng(),
     };
 
-    this.poly = this.grider.buildPolyByGeoPoint(coord);
+    const cellCenter = this.grider.calcGridCenterPointByGeoPoint(coord);
+    this.poly = this.grider.buildPolyByCenterGridPoint(cellCenter);  
+    this.tile = tileBuilder.buildTile(coord, this.grider.params)
   }
 
   onCenterClick = (): void => {
@@ -122,6 +132,12 @@ export class PositionMapWrapped extends Component<Props> {
               paths={this.poly}
             />
           )}
+          {this.tile && this.tile.map((path) => (
+            <SmartPolyline
+              path={path}
+              strokeColor="#008800"
+            />
+          ))}
           {this.props.children}
           <Borderline 
             border={this.border}
