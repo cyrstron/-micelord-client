@@ -45,7 +45,14 @@ export class GridTile extends Component<Props> {
     const zoomCoofX = 2 ** (zoom) * (256 / width);
     const zoomCoofY = 2 ** (zoom) * (256 / height);
 
-    const gridConfig = grider.calcGridConfig(tileCoord, zoomCoofX, zoomCoofY);
+    const minCellWidth = grider.calcMinCellSize(zoomCoofX) * width;
+
+    if (minCellWidth < 10) return null;
+
+    const stokeWidth = Math.max(1, Math.min(10, minCellWidth / 50));
+    const strokeOpacity = Math.min(minCellWidth / 100, 0.5);
+
+    const {patterns} = grider.calcGridConfig(tileCoord, zoomCoofX, zoomCoofY);
 
     return (
       <svg
@@ -56,7 +63,7 @@ export class GridTile extends Component<Props> {
         aria-labelledby='title' 
         fill="transparent" 
       >
-        {gridConfig.map(({start, end, patternConfig}, index) => {
+        {patterns.map(({start, end, patternConfig}, index) => {
           const patternId = `pattern-${tileCoord.x}-${tileCoord.y}-${index}`;
           const maskId = `mask-${tileCoord.x}-${tileCoord.y}-${index}`;
           const patternWidth = width * patternConfig.widthRel;
@@ -85,7 +92,7 @@ export class GridTile extends Component<Props> {
                     <polyline 
                       points={points}
                       stroke="orange"
-                      strokeWidth="3px"
+                      strokeWidth={stokeWidth}
                       key={`${tileCoord.x}-${tileCoord.y}-${index}-${polylineIndex}`}
                     />
                   )
@@ -102,7 +109,7 @@ export class GridTile extends Component<Props> {
               </mask>  
               <rect 
                 mask={`url(#${maskId})`} 
-                fill="#00000044"
+                fill={`rgba(40, 40, 40, ${strokeOpacity})`}
                 x={start.x * width}
                 y={start.y * height}
                 width={rectWidth}

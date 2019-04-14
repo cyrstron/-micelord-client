@@ -44,7 +44,6 @@ export class TilesOverlayStore {
   }
 
   removeUnregisteredTiles = debounce(() => {
-    requestAnimationFrame(() => {
       transaction(() => {
         this.tilesForDelete.forEach((tile) => {
           this.tiles.delete(tile);
@@ -52,8 +51,7 @@ export class TilesOverlayStore {
         
         this.tilesForDelete = [];
       });
-    });
-  }, 0);
+  }, 20);
 
   remove(): void {
     const {service} = this;

@@ -132,18 +132,18 @@ export class PositionMapWrapped extends Component<Props> {
             grider={this.grider}
             outer
           />
-          <EditableBorderline
+          {/* <EditableBorderline
             border={this.border}
             onPathChange={this.onBorderChange}
-          />
-          <SvgOverlay
+          /> */}
+          {/* <SvgOverlay
             bounds={{
               east: 38.35,
               north: 51,
               south: 49,
               west: 33.39,
             }}
-          />
+          /> */}
         </DumbCtrlMap>
         <button onClick={this.onCenterClick}>Center</button>
       </>
