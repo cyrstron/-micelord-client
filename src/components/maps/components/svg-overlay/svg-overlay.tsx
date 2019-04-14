@@ -35,85 +35,37 @@ export const SvgOverlay = ({bounds}: Props) => {
         xmlns='http://www.w3.org/2000/svg'
         width='100%'
         height='100%'
-        viewBox={`0 0 100 ${relHeight}`}
+        // viewBox={`0 0 100 ${relHeight}`}
+        viewBox={`0 0 100 100`}
         aria-labelledby='title' 
         fill="blue" 
       >
-        <title id='title'>Umbrella Icon</title>
         <pattern 
-          patternUnits="userSpaceOnUse"
+          // patternUnits="userSpaceOnUse"
           id="pattern"
-          width="17.32px" 
-          height="30px"
+          width="10%" 
+          height="10%"
         >        
-          <line 
-            x1="0" 
-            x2="8.66px" 
-            y1="0" 
-            y2="5px" 
+          <rect 
+            fill="#666600" 
+            width="100%"
+            height="100%"
+          />
+          <polyline 
+            points='0,11 11,0'
             stroke="orange"
             strokeWidth="3px"
             vectorEffect="non-scaling-stroke"
           /> 
-          <line 
-            x1="17.32px" 
-            x2="8.66px" 
-            y1="0" 
-            y2="5px" 
-            stroke="orange"
-            strokeWidth="3px"
-            vectorEffect="non-scaling-stroke"
-          />
-          <line 
-            x1="8.66px" 
-            x2="8.66px" 
-            y1="5px" 
-            y2="15px" 
-            stroke="orange"
-            strokeWidth="3px"
-            vectorEffect="non-scaling-stroke"
-          />
-          <line 
-            x1="0" 
-            x2="8.66px" 
-            y1="20px" 
-            y2="15px" 
-            stroke="orange"
-            strokeWidth="3px"
-            vectorEffect="non-scaling-stroke"
-          /> 
-          <line 
-            x1="17.32px" 
-            x2="8.66px" 
-            y1="20px" 
-            y2="15px" 
-            stroke="orange"
-            strokeWidth="3px"
-            vectorEffect="non-scaling-stroke"
-          />
-          <line 
-            x1="0" 
-            x2="0" 
-            y1="20px" 
-            y2="30px" 
-            stroke="orange"
-            strokeWidth="3px"
-            vectorEffect="non-scaling-stroke"
-          /> 
-          <line 
-            x1="17.32px" 
-            x2="17.32px" 
-            y1="20px" 
-            y2="30px" 
-            stroke="orange"
-            strokeWidth="3px"
-            vectorEffect="non-scaling-stroke"
-          />
         </pattern>
         <rect 
           fill="url(#pattern)" 
-          width="100%"
-          height="100%"
+          x="-10"
+          y="-10"
+          width="calc(100% + 10px)"
+          height="calc(100% + 10px)"
+          // width="100%"
+          // height="100%"
         />
       </svg>
     </SmartCustomOverlay>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {SmartTilesOverlay} from '@maps/tiles-overlay';
 import {StaticGrider} from '@micelord/grider';
+import {GridTile} from '../grid-tile/grid-tile';
 
 interface Props {
   grider: StaticGrider;
@@ -8,13 +9,14 @@ interface Props {
 
 export class GridOverlay extends Component<Props> {
   render() {
+    const {grider} = this.props;
     return (
-      <SmartTilesOverlay>
-        {({tileCoord, zoom}) => (
-          <span>
-            {zoom}/
-            {tileCoord.toString()}
-          </span>
+      <SmartTilesOverlay width={512}>
+        {(tileConfig) => (
+          <GridTile 
+            {...tileConfig}
+            grider={grider}
+          />
         )}
       </SmartTilesOverlay>
     )

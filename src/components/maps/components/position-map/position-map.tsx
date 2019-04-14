@@ -4,11 +4,7 @@ import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
 import {
   createStaticGrider, 
-  StaticGrider, 
-  utils, 
-  grider, 
-  Grider,
-  tileBuilder
+  StaticGrider,
 } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
@@ -60,8 +56,8 @@ export class PositionMapWrapped extends Component<Props> {
 
     this.grider = createStaticGrider({
       cellSize: 50000, // inner: 50000 - hex & rect - chack cleaner
-      type: 'rect',
-      correction: 'merc',
+      type: 'hex',
+      correction: 'none',
       // isHorizontal: true,
     });
     this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
@@ -89,8 +85,8 @@ export class PositionMapWrapped extends Component<Props> {
     };
 
     const cellCenter = this.grider.calcGridCenterPointByGeoPoint(coord);
+    this.tile = this.grider.gridRenderer.tileBuilder.buildTile(coord, this.grider.params);
     this.poly = this.grider.buildPolyByCenterGridPoint(cellCenter);  
-    this.tile = tileBuilder.buildTile(coord, this.grider.params)
   }
 
   onCenterClick = (): void => {

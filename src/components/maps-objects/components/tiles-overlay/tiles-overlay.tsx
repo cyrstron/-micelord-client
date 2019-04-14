@@ -35,6 +35,8 @@ export class TilesOverlay extends Component<Props, {}> {
     const {
       overlayStore,
       children,
+      width,
+      height,
       ...options
     } = this.props;
 
@@ -42,7 +44,8 @@ export class TilesOverlay extends Component<Props, {}> {
 
     overlayStore.setOverlay({
       index: 1,
-      width: 512,
+      width: width,
+      height: height,
       registerTile: this.registerTile,
       unregisterTile: this.unregisterTile,
     });
@@ -53,6 +56,8 @@ export class TilesOverlay extends Component<Props, {}> {
       overlayStore,
       TileComponent,
       children,
+      width,
+      height,
     } = this.props;
     const tiles = [...overlayStore.tiles.keys()];  
     
@@ -61,11 +66,19 @@ export class TilesOverlay extends Component<Props, {}> {
 
       if (children && payload) {
         return createPortal((
-          children(payload)
+          children({
+            ...payload, 
+            width, 
+            height: height || width
+          })
         ), tile as Element)
       } else if (TileComponent && payload) {
         return createPortal((
-          <TileComponent {...payload}/>
+          <TileComponent 
+            {...payload} 
+            width={width} 
+            height={height || width} 
+          />
         ), tile as Element)
       } else {
         return null;
