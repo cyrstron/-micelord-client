@@ -83,6 +83,6 @@ export class TilesOverlay extends Component<Props, {}> {
       } else {
         return null;
       }
-    })
+    });
   }
 }

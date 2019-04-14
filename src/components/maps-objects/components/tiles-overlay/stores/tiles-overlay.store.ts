@@ -1,6 +1,7 @@
-import {action, observable} from 'mobx';
+import {action, observable, transaction} from 'mobx';
 import {MapService} from '../../map';
 import {TilesOverlayService} from '../services';
+import debounce from 'lodash/debounce';
 
 export class TilesOverlayStore {
   @observable isLoaded = false;
@@ -8,6 +9,8 @@ export class TilesOverlayStore {
     tileCoord: google.maps.Point,
     zoom: number,
   }>();
+
+  tilesForDelete: Node[] = [];
   service?: TilesOverlayService;
   maps: google.Maps;
 
@@ -34,10 +37,23 @@ export class TilesOverlayStore {
     this.tiles.set(node, payload);
   }
 
-  @action
   unregisterTile(node: Node) {
-    this.tiles.delete(node);
+    this.tilesForDelete.push(node);
+
+    this.removeUnregisteredTiles()
   }
+
+  removeUnregisteredTiles = debounce(() => {
+    requestAnimationFrame(() => {
+      transaction(() => {
+        this.tilesForDelete.forEach((tile) => {
+          this.tiles.delete(tile);
+        });
+        
+        this.tilesForDelete = [];
+      });
+    });
+  }, 0);
 
   remove(): void {
     const {service} = this;

@@ -8,6 +8,14 @@ interface Props {
 }
 
 export class GridOverlay extends Component<Props> {
+  shouldComponentUpdate(nextProps: Props) {
+    const {
+      grider
+    } = this.props;
+
+    return grider !== nextProps.grider;
+  }
+
   render() {
     const {grider} = this.props;
     return (

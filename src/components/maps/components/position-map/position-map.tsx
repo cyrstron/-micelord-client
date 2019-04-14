@@ -48,7 +48,6 @@ export class PositionMapWrapped extends Component<Props> {
   ];
   borderline: google.maps.LatLngLiteral[] = [];
   @observable poly?: google.maps.LatLngLiteral[];
-  @observable tile?: google.maps.LatLngLiteral[][];
   @observable intersects: google.maps.LatLngLiteral[] = [];
 
   constructor(props: Props) {
@@ -57,7 +56,7 @@ export class PositionMapWrapped extends Component<Props> {
     this.grider = createStaticGrider({
       cellSize: 50000, // inner: 50000 - hex & rect - chack cleaner
       type: 'hex',
-      correction: 'none',
+      correction: 'merc',
       // isHorizontal: true,
     });
     this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
@@ -85,7 +84,6 @@ export class PositionMapWrapped extends Component<Props> {
     };
 
     const cellCenter = this.grider.calcGridCenterPointByGeoPoint(coord);
-    this.tile = this.grider.gridRenderer.tileBuilder.buildTile(coord, this.grider.params);
     this.poly = this.grider.buildPolyByCenterGridPoint(cellCenter);  
   }
 
@@ -128,12 +126,6 @@ export class PositionMapWrapped extends Component<Props> {
               paths={this.poly}
             />
           )}
-          {this.tile && this.tile.map((path) => (
-            <SmartPolyline
-              path={path}
-              strokeColor="#008800"
-            />
-          ))}
           {this.props.children}
           <Borderline 
             border={this.border}

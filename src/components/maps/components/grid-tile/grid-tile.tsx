@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {StaticGrider, utils} from '@micelord/grider';
+import React, {Component, Fragment} from 'react';
+import {StaticGrider} from '@micelord/grider';
 import isEqual from 'lodash/isEqual';
 
 interface Props {
@@ -14,10 +14,23 @@ export class GridTile extends Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const {
       zoom,
-      tileCoord
+      tileCoord,
+      width,
+      height,
+      grider,
     } = this.props;
 
-    return !isEqual(nextProps.tileCoord, tileCoord) && nextProps.zoom !== zoom;
+    const shouldUpdate = !isEqual(nextProps.tileCoord, tileCoord) || (
+      nextProps.zoom !== zoom
+    ) || (
+      grider !== nextProps.grider
+    ) || (
+      width !== nextProps.width
+    ) || (
+      height !== nextProps.height
+    );
+
+    return shouldUpdate;
   }
 
   render() {
@@ -33,8 +46,6 @@ export class GridTile extends Component<Props> {
     const zoomCoofY = 2 ** (zoom) * (256 / height);
 
     const gridConfig = grider.calcGridConfig(tileCoord, zoomCoofX, zoomCoofY);
-
-    console.log(gridConfig);
 
     return (
       <svg
@@ -58,13 +69,13 @@ export class GridTile extends Component<Props> {
           const patternHeightPercent = patternHeight / rectHeight * 100;
 
           return (
-            <>
+            <Fragment key={`${tileCoord.x}-${tileCoord.y}-${index}`}> 
               <pattern 
                 id={patternId}
                 width={`${patternWidthPercent}%`} 
                 height={`${patternHeightPercent}%`}
               >
-                {patternConfig.pattern.map((polyline) => {
+                {patternConfig.pattern.map((polyline, polylineIndex) => {
                   const points = polyline.map(({x, y}) => (
                     `${x * patternWidth},${y * patternHeight}`
                   ))
@@ -75,7 +86,7 @@ export class GridTile extends Component<Props> {
                       points={points}
                       stroke="orange"
                       strokeWidth="3px"
-                      vectorEffect="non-scaling-stroke"
+                      key={`${tileCoord.x}-${tileCoord.y}-${index}-${polylineIndex}`}
                     />
                   )
                 })}
@@ -97,15 +108,15 @@ export class GridTile extends Component<Props> {
                 width={rectWidth}
                 height={rectHeight}
               />
-            </>
+            </Fragment>
           )
         })}        
-        <rect 
+        {/* <rect 
           stroke="blue"
           strokeWidth="1px"
           width='512'
           height='512'
-        />
+        /> */}
       </svg>
     )
   }
