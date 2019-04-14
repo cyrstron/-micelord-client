@@ -15,8 +15,6 @@ export class GridTile extends Component<Props> {
     const {
       zoom,
       tileCoord,
-      width,
-      height,
       grider,
     } = this.props;
 
@@ -24,10 +22,6 @@ export class GridTile extends Component<Props> {
       nextProps.zoom !== zoom
     ) || (
       grider !== nextProps.grider
-    ) || (
-      width !== nextProps.width
-    ) || (
-      height !== nextProps.height
     );
 
     return shouldUpdate;
@@ -107,6 +101,14 @@ export class GridTile extends Component<Props> {
                   height={rectHeight}
                 /> 
               </mask>  
+              <polygon 
+                mask={`url(#${maskId})`} 
+                fill={`rgba(0, 180, 0, 1)`}
+                stroke={`rgba(0, 180, 0, 1)`}
+                strokeWidth={stokeWidth}
+                width={width}
+                height={height}
+              />
               <rect 
                 mask={`url(#${maskId})`} 
                 fill={`rgba(40, 40, 40, ${strokeOpacity})`}
