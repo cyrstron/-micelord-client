@@ -83,8 +83,10 @@ export class PositionMapWrapped extends Component<Props> {
       lng: e.latLng.lng(),
     };
 
-    const cellCenter = this.grider.calcGridCenterPointByGeoPoint(coord);
-    this.poly = this.grider.buildPolyByCenterGridPoint(cellCenter);  
+    console.log(this.grider.grider.calcGridPointByGeoPoint(coord, this.grider.params))
+
+    // const cellCenter = this.grider.calcGridCenterPointByGeoPoint(coord);
+    // this.poly = this.grider.buildPolyByCenterGridPoint(cellCenter);  
   }
 
   onCenterClick = (): void => {
@@ -132,10 +134,10 @@ export class PositionMapWrapped extends Component<Props> {
             grider={this.grider}
             outer
           />
-          {/* <EditableBorderline
+          <EditableBorderline
             border={this.border}
             onPathChange={this.onBorderChange}
-          /> */}
+          />
           {/* <SvgOverlay
             bounds={{
               east: 38.35,
