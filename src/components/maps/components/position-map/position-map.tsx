@@ -14,7 +14,6 @@ import {SmartPolygon, SmartPolyline} from '@maps/feature';
 import {PositionMarker} from '../position-marker';
 import {Borderline} from '../borderline';
 import {EditableBorderline} from '../editable-borderline';
-import {SvgOverlay} from '../svg-overlay/svg-overlay';
 
 import styles from './position-map.scss';
 

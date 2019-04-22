@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {SmartPolyline, SmartMarker, SmartPolygon} from '@maps/feature';
-import {StaticGrider} from '@micelord/grider';
+import {StaticGrider, createBorderRenderer, BorderRenderer} from '@micelord/grider';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
@@ -14,11 +14,15 @@ interface Props {
 @observer
 export class Borderline extends Component<Props> {
   @observable path: google.maps.LatLngLiteral[] = [];
+  @observable simplePath: google.maps.LatLngLiteral[] = [];
   @observable selfIntersects: google.maps.LatLngLiteral[] = [];
   @observable closeCells: google.maps.LatLngLiteral[][] = [];
+  borderRenderer: BorderRenderer;
 
   constructor(props: Props) {
     super(props);
+
+    this.borderRenderer = createBorderRenderer(this.path, props.border);
 
     this.updatePath();
   }
@@ -29,6 +33,7 @@ export class Borderline extends Component<Props> {
     } = this.props;
 
     if (prevProps.border === border) return;
+
 
     this.updatePath();
   }
@@ -48,6 +53,7 @@ export class Borderline extends Component<Props> {
     this.closeCells = grider.figureBuilder.validator.getTooCloseCells(shape, grider.params);
 
     this.path = grider.buildFigure(shape, !outer);
+    this.simplePath = this.borderRenderer.simplifyFigure([...this.path], [...border]);
   }
 
   render() {
@@ -72,13 +78,19 @@ export class Borderline extends Component<Props> {
       ))
     }
 
-    return (
+    return ([        
       <SmartPolyline
         path={this.path}
         strokeColor='#880000'
         strokeWeight={3}
-        onClick={this.props.onClick}
+        key="border"
+      />,    
+      <SmartPolyline
+        path={this.simplePath}
+        strokeColor='#000000'
+        strokeWeight={2}
+        key="simple-border"
       />
-    );
+    ]);
   }
 }
