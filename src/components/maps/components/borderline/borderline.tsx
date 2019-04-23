@@ -53,7 +53,7 @@ export class Borderline extends Component<Props> {
     this.closeCells = grider.figureBuilder.validator.getTooCloseCells(shape, grider.params);
 
     this.path = grider.buildFigure(shape, !outer);
-    this.simplePath = this.borderRenderer.simplifyFigure([...this.path], [...border]);
+    this.simplePath = this.borderRenderer.simplifyFigure([...this.path], [...border], grider.params);
   }
 
   render() {
