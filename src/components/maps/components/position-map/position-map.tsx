@@ -45,7 +45,7 @@ export class PositionMapWrapped extends Component<Props> {
     {lat: 49.20018618540992, lng: 24.0576171875}, 
     {lat: 51.936842019727436, lng: 32.2314453125},
   ];
-  borderline: google.maps.LatLngLiteral[] = [];
+  @observable borderline: google.maps.LatLngLiteral[] = [];
   @observable poly?: google.maps.LatLngLiteral[];
   @observable intersects: google.maps.LatLngLiteral[] = [];
 
@@ -66,6 +66,7 @@ export class PositionMapWrapped extends Component<Props> {
     );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
+    this.borderline = this.grider.buildFigure([...this.border], true);
   }
 
   componentDidMount() {
@@ -86,6 +87,10 @@ export class PositionMapWrapped extends Component<Props> {
 
     // const cellCenter = this.grider.calcGridCenterPointByGeoPoint(coord);
     // this.poly = this.grider.buildPolyByCenterGridPoint(cellCenter);  
+  }
+
+  setBorderline = (borderline: google.maps.LatLngLiteral[]) => {
+    this.borderline = borderline;
   }
 
   onCenterClick = (): void => {
@@ -120,7 +125,11 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}
         >
-          <GridOverlay grider={this.grider}/>
+          <GridOverlay 
+            grider={this.grider}
+            borderline={this.borderline}
+            border={this.border}
+          />
           <PositionMarker />
           {this.poly && (
             <SmartPolygon
@@ -131,6 +140,8 @@ export class PositionMapWrapped extends Component<Props> {
           <Borderline 
             border={this.border}
             grider={this.grider}
+            borderline={this.borderline}
+            setBorderline={this.setBorderline}
             outer
           />
           <EditableBorderline

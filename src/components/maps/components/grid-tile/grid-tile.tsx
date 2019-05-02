@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {StaticGrider} from '@micelord/grider';
+import {StaticGrider, BorderRenderer, utils} from '@micelord/grider';
 import isEqual from 'lodash/isEqual';
 
 interface Props {
@@ -8,6 +8,9 @@ interface Props {
   height: number;
   tileCoord: grider.Point,
   zoom: number,
+  borderRenderer: BorderRenderer,
+  borderline: google.maps.LatLngLiteral[],
+  border: google.maps.LatLngLiteral[],
 }
 
 export class GridTile extends Component<Props> {
@@ -25,6 +28,25 @@ export class GridTile extends Component<Props> {
     );
 
     return shouldUpdate;
+  }
+
+  componentDidMount() {
+    const {
+      height,
+      width,
+      borderRenderer,
+      tileCoord,
+      zoom,
+    } = this.props;
+    
+    const zoomCoofX = 2 ** (zoom) * (256 / width);
+    const zoomCoofY = 2 ** (zoom) * (256 / height);
+
+    const tileBounds = borderRenderer.calcTileBounds(tileCoord, zoomCoofX, zoomCoofY);
+
+    const border = borderRenderer.getIntersectedBorder(tileBounds);
+
+    console.log(border);
   }
 
   render() {
