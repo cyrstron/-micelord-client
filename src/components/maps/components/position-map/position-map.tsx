@@ -66,7 +66,7 @@ export class PositionMapWrapped extends Component<Props> {
     );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
-    this.borderline = this.grider.buildFigure([...this.border], true);
+    this.borderline = this.grider.buildFigure([...this.border], false);
   }
 
   componentDidMount() {

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {SmartTilesOverlay} from '@maps/tiles-overlay';
 import {StaticGrider, createBorderRenderer, BorderRenderer} from '@micelord/grider';
 import {GridTile} from '../grid-tile/grid-tile';
+import {SmartMarker} from '@maps/feature';
 
 interface Props {
   grider: StaticGrider;
@@ -11,6 +12,7 @@ interface Props {
 
 export class GridOverlay extends Component<Props> {
   borderRenderer: BorderRenderer;
+  // distribution: {[key: string]: google.maps.LatLngLiteral[]};
 
   constructor(props: Props) {
     super(props);
@@ -22,7 +24,9 @@ export class GridOverlay extends Component<Props> {
     } = props;
 
     this.borderRenderer = createBorderRenderer(grider.params, borderline, border);
+    // this.distribution = this.borderRenderer.distributePoints();
   }
+
   shouldComponentUpdate(nextProps: Props) {
     const {
       grider,      
@@ -38,6 +42,13 @@ export class GridOverlay extends Component<Props> {
       border
     } = this.props;
     return (
+      <>
+      {/* {this.distribution[0].map((point, index) => (
+        <SmartMarker 
+          position={point}
+          title={`${index}`}
+        />
+      ))} */}
       <SmartTilesOverlay width={512}>
         {(tileConfig) => (
           <GridTile 
@@ -49,6 +60,7 @@ export class GridOverlay extends Component<Props> {
           />
         )}
       </SmartTilesOverlay>
+      </>
     )
   }
 }
