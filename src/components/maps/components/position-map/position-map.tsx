@@ -56,7 +56,6 @@ export class PositionMapWrapped extends Component<Props> {
     {lat: 54.51822185091831, lng: 24.814453125}, 
     {lat: 49.20018618540992, lng: 24.0576171875}, 
     {lat: 51.936842019727436, lng: 32.2314453125},
-    {lat: 47.06676604567628, lng: 36.796875}, 
   ].map(({lat, lng}) => new GeoPoint(lat, lng)));
   @observable borderline: Figure | undefined;
   // @observable poly?: google.maps.LatLngLiteral[];

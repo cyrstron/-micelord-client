@@ -60,7 +60,7 @@ export class DumbEditableBorderline extends Component<Props> {
 
     const pathExtended = path.map(({lat, lng}) => new GeoPoint(lat, lng));
 
-    const borderPoints = pathExtended;
+    const borderPoints = pathExtended.slice(0, -1);
 
     if (!pathExtended[pathExtended.length - 1].isEqual(pathExtended[0])) {
       borderPoints[0] = pathExtended[pathExtended.length - 1];
@@ -90,7 +90,7 @@ export class DumbEditableBorderline extends Component<Props> {
     return (
       <>
         <DumbPolyline
-          path={border.points}
+          path={[...border.points, border.points[0]]}
           strokeColor='#000066'
           onDragEnd={this.onDragBorder}
           editable={true}
