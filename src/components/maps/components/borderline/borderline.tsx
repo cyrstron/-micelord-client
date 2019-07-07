@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {SmartPolyline, SmartMarker, SmartPolygon} from '@maps/feature';
-import {StaticGrider} from '@micelord/grider';
+// import {StaticGrider} from '@micelord/grider';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 interface Props {
-  grider: StaticGrider;
+  // grider: StaticGrider;
   border: google.maps.LatLngLiteral[];
   borderline: google.maps.LatLngLiteral[];
   setBorderline: (borderline: google.maps.LatLngLiteral[]) => void,
@@ -36,7 +36,7 @@ export class Borderline extends Component<Props> {
 
   private updatePath() {
     const {
-      grider,
+      // grider,
       border,
       outer,
       setBorderline,
@@ -46,12 +46,12 @@ export class Borderline extends Component<Props> {
 
     console.log(shape)
 
-    this.selfIntersects = grider.figureBuilder.validator.getSelfIntersectsPoints(shape);
-    this.closeCells = grider.figureBuilder.validator.getTooCloseCells(shape, grider.params);
+    // this.selfIntersects = grider.figureBuilder.validator.getSelfIntersectsPoints(shape);
+    // this.closeCells = grider.figureBuilder.validator.getTooCloseCells(shape, grider.params);
 
-    const borderline = grider.buildFigure(shape, !outer);
+    // const borderline = grider.buildFigure(shape, !outer);
 
-    setBorderline(borderline)
+    // setBorderline(borderline)
   }
 
   render() {

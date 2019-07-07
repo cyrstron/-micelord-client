@@ -2,10 +2,10 @@ import classNames from 'classnames/bind';
 import { observable } from 'mobx';
 import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
-import {
-  createStaticGrider, 
-  StaticGrider,
-} from '@micelord/grider';
+// import {
+//   createStaticGrider, 
+//   StaticGrider,
+// } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
 import {GridOverlay} from '../grid-overlay/grid-overlay';
@@ -31,7 +31,7 @@ type Props = PositionMapProps & {
 @inject('geolocationStore')
 @observer
 export class PositionMapWrapped extends Component<Props> {
-  grider: StaticGrider;
+  // grider: StaticGrider;
   geolocationStore: GeolocationStore;
   mapStore: CtrlMapStore;
   gridAdded: boolean = false;
@@ -52,21 +52,21 @@ export class PositionMapWrapped extends Component<Props> {
   constructor(props: Props) {
     super(props);
 
-    this.grider = createStaticGrider({
-      cellSize: 50000, // inner: 50000 - hex & rect - chack cleaner
-      type: 'hex',
-      correction: 'merc',
-      // isHorizontal: true,
-    });
-    this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
-      this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
-      this.grider.buildPolyByGeoPoint(this.border[0]),
-      this.border,
-      this.grider.params
-    );
+    // this.grider = createStaticGrider({
+    //   cellSize: 50000, // inner: 50000 - hex & rect - chack cleaner
+    //   type: 'hex',
+    //   correction: 'merc',
+    //   // isHorizontal: true,
+    // });
+    // this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
+    //   this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
+    //   this.grider.buildPolyByGeoPoint(this.border[0]),
+    //   this.border,
+    //   this.grider.params
+    // );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
-    this.borderline = this.grider.buildFigure([...this.border], false);
+    // this.borderline = this.grider.buildFigure([...this.border], false);
   }
 
   componentDidMount() {
@@ -83,7 +83,7 @@ export class PositionMapWrapped extends Component<Props> {
       lng: e.latLng.lng(),
     };
 
-    console.log(this.grider.grider.calcGridPointByGeoPoint(coord, this.grider.params))
+    // console.log(this.grider.grider.calcGridPointByGeoPoint(coord, this.grider.params))
 
     // const cellCenter = this.grider.calcGridCenterPointByGeoPoint(coord);
     // this.poly = this.grider.buildPolyByCenterGridPoint(cellCenter);  
@@ -125,11 +125,11 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}
         >
-          <GridOverlay 
+          {/* <GridOverlay 
             grider={this.grider}
             borderline={this.borderline}
             border={this.border}
-          />
+          /> */}
           <PositionMarker />
           {this.poly && (
             <SmartPolygon
@@ -137,13 +137,13 @@ export class PositionMapWrapped extends Component<Props> {
             />
           )}
           {this.props.children}
-          <Borderline 
+          {/* <Borderline 
             border={this.border}
             grider={this.grider}
             borderline={this.borderline}
             setBorderline={this.setBorderline}
             outer
-          />
+          /> */}
           <EditableBorderline
             border={this.border}
             onPathChange={this.onBorderChange}

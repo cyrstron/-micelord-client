@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import {SmartTilesOverlay} from '@maps/tiles-overlay';
-import {StaticGrider, createBorderRenderer, BorderRenderer} from '@micelord/grider';
+// import {StaticGrider, createBorderRenderer, BorderRenderer} from '@micelord/grider';
 import {GridTile} from '../grid-tile/grid-tile';
 import {SmartMarker, SmartPolyline} from '@maps/feature';
 
 interface Props {
-  grider: StaticGrider;
+  // grider: StaticGrider;
   borderline: google.maps.LatLngLiteral[],
   border: google.maps.LatLngLiteral[],
 }
 
 export class GridOverlay extends Component<Props> {
-  borderRenderer: BorderRenderer;
-  distribution: {point: google.maps.LatLngLiteral, index: number}[][];
+  // borderRenderer: BorderRenderer;
+  // distribution: {point: google.maps.LatLngLiteral, index: number}[][];
 
   constructor(props: Props) {
     super(props);
@@ -20,40 +20,40 @@ export class GridOverlay extends Component<Props> {
     const {
       borderline,
       border,
-      grider,
+      // grider,
     } = props;
 
-    this.borderRenderer = createBorderRenderer(grider.params, borderline, border);
-    this.distribution = this.borderRenderer.distributePoints();
+    // this.borderRenderer = createBorderRenderer(grider.params, borderline, border);
+    // this.distribution = this.borderRenderer.distributePoints();
   }
 
-  shouldComponentUpdate(nextProps: Props) {
-    const {
-      grider,      
-    } = this.props;
+  // shouldComponentUpdate(nextProps: Props) {
+  //   const {
+  //     // grider,      
+  //   } = this.props;
 
-    return grider !== nextProps.grider;
-  }
+  //   // return grider !== nextProps.grider;
+  // }
 
   render() {
     const {
-      grider,
+      // grider,
       borderline,
       border
     } = this.props;
     return (
       <>
-      {this.distribution[0].map(({point, index}) => (
+      {/* {this.distribution[0].map(({point, index}) => (
         <SmartMarker 
           position={point}
           title={`${index}`}
         />
-      ))}
+      ))} */}
       {/* <SmartMarker 
         position={{lat: 54.2285004, lng: 24.7708037}}
         title={'lal'}
       /> */}
-      <SmartPolyline 
+      {/* <SmartPolyline 
         path={this.distribution[0].map(({point}) => point)}
         strokeColor='#ff0000'
       />
@@ -87,7 +87,7 @@ export class GridOverlay extends Component<Props> {
             border={border}
           />
         )}
-      </SmartTilesOverlay>
+      </SmartTilesOverlay> */}
       </>
     )
   }
