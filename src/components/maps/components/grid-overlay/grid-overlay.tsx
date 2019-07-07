@@ -3,11 +3,12 @@ import {SmartTilesOverlay} from '@maps/tiles-overlay';
 // import {StaticGrider, createBorderRenderer, BorderRenderer} from '@micelord/grider';
 import {GridTile} from '../grid-tile/grid-tile';
 import {SmartMarker, SmartPolyline} from '@maps/feature';
+import {TileMercPoint} from '@micelord/grider'
 
 interface Props {
   // grider: StaticGrider;
-  borderline: google.maps.LatLngLiteral[],
-  border: google.maps.LatLngLiteral[],
+  // borderline: google.maps.LatLngLiteral[],
+  // border: google.maps.LatLngLiteral[],
 }
 
 export class GridOverlay extends Component<Props> {
@@ -18,8 +19,8 @@ export class GridOverlay extends Component<Props> {
     super(props);
 
     const {
-      borderline,
-      border,
+      // borderline,
+      // border,
       // grider,
     } = props;
 
@@ -38,56 +39,33 @@ export class GridOverlay extends Component<Props> {
   render() {
     const {
       // grider,
-      borderline,
-      border
+      // borderline,
+      // border
     } = this.props;
     return (
       <>
-      {/* {this.distribution[0].map(({point, index}) => (
-        <SmartMarker 
-          position={point}
-          title={`${index}`}
-        />
-      ))} */}
-      {/* <SmartMarker 
-        position={{lat: 54.2285004, lng: 24.7708037}}
-        title={'lal'}
-      /> */}
-      {/* <SmartPolyline 
-        path={this.distribution[0].map(({point}) => point)}
-        strokeColor='#ff0000'
-      />
-      <SmartPolyline 
-        path={this.distribution[1].map(({point}) => point)}
-        strokeColor='#00ff00'
-      />
-      <SmartPolyline 
-        path={this.distribution[2].map(({point}) => point)}
-        strokeColor='#0000ff'
-      />
-      <SmartPolyline 
-        path={this.distribution[3].map(({point}) => point)}
-        strokeColor='#ff00ff'
-      />
-      <SmartPolyline 
-        path={this.distribution[4].map(({point}) => point)}
-        strokeColor='#ffff00'
-      />
-      <SmartPolyline 
-        path={this.distribution[5].map(({point}) => point)}
-        strokeColor='#ffffff'
-      />
-      <SmartTilesOverlay width={512}>
-        {(tileConfig) => (
-          <GridTile 
-            {...tileConfig}
-            grider={grider}
-            borderRenderer={this.borderRenderer}
-            borderline={borderline}
-            border={border}
-          />
-        )}
-      </SmartTilesOverlay> */}
+        <SmartTilesOverlay width={512}>
+          {({tileCoord: {x, y}, zoom, width, height}) => {
+            const tilePoint = TileMercPoint.fromTile(x, y, width, height, zoom);
+            const geoPoint = tilePoint.toSphere().toFormatted();
+
+            return (
+            <div style={{border: '1px dotted green'}}>
+              x: {tilePoint.x} y: {tilePoint.y}
+              <br/>
+              tileX: {tilePoint.tileX} tileY: {tilePoint.tileY}
+              <br/>
+              lat: {geoPoint.lat} lng: {geoPoint.lng}
+            </div>
+            // <GridTile 
+            //   {...tileConfig}
+            //   grider={grider}
+            //   borderRenderer={this.borderRenderer}
+            //   borderline={borderline}
+            //   border={border}
+            // />
+          )}}
+        </SmartTilesOverlay>
       </>
     )
   }

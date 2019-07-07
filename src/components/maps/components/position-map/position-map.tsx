@@ -2,20 +2,22 @@ import classNames from 'classnames/bind';
 import { observable } from 'mobx';
 import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
-// import {
-//   createStaticGrider, 
-//   StaticGrider,
-// } from '@micelord/grider';
+import {
+  GeoPoint,
+  GridParams,
+  Cell,
+} from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
 import {GridOverlay} from '../grid-overlay/grid-overlay';
-import {SmartPolygon, SmartPolyline} from '@maps/feature';
+import {SmartPolygon, SmartPolyline, SmartMarker} from '@maps/feature';
 
 import {PositionMarker} from '../position-marker';
 import {Borderline} from '../borderline';
 import {EditableBorderline} from '../editable-borderline';
 
 import styles from './position-map.scss';
+import { GeoSegment } from '@micelord/grider/src';
 
 const cx = classNames.bind(styles);
 
@@ -31,23 +33,31 @@ type Props = PositionMapProps & {
 @inject('geolocationStore')
 @observer
 export class PositionMapWrapped extends Component<Props> {
-  // grider: StaticGrider;
   geolocationStore: GeolocationStore;
   mapStore: CtrlMapStore;
   gridAdded: boolean = false;
-  startPoint: google.maps.LatLngLiteral | undefined;
-  @observable projections: google.maps.LatLngLiteral[] = [];
-  @observable border: google.maps.LatLngLiteral[] = [
-    {lat: 47.06676604567628, lng: 36.796875}, 
-    {lat: 54.317706011018224, lng: 40.7470703125},  
-    {lat: 53.01600312774294, lng: 29.0234375},
-    {lat: 54.51822185091831, lng: 24.814453125}, 
-    {lat: 49.20018618540992, lng: 24.0576171875}, 
-    {lat: 51.936842019727436, lng: 32.2314453125},
-  ];
-  @observable borderline: google.maps.LatLngLiteral[] = [];
-  @observable poly?: google.maps.LatLngLiteral[];
-  @observable intersects: google.maps.LatLngLiteral[] = [];
+  startPoint: GeoPoint | undefined;
+  activePoint: number = 0;
+  gridParams = new GridParams({
+    type: 'hex',
+    correction: 'merc',
+    cellSize: 100000,
+    // isHorizontal: true,
+  });
+  @observable point: GeoPoint | undefined;
+  @observable cell: Cell | undefined;
+  // @observable projections: google.maps.LatLngLiteral[] = [];
+  // @observable border: google.maps.LatLngLiteral[] = [
+  //   {lat: 47.06676604567628, lng: 36.796875}, 
+  //   {lat: 54.317706011018224, lng: 40.7470703125},  
+  //   {lat: 53.01600312774294, lng: 29.0234375},
+  //   {lat: 54.51822185091831, lng: 24.814453125}, 
+  //   {lat: 49.20018618540992, lng: 24.0576171875}, 
+  //   {lat: 51.936842019727436, lng: 32.2314453125},
+  // ];
+  // @observable borderline: google.maps.LatLngLiteral[] = [];
+  // @observable poly?: google.maps.LatLngLiteral[];
+  // @observable intersects: google.maps.LatLngLiteral[] = [];
 
   constructor(props: Props) {
     super(props);
@@ -78,10 +88,15 @@ export class PositionMapWrapped extends Component<Props> {
   }
 
   onClick = (e: google.maps.MouseEvent) => {
-    const coord = {
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
-    };
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+
+    this.point = new GeoPoint(lat, lng);
+    this.cell = this.point.toCell(this.gridParams);
+
+    console.log(this.cell.center);
+    // console.log(this.cell.points);
+    // console.log(this.point.toGrid(this.gridParams));
 
     // console.log(this.grider.grider.calcGridPointByGeoPoint(coord, this.grider.params))
 
@@ -89,9 +104,9 @@ export class PositionMapWrapped extends Component<Props> {
     // this.poly = this.grider.buildPolyByCenterGridPoint(cellCenter);  
   }
 
-  setBorderline = (borderline: google.maps.LatLngLiteral[]) => {
-    this.borderline = borderline;
-  }
+  // setBorderline = (borderline: google.maps.LatLngLiteral[]) => {
+  //   this.borderline = borderline;
+  // }
 
   onCenterClick = (): void => {
     const {position} = this.geolocationStore;
@@ -101,9 +116,9 @@ export class PositionMapWrapped extends Component<Props> {
     this.mapStore.panTo(position);
   }
 
-  onBorderChange = (newBorder: google.maps.LatLngLiteral[]) => {
-    this.border = newBorder;
-  }
+  // onBorderChange = (newBorder: google.maps.LatLngLiteral[]) => {
+  //   this.border = newBorder;
+  // }
 
   render() {
     const {position} = this.geolocationStore;
@@ -125,17 +140,26 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}
         >
-          {/* <GridOverlay 
-            grider={this.grider}
-            borderline={this.borderline}
-            border={this.border}
-          /> */}
+          {this.point && (
+            <SmartMarker position={this.point} title='point' />
+          )}
+          {this.cell && (
+            <SmartPolygon 
+              paths={this.cell.points} 
+              onClick={this.onClick}
+            />
+          )}
+          <GridOverlay 
+            // grider={this.grider}
+            // borderline={this.borderline}
+            // border={this.border}
+          />
           <PositionMarker />
-          {this.poly && (
+          {/* {this.poly && (
             <SmartPolygon
               paths={this.poly}
             />
-          )}
+          )} */}
           {this.props.children}
           {/* <Borderline 
             border={this.border}
@@ -144,10 +168,10 @@ export class PositionMapWrapped extends Component<Props> {
             setBorderline={this.setBorderline}
             outer
           /> */}
-          <EditableBorderline
+          {/* <EditableBorderline
             border={this.border}
             onPathChange={this.onBorderChange}
-          />
+          /> */}
           {/* <SvgOverlay
             bounds={{
               east: 38.35,
