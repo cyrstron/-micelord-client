@@ -6,6 +6,8 @@ import {
   GeoPoint,
   GridParams,
   Cell,
+  Figure,
+  GeoPolygon,
 } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
@@ -47,15 +49,16 @@ export class PositionMapWrapped extends Component<Props> {
   @observable point: GeoPoint | undefined;
   @observable cell: Cell | undefined;
   // @observable projections: google.maps.LatLngLiteral[] = [];
-  // @observable border: google.maps.LatLngLiteral[] = [
-  //   {lat: 47.06676604567628, lng: 36.796875}, 
-  //   {lat: 54.317706011018224, lng: 40.7470703125},  
-  //   {lat: 53.01600312774294, lng: 29.0234375},
-  //   {lat: 54.51822185091831, lng: 24.814453125}, 
-  //   {lat: 49.20018618540992, lng: 24.0576171875}, 
-  //   {lat: 51.936842019727436, lng: 32.2314453125},
-  // ];
-  // @observable borderline: google.maps.LatLngLiteral[] = [];
+  @observable border: GeoPolygon = new GeoPolygon([
+    {lat: 47.06676604567628, lng: 36.796875}, 
+    {lat: 54.317706011018224, lng: 40.7470703125},  
+    {lat: 53.01600312774294, lng: 29.0234375},
+    {lat: 54.51822185091831, lng: 24.814453125}, 
+    {lat: 49.20018618540992, lng: 24.0576171875}, 
+    {lat: 51.936842019727436, lng: 32.2314453125},
+    {lat: 47.06676604567628, lng: 36.796875}, 
+  ].map(({lat, lng}) => new GeoPoint(lat, lng)));
+  @observable borderline: Figure | undefined;
   // @observable poly?: google.maps.LatLngLiteral[];
   // @observable intersects: google.maps.LatLngLiteral[] = [];
 
@@ -76,6 +79,7 @@ export class PositionMapWrapped extends Component<Props> {
     // );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
+    // this.borderline = Figure.fromShape(this.border, this.gridParams);
     // this.borderline = this.grider.buildFigure([...this.border], false);
   }
 
@@ -116,9 +120,9 @@ export class PositionMapWrapped extends Component<Props> {
     this.mapStore.panTo(position);
   }
 
-  // onBorderChange = (newBorder: google.maps.LatLngLiteral[]) => {
-  //   this.border = newBorder;
-  // }
+  onBorderChange = (newBorder: GeoPolygon) => {
+    this.border = newBorder;
+  }
 
   render() {
     const {position} = this.geolocationStore;
@@ -168,10 +172,11 @@ export class PositionMapWrapped extends Component<Props> {
             setBorderline={this.setBorderline}
             outer
           /> */}
-          {/* <EditableBorderline
+          <EditableBorderline
             border={this.border}
+            gridParams={this.gridParams}
             onPathChange={this.onBorderChange}
-          /> */}
+          />
           {/* <SvgOverlay
             bounds={{
               east: 38.35,

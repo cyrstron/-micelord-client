@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
-import {DumbPolyline} from '@maps/feature';
+import {DumbPolyline, SmartMarker, SmartPolygon} from '@maps/feature';
 import {PolylineStore} from '@maps/feature';
-import isEqual from 'lodash/isEqual';
+import {GeoPolygon, GeoPoint, GridParams} from '@micelord/grider';
 import debounce from 'lodash/debounce';
+
+export interface EditableBorderlineProps {
+  border: GeoPolygon;
+  gridParams: GridParams;
+  onPathChange: (newPath: GeoPolygon) => void
+}
 
 type Props = EditableBorderlineProps & {
   featureStore: PolylineStore,
@@ -52,36 +58,51 @@ export class DumbEditableBorderline extends Component<Props> {
 
     if (!path) return;
 
-    const borderPoints = path.slice(0, -1);
+    const pathExtended = path.map(({lat, lng}) => new GeoPoint(lat, lng));
 
-    if (!isEqual(path[path.length - 1], path[0])) {
-      borderPoints[0] = path[path.length - 1];
+    const borderPoints = pathExtended;
+
+    if (!pathExtended[pathExtended.length - 1].isEqual(pathExtended[0])) {
+      borderPoints[0] = pathExtended[pathExtended.length - 1];
     }
 
-    const arePointsChanged = borderPoints.length !== border.length || 
-    borderPoints.reduce((arePointsChanged, point, index) => {
-      if (arePointsChanged) return arePointsChanged;
-      
-      return !isEqual(point, border[index]);
-    }, false);
+    const arePointsChanged = borderPoints.length !== border.points.length || border
+      .points.reduce((arePointsChanged: boolean, point, index) => {
+        if (arePointsChanged) return arePointsChanged;
+        
+        return point.isEqual(border.points[index]);
+      }, false);
 
     if (!arePointsChanged) return;
 
-    onPathChange(borderPoints);
+    const poly = new GeoPolygon(borderPoints)
+
+    onPathChange(poly);
   }, 500)
 
 
   render() {
-    const {border} = this.props;
+    const {border, gridParams} = this.props;
+
+    const {selfIntersections} = border;
+    const cells = border.cellsInvalidForFigure(gridParams);
 
     return (
-      <DumbPolyline
-        path={[...border, border[0]]}
-        strokeColor='#000066'
-        onDragEnd={this.onDragBorder}
-        editable={true}
-        draggable={true}
-      />
+      <>
+        <DumbPolyline
+          path={border.points}
+          strokeColor='#000066'
+          onDragEnd={this.onDragBorder}
+          editable={true}
+          draggable={true}
+        />
+        {selfIntersections.map((point, index) => (
+          <SmartMarker position={point} title={`${index}`} key={index} />
+        ))}
+        {cells.map((cell, index) => (
+          <SmartPolygon paths={cell.points} key={index} />
+        ))}
+      </>
     );
   }
 }
