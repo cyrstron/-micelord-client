@@ -41,13 +41,15 @@ export class PositionMapWrapped extends Component<Props> {
   startPoint: GeoPoint | undefined;
   activePoint: number = 0;
   gridParams = new GridParams({
-    type: 'hex',
+    type: 'rect',
     correction: 'merc',
     cellSize: 100000,
     // isHorizontal: true,
   });
   @observable point: GeoPoint | undefined;
   @observable cell: Cell | undefined;
+  @observable nextCells: Cell[] = [];
+  // @observable intersetions: GeoPoint[] = [];
   // @observable projections: google.maps.LatLngLiteral[] = [];
   @observable border: GeoPolygon = new GeoPolygon([
     {lat: 47.06676604567628, lng: 36.796875}, 
@@ -78,8 +80,7 @@ export class PositionMapWrapped extends Component<Props> {
     // );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
-    // this.borderline = Figure.fromShape(this.border, this.gridParams);
-    // this.borderline = this.grider.buildFigure([...this.border], false);
+    this.borderline = Figure.fromShape(this.border, this.gridParams);
   }
 
   componentDidMount() {
@@ -96,7 +97,20 @@ export class PositionMapWrapped extends Component<Props> {
 
     this.point = new GeoPoint(lat, lng);
     this.cell = this.point.toCell(this.gridParams);
+    // this.intersetions = this.border.intersectsPoly(this.cell);
+    const cell = this.cell;
 
+    if (!cell) return;
+
+    this.nextCells = this.border.reduceSides((nextCells, side) => {
+      const nextCell = cell.nextCellOnSegment(side);
+
+      if (nextCell) {
+        nextCells.push(nextCell);
+      }
+
+      return nextCells;
+    }, [] as Cell[])
     console.log(this.cell.center);
     // console.log(this.cell.points);
     // console.log(this.point.toGrid(this.gridParams));
@@ -121,6 +135,7 @@ export class PositionMapWrapped extends Component<Props> {
 
   onBorderChange = (newBorder: GeoPolygon) => {
     this.border = newBorder;
+    this.borderline = Figure.fromShape(newBorder, this.gridParams);
   }
 
   render() {
@@ -152,6 +167,26 @@ export class PositionMapWrapped extends Component<Props> {
               onClick={this.onClick}
             />
           )}
+          {this.borderline && (
+            <SmartPolygon 
+              paths={this.borderline.points} 
+              onClick={this.onClick}
+            />
+          )}
+          {this.borderline && this.borderline.points.length > 0 && (
+            <SmartMarker 
+              position={this.borderline.points[0]}
+              title={'start'}
+            />
+          )}
+          {this.nextCells.map((cell, index) => (
+            <SmartPolygon 
+              paths={cell.points}
+              strokeColor='#0f0'
+              key={`intersection-${index}}`}
+              onClick={this.onClick}
+            />
+          ))}
           <GridOverlay 
             // grider={this.grider}
             // borderline={this.borderline}
