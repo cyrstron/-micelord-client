@@ -7,6 +7,7 @@ import {
   GridParams,
   Cell,
   Figure,
+  IndexatedFigure,
   GeoPolygon,
 } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
@@ -20,6 +21,10 @@ import {EditableBorderline} from '../editable-borderline';
 
 import styles from './position-map.scss';
 import { GeoSegment } from '@micelord/grider/src';
+import { GridPoint } from '@micelord/grider/src';
+import { Line } from '@micelord/grider/src';
+import { MercPoint } from '@micelord/grider/src/entities/points';
+import { TileMercPoint } from '@micelord/grider/src';
 
 const cx = classNames.bind(styles);
 
@@ -41,7 +46,7 @@ export class PositionMapWrapped extends Component<Props> {
   startPoint: GeoPoint | undefined;
   activePoint: number = 0;
   gridParams = new GridParams({
-    type: 'rect',
+    type: 'hex',
     correction: 'merc',
     cellSize: 100000,
     // isHorizontal: true,
@@ -49,7 +54,7 @@ export class PositionMapWrapped extends Component<Props> {
   @observable point: GeoPoint | undefined;
   @observable cell: Cell | undefined;
   @observable nextCells: Cell[] = [];
-  // @observable intersetions: GeoPoint[] = [];
+  @observable intersetions: GeoPoint[] = [];
   // @observable projections: google.maps.LatLngLiteral[] = [];
   @observable border: GeoPolygon = new GeoPolygon([
     {lat: 47.06676604567628, lng: 36.796875}, 
@@ -59,9 +64,19 @@ export class PositionMapWrapped extends Component<Props> {
     {lat: 49.20018618540992, lng: 24.0576171875}, 
     {lat: 51.936842019727436, lng: 32.2314453125},
   ].map(({lat, lng}) => new GeoPoint(lat, lng)));
-  @observable borderline: Figure | undefined;
+  @observable borderline: IndexatedFigure;
+  @observable tilePoint = TileMercPoint.fromTile(38, 21, 512, 512, 7);
   // @observable poly?: google.maps.LatLngLiteral[];
   // @observable intersects: google.maps.LatLngLiteral[] = [];
+
+  @observable gridPointA: GridPoint | undefined;
+  @observable gridPointB: GridPoint | undefined;
+  @observable gridPointC: GridPoint | undefined;
+
+  @observable geoPointA: GeoPoint | undefined;
+  @observable geoPointB: GeoPoint | undefined;
+
+  active: number = 0;
 
   constructor(props: Props) {
     super(props);
@@ -80,7 +95,7 @@ export class PositionMapWrapped extends Component<Props> {
     // );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
-    this.borderline = Figure.fromShape(this.border, this.gridParams);
+    this.borderline = IndexatedFigure.fromShape(this.border, this.gridParams, false);
   }
 
   componentDidMount() {
@@ -97,10 +112,13 @@ export class PositionMapWrapped extends Component<Props> {
 
     this.point = new GeoPoint(lat, lng);
     this.cell = this.point.toCell(this.gridParams);
-    // this.intersetions = this.border.intersectsPoly(this.cell);
+    this.intersetions = this.border.intersectsPoly(this.cell);
     const cell = this.cell;
 
     if (!cell) return;
+
+    console.log(cell)
+    console.log(this.point)
 
     this.nextCells = this.border.reduceSides((nextCells, side) => {
       const nextCell = cell.nextCellOnSegment(side);
@@ -135,13 +153,98 @@ export class PositionMapWrapped extends Component<Props> {
 
   onBorderChange = (newBorder: GeoPolygon) => {
     this.border = newBorder;
-    this.borderline = Figure.fromShape(newBorder, this.gridParams);
+    this.borderline = IndexatedFigure.fromShape(newBorder, this.gridParams, false);
   }
+
+  // onClick: google.maps.MapMouseEventHandler = (e) => {
+  //   console.log(e);
+
+  //   const lat = e.latLng.lat();
+  //   const lng = e.latLng.lng();
+
+  //   const geoPoint = new GeoPoint(lat, lng);
+
+  //   this.point = geoPoint;
+
+  //   switch(this.active) {
+  //     case 0:
+  //       this.geoPointA = geoPoint;
+  //       this.active = 1;
+  //       break;
+  //     case 1:
+  //       this.geoPointB = geoPoint;
+  //       this.active = 2;
+  //       break;
+  //     case 2:
+  //       this.geoPointA = undefined;
+  //       this.geoPointB = undefined;
+  //       this.active = 0;
+  //       break;
+  //   }    
+  // }
 
   render() {
     const {position} = this.geolocationStore;
 
     if (position === undefined) return null;
+
+    // let closests: GeoPoint[] = [];
+    // const {point} = this;
+
+    // if (point) {
+    //   closests = this.border.mapSides((
+    //     side
+    //   ) => {
+    //     return side
+    //   }).slice(0, 1).map((
+    //     side
+    //   ): GeoPoint => {
+    //     return side.toMerc().line.closestToPoint(point.toMerc()).toSphere()
+    //   }).slice(0, 1)
+    // }
+
+    // let pointA: GeoPoint | undefined;
+    // let pointB: GeoPoint | undefined;
+    // let point: GeoPoint | undefined;
+    // if (this.geoPointA && this.geoPointB) {
+    //   point = new GeoPoint(
+    //     (this.geoPointA.lat + this.geoPointB.lat) / 2,
+    //     (this.geoPointA.lng + this.geoPointB.lng) / 2,
+    //   )
+    //   const perp = Line.fromTwoPoints(
+    //     this.geoPointA.toMerc(), 
+    //     this.geoPointB.toMerc()
+    //   ).perpendicularByPoint(
+    //     point.toMerc()
+    //   );
+
+    //   const yA = perp.xByY(this.geoPointA.toMerc().x);
+    //   const yB = perp.xByY(this.geoPointB.toMerc().x);
+
+    //   if (yA !== undefined) {
+    //     pointA = new MercPoint(
+    //       this.geoPointA.toMerc().x,
+    //       yA,
+    //     ).toSphere();
+    //   }
+    //   if (yB !== undefined) {
+    //     pointB = new MercPoint(
+    //       this.geoPointB.toMerc().x,
+    //       yB,
+    //     ).toSphere();
+    //   }
+    // }
+
+    const tileIntersection = this.borderline.indexation.tileIntersection(this.tilePoint);
+
+    const points = tileIntersection.north.map(({intersection}) => intersection);
+    points.push(...tileIntersection.east.map(({intersection}) => intersection));
+    points.push(...tileIntersection.west.map(({intersection}) => intersection));
+    points.push(...tileIntersection.south.map(({intersection}) => intersection));
+
+    const polyIntersects = this.borderline.splitSectionsByLat(this.tilePoint.northBound);
+
+    polyIntersects.push(...this.borderline.splitSectionsByLat(this.tilePoint.southBound));
 
     return (
       <>
@@ -158,9 +261,12 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}
         >
-          {this.point && (
+          {/* {this.point && (
             <SmartMarker position={this.point} title='point' />
-          )}
+          )} */}
+          {/* {point && (
+            <SmartMarker position={point} title='pointCenter' />
+          )} */}
           {this.cell && (
             <SmartPolygon 
               paths={this.cell.points} 
@@ -173,24 +279,84 @@ export class PositionMapWrapped extends Component<Props> {
               onClick={this.onClick}
             />
           )}
-          {this.borderline && this.borderline.points.length > 0 && (
+          {polyIntersects.map((segment, index) => (
+            <SmartPolyline
+              path={segment.points}
+              strokeColor={'rgba(50, 0, 200, 0.5)'}
+              zIndex={10}
+              key={`segment-${index}`}
+            />
+          ))}
+          {/* {this.gridPointA && this.gridPointB && this.gridPointC && (
+            <SmartPolyline 
+              path={[
+                this.gridPointA.toGeo(),
+                this.gridPointB.toGeo(),
+                this.gridPointC.toGeo(),
+              ]} 
+              strokeColor='#f00'
+              zIndex={10}
+            />
+          )} */}
+          {/* {this.geoPointA && this.geoPointB && (
+            <SmartPolyline 
+              path={[
+                this.geoPointA,
+                this.geoPointB,
+              ]} 
+              strokeColor='#f00'
+              zIndex={10}
+            />
+          )} */}
+          {/* {pointA && pointB && (
+            <SmartPolyline 
+              path={[
+                pointA,
+                pointB,
+              ]} 
+              strokeColor='#0f0'
+              zIndex={10}
+            />
+          )} */}
+          {/* {this.borderline && this.borderline.points.length > 0 && (
             <SmartMarker 
               position={this.borderline.points[0]}
               title={'start'}
             />
-          )}
-          {this.nextCells.map((cell, index) => (
+          )} */}
+          {/* {closests.map((point, index) => (
+            <SmartMarker 
+              position={point}
+              title={`closest-${index}`}
+            />
+          ))} */}
+          {points.map((point, index) => {
+            return (
+              <SmartMarker 
+                position={point}
+                title={`lat: ${point.lat}, lng: ${point.lng}`}
+                key={`grid-point-${index}`}
+              />
+            );
+          })}
+          {/* {this.nextCells.map((cell, index) => (
             <SmartPolygon 
               paths={cell.points}
               strokeColor='#0f0'
               key={`intersection-${index}}`}
               onClick={this.onClick}
             />
-          ))}
+          ))} */}
+          {/* {this.intersetions.map((point, index) => (
+            <SmartMarker 
+              position={point}
+              title={`intersection-${index}`}
+              key={`intersection-${index}`}
+            />
+          ))} */}
           <GridOverlay 
-            // grider={this.grider}
-            // borderline={this.borderline}
-            // border={this.border}
+            params={this.gridParams}
+            borderline={this.borderline}
           />
           <PositionMarker />
           {/* {this.poly && (
@@ -210,6 +376,16 @@ export class PositionMapWrapped extends Component<Props> {
             border={this.border}
             gridParams={this.gridParams}
             onPathChange={this.onBorderChange}
+          />
+          <SmartPolygon
+            paths={[              
+              this.tilePoint.toSphere(),
+              this.tilePoint.east.toSphere(),
+              this.tilePoint.east.south.toSphere(),
+              this.tilePoint.south.toSphere(),
+            ]}
+            strokeColor={'#900'}
+            fillColor='transparent'
           />
           {/* <SvgOverlay
             bounds={{
