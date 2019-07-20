@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react';
 // import {StaticGrider, BorderRenderer, utils} from '@micelord/grider';
 import { GridParams, TileMercPoint, MapGridTile, IndexatedFigure } from '@micelord/grider/src';
 import { GeoPolygon } from '@micelord/grider/src';
+import { Point } from '@micelord/grider/src';
 
 interface Props {
   params: GridParams;
@@ -18,15 +19,23 @@ interface Props {
 
 export class GridTile extends Component<Props> {
   mapTile: MapGridTile;
-  borderPoly: GeoPolygon;
+  borderPoly: Point[];
 
   constructor(props: Props) {
     super(props);
 
     const {params, borderline, tilePoint} = props;
 
+    performance.mark('GridTile Start');
     this.mapTile = MapGridTile.fromTilePoint(tilePoint, params);
+    performance.mark('GridTile End');
+    performance.measure('GridTile', 'GridTile Start', 'GridTile End');
+    performance.mark('BorderTile Start');
     this.borderPoly = borderline.tilePoints(tilePoint);
+    // console.log(tilePoint);
+    // console.log(this.borderPoly);
+    performance.mark('BorderTile End');
+    performance.measure('BorderTile', 'BorderTile Start', 'BorderTile End');
   }
   shouldComponentUpdate(nextProps: Props) {
     const {
@@ -166,10 +175,12 @@ export class GridTile extends Component<Props> {
               </Fragment>
             )
           })}        
-          <rect 
-            width={tilePoint.tileWidth}
-            height={tilePoint.tileHeight}
-          />
+          {this.borderPoly.length > 0 && (
+            <polygon 
+              points={this.borderPoly.map(({x, y}) => `${x * tileWidth},${y * tileHeight}`).join(' ')}
+              fill="rgba(0, 255, 0, 0.4)"
+            />
+          )}
         </svg>
       </>
     )
