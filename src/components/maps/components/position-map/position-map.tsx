@@ -9,6 +9,7 @@ import {
   Figure,
   IndexatedFigure,
   GeoPolygon,
+  GridPoint,
 } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
@@ -20,11 +21,6 @@ import {Borderline} from '../borderline';
 import {EditableBorderline} from '../editable-borderline';
 
 import styles from './position-map.scss';
-import { GeoSegment } from '@micelord/grider/src';
-import { GridPoint } from '@micelord/grider/src';
-import { Line } from '@micelord/grider/src';
-import { MercPoint } from '@micelord/grider/src/entities/points';
-import { TileMercPoint } from '@micelord/grider/src';
 
 const cx = classNames.bind(styles);
 
