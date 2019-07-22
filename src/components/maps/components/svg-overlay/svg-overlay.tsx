@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import {SmartCustomOverlay} from '@maps/custom-overlay';
-import {utils} from '@micelord/grider';
+// import {utils} from '@micelord/grider';
 
 interface Props {
   children?: ReactNode;
@@ -15,17 +15,17 @@ export const SvgOverlay = ({bounds}: Props) => {
     south
   } = bounds;
 
-  if (east - west > 180) {
-    east = utils.geography.reduceLng(east - 180);
-    west = utils.geography.reduceLng(west - 180);
-  }
+  // if (east - west > 180) {
+  //   east = utils.geography.reduceLng(east - 180);
+  //   west = utils.geography.reduceLng(west - 180);
+  // }
 
-  const northMerc = utils.geography.spherLatToMercY(north);
-  const southMerc = utils.geography.spherLatToMercY(south);
-  const eastMerc = utils.geography.spherLngToMercX(east);
-  const westMerc = utils.geography.spherLngToMercX(west);
+  // const northMerc = utils.geography.spherLatToMercY(north);
+  // const southMerc = utils.geography.spherLatToMercY(south);
+  // const eastMerc = utils.geography.spherLngToMercX(east);
+  // const westMerc = utils.geography.spherLngToMercX(west);
 
-  const relHeight = (northMerc - southMerc) / (eastMerc - westMerc) * 100;
+  // const relHeight = (northMerc - southMerc) / (eastMerc - westMerc) * 100;
 
   return (
     <SmartCustomOverlay

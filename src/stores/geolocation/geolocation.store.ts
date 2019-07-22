@@ -1,5 +1,6 @@
 import {action, computed, observable} from 'mobx';
 import { GeolocationActions } from './geolocation.actions';
+import {GeoPoint} from '@micelord/grider';
 
 export interface GeolocationProps {
   geolocationStore?: GeolocationStore;
@@ -8,14 +9,12 @@ export interface GeolocationProps {
 export class GeolocationStore {
 
   @computed
-  get position(): geo.Location | undefined {
+  get position(): GeoPoint | undefined {
     if (this.lat === undefined || this.lng === undefined) return;
 
-    return {
-      lat: this.lat,
-      lng: this.lng,
-    };
+    return new GeoPoint(this.lat, this.lng);
   }
+
   @observable error?: PositionError;
   @observable lat?: number;
   @observable lng?: number;

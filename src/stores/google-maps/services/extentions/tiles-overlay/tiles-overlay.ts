@@ -56,7 +56,6 @@ export const createTilesOverlayClass = (google: Google): google.custom.TilesOver
 
       container.style.width = '100%';
       container.style.height = '100%';
-      container.style.border = '1px dashed #008800';
 
       this.registerTile(container, {tileCoord, zoom});
 

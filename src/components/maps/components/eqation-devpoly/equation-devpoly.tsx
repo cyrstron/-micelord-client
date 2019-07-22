@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {SmartPolyline, SmartPolygon} from '@maps/feature';
-import {StaticGrider, utils} from '@micelord/grider';
+// import {StaticGrider, utils} from '@micelord/grider';
 
 interface Props {
-  grider: StaticGrider;
+  // grider: StaticGrider;
   border: google.maps.LatLngLiteral[];
   onClick?: google.maps.MapPolyEventHandler;
 }
 
 export class EqDevpoly extends Component<Props> {
-  utils = utils;
+  // utils = utils;
   paths: google.maps.LatLngLiteral[];
 
   constructor(props: Props) {
@@ -31,41 +31,41 @@ export class EqDevpoly extends Component<Props> {
       if (latStep === 0) {
         const lngStep = (point.lng - nextPoint.lng) / 10;
    
-        const equationY = this.utils.geography.calcLatLoxEquation([
-          point, 
-          nextPoint
-        ]);
+        // const equationY = this.utils.geography.calcLatLoxEquation([
+        //   point, 
+        //   nextPoint
+        // ]);
 
         for (let mul = 0; mul < 10; mul += 1) {
           const nextLng = point.lng - lngStep * mul;
 
-          const lat = equationY(nextLng);
+          // const lat = equationY(nextLng);
 
-          if (!lat) continue;
+          // if (!lat) continue;
 
-          poly.push({
-            lng: nextLng,
-            lat,
-          });
+          // poly.push({
+          //   lng: nextLng,
+          //   lat,
+          // });
         }
 
       } else {        
-        const equationX = this.utils.geography.calcLngLoxEquation([
-          point,
-          nextPoint
-        ])
+        // const equationX = this.utils.geography.calcLngLoxEquation([
+        //   point,
+        //   nextPoint
+        // ])
 
         for (let mul = 0; mul < 10; mul += 1) {
           const nextLat = point.lat - latStep * mul;
 
-          const lng = equationX(nextLat);
+          // const lng = equationX(nextLat);
 
-          if (lng !== undefined) {
-            poly.push({
-              lng,
-              lat: nextLat
-            });
-          }
+          // if (lng !== undefined) {
+          //   poly.push({
+          //     lng,
+          //     lat: nextLat
+          //   });
+          // }
         }
       }
 
@@ -84,41 +84,41 @@ export class EqDevpoly extends Component<Props> {
       if (latStep === 0) {
         const lngStep = (point.lng - nextPoint.lng) / 10;
    
-        const equationY = this.utils.geometry.calcYLineEquation([
-          [point.lng, point.lat], 
-          [nextPoint.lng, nextPoint.lat]
-        ]);
+        // const equationY = this.utils.geometry.calcYLineEquation([
+        //   [point.lng, point.lat], 
+        //   [nextPoint.lng, nextPoint.lat]
+        // ]);
 
         for (let mul = 0; mul < 10; mul += 1) {
           const nextLng = point.lng - lngStep * mul;
 
-          const lat = equationY(nextLng);
+          // const lat = equationY(nextLng);
 
-          if (!lat) continue;
+          // if (!lat) continue;
 
-          poly.push({
-            lng: nextLng,
-            lat,
-          });
+          // poly.push({
+          //   lng: nextLng,
+          //   lat,
+          // });
         }
 
       } else {        
-        const equationX = this.utils.geometry.calcXLineEquation([
-          [point.lng, point.lat], 
-          [nextPoint.lng, nextPoint.lat]
-        ])
+        // const equationX = this.utils.geometry.calcXLineEquation([
+        //   [point.lng, point.lat], 
+        //   [nextPoint.lng, nextPoint.lat]
+        // ])
 
         for (let mul = 0; mul < 10; mul += 1) {
           const nextLat = point.lat - latStep * mul;
 
-          const lng = equationX(nextLat);
+          // const lng = equationX(nextLat);
 
-          if (lng !== undefined) {
-            poly.push({
-              lng,
-              lat: nextLat
-            });
-          }
+          // if (lng !== undefined) {
+          //   poly.push({
+          //     lng,
+          //     lat: nextLat
+          //   });
+          // }
         }
       }
 

@@ -1,154 +1,191 @@
 import React, {Component, Fragment} from 'react';
-import {StaticGrider, BorderRenderer, utils} from '@micelord/grider';
-import isEqual from 'lodash/isEqual';
+// import {StaticGrider, BorderRenderer, utils} from '@micelord/grider';
+import { GridParams, TileMercPoint, MapGridTile, IndexatedFigure, GeoPolygon, Point } from '@micelord/grider';
 
 interface Props {
-  grider: StaticGrider;
-  width: number;
-  height: number;
-  tileCoord: grider.Point,
-  zoom: number,
-  borderRenderer: BorderRenderer,
-  borderline: google.maps.LatLngLiteral[],
-  border: google.maps.LatLngLiteral[],
+  params: GridParams;
+  tilePoint: TileMercPoint;
+  // grider: StaticGrider;
+  // width: number;
+  // height: number;
+  // tileCoord: grider.Point,
+  // zoom: number,
+  // borderRenderer: BorderRenderer,
+  borderline: IndexatedFigure,
+  // border: google.maps.LatLngLiteral[],
 }
 
 export class GridTile extends Component<Props> {
+  mapTile: MapGridTile;
+  borderPoly: Point[] = [];
+
+  constructor(props: Props) {
+    super(props);
+
+    const {params, borderline, tilePoint} = props;
+
+    this.mapTile = MapGridTile.fromTilePoint(tilePoint, params);
+    
+    try {
+      this.borderPoly = borderline.tilePoints(tilePoint)
+    } catch (err) {
+      console.error(err);
+      console.error(tilePoint);
+      console.error(params);
+      console.error(borderline);
+    }
+  }
+  
   shouldComponentUpdate(nextProps: Props) {
     const {
-      zoom,
-      tileCoord,
-      grider,
+      tilePoint,
+      params,
     } = this.props;
 
-    const shouldUpdate = !isEqual(nextProps.tileCoord, tileCoord) || (
-      nextProps.zoom !== zoom
-    ) || (
-      grider !== nextProps.grider
-    );
-
-    return shouldUpdate;
+    return !nextProps.tilePoint.isEqual(tilePoint) && 
+      !nextProps.params.isEqual(params);
   }
 
-  componentDidMount() {
-    const {
-      height,
-      width,
-      borderRenderer,
-      tileCoord,
-      zoom,
-    } = this.props;
-    
-    const zoomCoofX = 2 ** (zoom) * (256 / width);
-    const zoomCoofY = 2 ** (zoom) * (256 / height);
+  componentWillUpdate(nextProps: Props) {
+    const {params, borderline, tilePoint} = this.props;
 
-    const tileBounds = borderRenderer.calcTileBounds(tileCoord, zoomCoofX, zoomCoofY);
+    if (nextProps.tilePoint !== tilePoint || nextProps.params !== params) {
+      this.mapTile = MapGridTile.fromTilePoint(
+        nextProps.tilePoint, 
+        nextProps.params
+      );
+    }
 
-    const border = borderRenderer.getIntersectedBorder(tileBounds);
-
-    console.log(border);
+    if (nextProps.borderline !== borderline || nextProps.tilePoint !== tilePoint) {
+      this.borderPoly = nextProps.borderline.tilePoints(nextProps.tilePoint);
+    }
   }
 
   render() {
     const {
-      height,
-      width,
-      grider,
-      tileCoord,
-      zoom,
+      tilePoint,
+      params,
     } = this.props;
+    
+    const minCellSize = params.minCellSize(tilePoint);
 
-    const zoomCoofX = 2 ** (zoom) * (256 / width);
-    const zoomCoofY = 2 ** (zoom) * (256 / height);
+    if (minCellSize < 10) return null;
 
-    const minCellWidth = grider.calcMinCellSize(zoomCoofX) * width;
+    const stokeWidth = Math.max(1, Math.min(10, minCellSize / 50));
+    const strokeOpacity = Math.min(minCellSize / 100, 0.5);
+    const maskId = `mask-${tilePoint.tileX}-${tilePoint.tileY}`;
 
-    if (minCellWidth < 10) return null;
-
-    const stokeWidth = Math.max(1, Math.min(10, minCellWidth / 50));
-    const strokeOpacity = Math.min(minCellWidth / 100, 0.5);
-
-    const {patterns} = grider.calcGridConfig(tileCoord, zoomCoofX, zoomCoofY);
+    const {
+      tileX,
+      tileY,
+      tileWidth,
+      tileHeight
+    } = tilePoint;
 
     return (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        width='100%'
-        height='100%'
-        viewBox={`0 0 ${width} ${height}`}
-        aria-labelledby='title' 
-        fill="transparent" 
-      >
-        {patterns.map(({start, end, patternConfig}, index) => {
-          const patternId = `pattern-${tileCoord.x}-${tileCoord.y}-${index}`;
-          const maskId = `mask-${tileCoord.x}-${tileCoord.y}-${index}`;
-          const patternWidth = width * patternConfig.widthRel;
-          const patternHeight = height * patternConfig.heightRel;
+      <>    
+        <span
+          style={{
+            top: 0,
+            width: '100%',
+            position: "absolute",
+            textAlign: 'center',
+            fontSize: '16px',
+            padding: '5px',
+            fontWeight: 'bold'
+          }}
+        >
+          {tilePoint.tileX} : {tilePoint.tileY}
+        </span>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='100%'
+          height='100%'
+          viewBox={`0 0 ${tilePoint.tileWidth} ${tilePoint.tileHeight}`}
+          aria-labelledby='title' 
+          fill="transparent" 
+          style={{border: '1px dashed green'}}
+        >
+        {this.mapTile.patterns.map(({start, end, tile}, index) => {
+          const patternId = `pattern-${tileX}-${tileY}-${index}`;
+          const patternWidth = tileWidth * tile.tileWidth;
+          const patternHeight = tileHeight * tile.tileHeight;
 
-          const rectWidth = (end.x - start.x) * width;
-          const rectHeight = (end.y - start.y) * height;
+          const rectWidth = (end.x - start.x) * tileWidth;
+          const rectHeight = (end.y - start.y) * tileHeight;
 
           const patternWidthPercent = patternWidth / rectWidth * 100;
           const patternHeightPercent = patternHeight / rectHeight * 100;
 
           return (
-            <Fragment key={`${tileCoord.x}-${tileCoord.y}-${index}`}> 
-              <pattern 
-                id={patternId}
-                width={`${patternWidthPercent}%`} 
-                height={`${patternHeightPercent}%`}
-              >
-                {patternConfig.pattern.map((polyline, polylineIndex) => {
-                  const points = polyline.map(({x, y}) => (
-                    `${x * patternWidth},${y * patternHeight}`
-                  ))
-                    .join(' ');
-                    
-                  return (
-                    <polyline 
-                      points={points}
-                      stroke="orange"
-                      strokeWidth={stokeWidth}
-                      key={`${tileCoord.x}-${tileCoord.y}-${index}-${polylineIndex}`}
-                    />
-                  )
-                })}
-              </pattern>
-              <mask id={maskId}>  
+            <pattern 
+              id={patternId}
+              key={patternId}
+              width={`${patternWidthPercent}%`} 
+              height={`${patternHeightPercent}%`}
+            >
+              {tile.points.map((polyline, polylineIndex) => {
+                const points = polyline.map(({x, y}) => (
+                  `${Math.round((x) * patternWidth)},${Math.round((y) * patternHeight)}`
+                ))
+                  .join(' ');
+                  
+                return (
+                  <polyline 
+                    points={points}
+                    stroke="orange"
+                    strokeWidth={stokeWidth}
+                    key={`${tileX}-${tileY}-${index}-${polylineIndex}`}
+                  />
+                )
+              })}
+            </pattern>
+          )
+        })}  
+          <mask id={maskId}>  
+            {this.mapTile.patterns.map(({start, end, tile}, index) => {
+              const patternId = `pattern-${tileX}-${tileY}-${index}`;
+              const rectWidth = (end.x - start.x) * tileWidth;
+              const rectHeight = (end.y - start.y) * tileHeight;
+
+              return (
                 <rect 
                   fill={`url(#${patternId})`} 
-                  x={start.x * width}
-                  y={start.y * height}
+                  x={start.x * tileWidth}
+                  y={start.y * tileHeight}
                   width={rectWidth}
                   height={rectHeight}
+                  key={patternId}
                 /> 
-              </mask>  
-              <polygon 
-                mask={`url(#${maskId})`} 
-                fill={`rgba(0, 180, 0, 1)`}
-                stroke={`rgba(0, 180, 0, 1)`}
-                strokeWidth={stokeWidth}
-                width={width}
-                height={height}
-              />
-              <rect 
-                mask={`url(#${maskId})`} 
-                fill={`rgba(40, 40, 40, ${strokeOpacity})`}
-                x={start.x * width}
-                y={start.y * height}
-                width={rectWidth}
-                height={rectHeight}
-              />
-            </Fragment>
-          )
-        })}        
-        {/* <rect 
-          stroke="blue"
-          strokeWidth="1px"
-          width='512'
-          height='512'
-        /> */}
-      </svg>
+              )
+            })}    
+          </mask>
+          <rect 
+            mask={`url(#${maskId})`} 
+            fill={`rgba(40, 40, 40, ${strokeOpacity})`}
+            strokeWidth={stokeWidth}
+            width={tilePoint.tileWidth}
+            height={tilePoint.tileHeight}
+          />
+          {/* <rect 
+            mask={`url(#${maskId})`} 
+            fill={`rgba(40, 40, 40, ${strokeOpacity})`}
+            x={start.x * tilePoint.tileWidth}
+            y={start.y * tilePoint.tileHeight}
+            width={rectWidth}
+            height={rectHeight}
+          /> */}
+          {this.borderPoly.length > 0 && (
+            <polygon 
+              mask={`url(#${maskId})`} 
+              points={this.borderPoly.map(({x, y}) => `${x},${y}`).join(' ')}
+              fill="rgba(0, 255, 0, 1)"
+              stroke="rgba(0, 255, 0, 1)"
+              strokeWidth={stokeWidth}
+            />
+          )}
+        </svg>
+      </>
     )
   }
 }
