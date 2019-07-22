@@ -1,8 +1,6 @@
 import React, {Component, Fragment} from 'react';
 // import {StaticGrider, BorderRenderer, utils} from '@micelord/grider';
-import { GridParams, TileMercPoint, MapGridTile, IndexatedFigure } from '@micelord/grider/src';
-import { GeoPolygon } from '@micelord/grider/src';
-import { Point } from '@micelord/grider/src';
+import { GridParams, TileMercPoint, MapGridTile, IndexatedFigure, GeoPolygon, Point } from '@micelord/grider';
 
 interface Props {
   params: GridParams;
@@ -19,7 +17,7 @@ interface Props {
 
 export class GridTile extends Component<Props> {
   mapTile: MapGridTile;
-  borderPoly: Point[];
+  borderPoly: Point[] = [];
 
   constructor(props: Props) {
     super(props);
@@ -27,7 +25,15 @@ export class GridTile extends Component<Props> {
     const {params, borderline, tilePoint} = props;
 
     this.mapTile = MapGridTile.fromTilePoint(tilePoint, params);
-    this.borderPoly = borderline.tilePoints(tilePoint);
+    
+    try {
+      this.borderPoly = borderline.tilePoints(tilePoint)
+    } catch (err) {
+      console.error(err);
+      console.error(tilePoint);
+      console.error(params);
+      console.error(borderline);
+    }
   }
   
   shouldComponentUpdate(nextProps: Props) {

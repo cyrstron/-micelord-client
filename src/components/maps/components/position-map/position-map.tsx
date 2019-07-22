@@ -91,7 +91,7 @@ export class PositionMapWrapped extends Component<Props> {
     // );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
-    this.borderline = IndexatedFigure.fromShape(this.border, this.gridParams, false);
+    this.borderline = IndexatedFigure.fromShape(this.border, this.gridParams);
   }
 
   componentDidMount() {
@@ -148,7 +148,7 @@ export class PositionMapWrapped extends Component<Props> {
 
   onBorderChange = (newBorder: GeoPolygon) => {
     this.border = newBorder;
-    this.borderline = IndexatedFigure.fromShape(newBorder, this.gridParams, false);
+    this.borderline = IndexatedFigure.fromShape(newBorder, this.gridParams);
   }
 
   render() {
@@ -260,11 +260,11 @@ export class PositionMapWrapped extends Component<Props> {
           />
           <PositionMarker />
           {this.props.children}
-          <EditableBorderline
+          {/* <EditableBorderline
             border={this.border}
             gridParams={this.gridParams}
             onPathChange={this.onBorderChange}
-          />
+          /> */}
           {/* <SmartPolygon
             paths={this.tilePoint.toPoly().points}
             onClick={this.onClick}
