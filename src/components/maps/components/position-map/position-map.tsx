@@ -6,10 +6,11 @@ import {
   GeoPoint,
   GridParams,
   Cell,
-  Figure,
+  Area,
   IndexatedFigure,
   GeoPolygon,
   GridPoint,
+  CenterPoint,
 } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
@@ -17,8 +18,7 @@ import {GridOverlay} from '../grid-overlay/grid-overlay';
 import {SmartPolygon, SmartPolyline, SmartMarker} from '@maps/feature';
 
 import {PositionMarker} from '../position-marker';
-import {Borderline} from '../borderline';
-import {EditableBorderline} from '../editable-borderline';
+import testCells from './test-cells.json';
 
 import styles from './position-map.scss';
 
@@ -42,13 +42,16 @@ export class PositionMapWrapped extends Component<Props> {
   startPoint: GeoPoint | undefined;
   activePoint: number = 0;
   gridParams = new GridParams({
-    type: 'hex',
+    type: 'rect',
     correction: 'merc',
     cellSize: 100000,
-    // isHorizontal: true,
+    isHorizontal: true,
   });
   @observable point: GeoPoint | undefined;
   @observable cell: Cell | undefined;
+  @observable cells: Cell[] = testCells.map(
+    ({i, j ,k}) => new CenterPoint(this.gridParams, i, j, k).toCell()
+  );
   @observable nextCells: Cell[] = [];
   @observable intersetions: GeoPoint[] = [];
   // @observable projections: google.maps.LatLngLiteral[] = [];
@@ -96,6 +99,7 @@ export class PositionMapWrapped extends Component<Props> {
 
   componentDidMount() {
     this.geolocationStore.watchPosition();
+    Area.fromCellCenters(this.cells.map(({center}) => center));
   }
 
   componentWillUnmount() {
@@ -109,26 +113,46 @@ export class PositionMapWrapped extends Component<Props> {
     const point = new GeoPoint(lat, lng);
 
     console.log(point);
+    console.log(this.border.containsPoint(point));
 
     this.point = point;
 
-    this.cell = this.point.toCell(this.gridParams);
-    // this.intersetions = this.border.intersectsPoly(this.cell);
+    const cell = this.point.toCell(this.gridParams);
+    this.cell = cell;
+
+    if (!cell) return;
+
+    // console.log(cell.center);
+
+    // const cellIndex = this.cells.findIndex(
+    //   (cellContaned) => cellContaned.isEqual(cell)
+    // );
+    
+    // if (cellIndex === -1) {
+    //   this.cells = [...this.cells, cell];
+    // } else {
+    //   this.cells = [
+    //     ...this.cells.slice(0, cellIndex),
+    //     ...this.cells.slice(cellIndex + 1),
+    //   ];
+    // }
+
+    this.intersetions = this.border.intersectsPoly(cell);
 
     // if (!cell) return;
 
     // console.log(cell)
     // console.log(this.point)
 
-    // this.nextCells = this.border.reduceSides((nextCells, side) => {
-    //   const nextCell = cell.nextCellOnSegment(side);
+    this.nextCells = this.border.reduceSides((nextCells, side) => {
+      const nextCell = cell.nextCellOnSegment(side);
 
-    //   if (nextCell) {
-    //     nextCells.push(nextCell);
-    //   }
+      if (nextCell) {
+        nextCells.push(nextCell);
+      }
 
-    //   return nextCells;
-    // }, [] as Cell[])
+      return nextCells;
+    }, [] as Cell[])
     // console.log(this.cell.center);
     // console.log(this.cell.points);
     // console.log(this.point.toGrid(this.gridParams));
@@ -210,9 +234,9 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}
         >
-          {/* {this.point && (
-            <SmartMarker position={this.point} title='point' />
-          )} */}
+          {this.borderline && (
+            <SmartMarker position={this.borderline.points[0]} title='point' />
+          )}
           {/* {point && (
             <SmartMarker position={point} title='pointCenter' />
           )} */}
@@ -220,14 +244,30 @@ export class PositionMapWrapped extends Component<Props> {
             <SmartPolygon 
               paths={this.cell.points} 
               onClick={this.onClick}
+              zIndex={10}
             />
           )}
+          {this.cells.map((cell) => (
+            <SmartPolygon 
+              paths={cell.points} 
+              onClick={this.onClick}
+              strokeWeight={1}
+              strokeColor='#f00'
+              fillColor='#f00'
+            />
+          ))}
           {this.borderline && (
             <SmartPolygon 
               paths={this.borderline.fullPoints.points} 
               onClick={this.onClick}
               strokeColor='green'
               fillColor='transparent'
+            />
+          )}
+          {this.borderline && (
+            <SmartPolygon 
+              paths={this.border.points} 
+              onClick={this.onClick}
             />
           )}
           {intersects.map((point, index) => (
@@ -246,14 +286,14 @@ export class PositionMapWrapped extends Component<Props> {
               />
             );
           })} */}
-          {/* {this.nextCells.map((cell, index) => (
+          {this.nextCells.map((cell, index) => (
             <SmartPolygon 
               paths={cell.points}
               strokeColor='#0f0'
               key={`intersection-${index}}`}
               onClick={this.onClick}
             />
-          ))} */}
+          ))}
           <GridOverlay 
             params={this.gridParams}
             borderline={this.borderline}
