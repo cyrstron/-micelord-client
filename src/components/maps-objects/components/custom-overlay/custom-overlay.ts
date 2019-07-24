@@ -30,7 +30,6 @@ export class CustomOverlay extends Component<Props, {}> {
     if (!container) return;
 
     this.container = container;
-    this.container.style.backgroundColor = '#fff';
   }
 
   render() {

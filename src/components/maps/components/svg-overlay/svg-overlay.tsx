@@ -4,10 +4,11 @@ import {SmartCustomOverlay} from '@maps/custom-overlay';
 
 interface Props {
   children?: ReactNode;
+  fill?: string;
   bounds: google.maps.LatLngBoundsLiteral,
 }
 
-export const SvgOverlay = ({bounds}: Props) => {
+export const SvgOverlay = ({bounds, children, fill}: Props) => {
   let {
     east,
     west,
@@ -35,38 +36,13 @@ export const SvgOverlay = ({bounds}: Props) => {
         xmlns='http://www.w3.org/2000/svg'
         width='100%'
         height='100%'
+        strokeOpacity='0'
         // viewBox={`0 0 100 ${relHeight}`}
         viewBox={`0 0 100 100`}
         aria-labelledby='title' 
-        fill="blue" 
+        fill='none'
       >
-        <pattern 
-          // patternUnits="userSpaceOnUse"
-          id="pattern"
-          width="10%" 
-          height="10%"
-        >        
-          <rect 
-            fill="#666600" 
-            width="100%"
-            height="100%"
-          />
-          <polyline 
-            points='0,11 11,0'
-            stroke="orange"
-            strokeWidth="3px"
-            vectorEffect="non-scaling-stroke"
-          /> 
-        </pattern>
-        <rect 
-          fill="url(#pattern)" 
-          x="-10"
-          y="-10"
-          width="calc(100% + 10px)"
-          height="calc(100% + 10px)"
-          // width="100%"
-          // height="100%"
-        />
+        {children}
       </svg>
     </SmartCustomOverlay>
   );

@@ -16,6 +16,7 @@ import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
 import {GridOverlay} from '../grid-overlay/grid-overlay';
 import {SmartPolygon, SmartPolyline, SmartMarker} from '@maps/feature';
+import {CellPoly} from '../cell/cell';
 
 import {PositionMarker} from '../position-marker';
 import testCells from './test-cells.json';
@@ -45,7 +46,7 @@ export class PositionMapWrapped extends Component<Props> {
     type: 'rect',
     correction: 'merc',
     cellSize: 100000,
-    isHorizontal: true,
+    // isHorizontal: true,
   });
   @observable point: GeoPoint | undefined;
   @observable cell: Cell | undefined;
@@ -141,7 +142,7 @@ export class PositionMapWrapped extends Component<Props> {
 
     // if (!cell) return;
 
-    // console.log(cell)
+    console.log(cell)
     // console.log(this.point)
 
     this.nextCells = this.border.reduceSides((nextCells, side) => {
@@ -247,13 +248,10 @@ export class PositionMapWrapped extends Component<Props> {
               zIndex={10}
             />
           )}
-          {this.cells.map((cell) => (
-            <SmartPolygon 
-              paths={cell.points} 
-              onClick={this.onClick}
-              strokeWeight={1}
-              strokeColor='#f00'
-              fillColor='#f00'
+          {this.cells.map((cell, index) => (
+            <CellPoly
+              cell={cell}
+              key={`cell-${index}`}
             />
           ))}
           {this.borderline && (
@@ -264,13 +262,13 @@ export class PositionMapWrapped extends Component<Props> {
               fillColor='transparent'
             />
           )}
-          {this.borderline && (
+          {/* {this.borderline && (
             <SmartPolygon 
               paths={this.border.points} 
               onClick={this.onClick}
             />
-          )}
-          {intersects.map((point, index) => (
+          )} */}
+          {this.intersetions.map((point, index) => (
             <SmartMarker 
               position={point}
               title={`{lat: ${point.lat}, lng: ${point.lng}}`}
@@ -287,11 +285,9 @@ export class PositionMapWrapped extends Component<Props> {
             );
           })} */}
           {this.nextCells.map((cell, index) => (
-            <SmartPolygon 
-              paths={cell.points}
-              strokeColor='#0f0'
-              key={`intersection-${index}}`}
-              onClick={this.onClick}
+            <CellPoly
+              cell={cell}
+              key={`next-cell-${index}`}
             />
           ))}
           <GridOverlay 
