@@ -43,7 +43,7 @@ export class PositionMapWrapped extends Component<Props> {
   startPoint: GeoPoint | undefined;
   activePoint: number = 0;
   gridParams = new GridParams({
-    type: 'rect',
+    type: 'hex',
     correction: 'merc',
     cellSize: 100000,
     // isHorizontal: true,
