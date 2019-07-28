@@ -43,7 +43,7 @@ export class PositionMapWrapped extends Component<Props> {
   startPoint: GeoPoint | undefined;
   activePoint: number = 0;
   gridParams = new GridParams({
-    type: 'hex',
+    type: 'rect',
     correction: 'merc',
     cellSize: 100000,
     // isHorizontal: true,
@@ -53,6 +53,7 @@ export class PositionMapWrapped extends Component<Props> {
   @observable cells: Cell[] = testCells.map(
     ({i, j ,k}) => new CenterPoint(this.gridParams, i, j, k).toCell()
   );
+  @observable area = Area.fromCellCenters(this.cells.map(({center}) => center));
   @observable nextCells: Cell[] = [];
   @observable intersetions: GeoPoint[] = [];
   // @observable projections: google.maps.LatLngLiteral[] = [];
@@ -100,7 +101,6 @@ export class PositionMapWrapped extends Component<Props> {
 
   componentDidMount() {
     this.geolocationStore.watchPosition();
-    Area.fromCellCenters(this.cells.map(({center}) => center));
   }
 
   componentWillUnmount() {
@@ -122,6 +122,10 @@ export class PositionMapWrapped extends Component<Props> {
     this.cell = cell;
 
     if (!cell) return;
+
+    this.cells = [...this.cells, cell];
+
+    this.area = Area.fromCellCenters(this.cells.map(({center}) => center))
 
     // console.log(cell.center);
 
@@ -260,6 +264,14 @@ export class PositionMapWrapped extends Component<Props> {
               onClick={this.onClick}
               strokeColor='green'
               fillColor='transparent'
+            />
+          )}
+          {this.area && (
+            <SmartPolygon 
+              paths={this.area.points} 
+              onClick={this.onClick}
+              strokeColor='green'
+              fillColor='green'
             />
           )}
           {/* {this.borderline && (
