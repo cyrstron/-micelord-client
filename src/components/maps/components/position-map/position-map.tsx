@@ -43,16 +43,16 @@ export class PositionMapWrapped extends Component<Props> {
   startPoint: GeoPoint | undefined;
   activePoint: number = 0;
   gridParams = new GridParams({
-    type: 'rect',
+    type: 'hex',
     correction: 'merc',
     cellSize: 100000,
     // isHorizontal: true,
   });
   @observable point: GeoPoint | undefined;
   @observable cell: Cell | undefined;
-  @observable cells: Cell[] = testCells.map(
-    ({i, j ,k}) => new CenterPoint(this.gridParams, i, j, k).toCell()
-  );
+  @observable cells: Cell[] = [] //testCells.map(
+    // ({i, j ,k}) => new CenterPoint(this.gridParams, i, j, k).toCell()
+  // );
   @observable area = Area.fromCellCenters(this.cells.map(({center}) => center));
   @observable nextCells: Cell[] = [];
   @observable intersetions: GeoPoint[] = [];
@@ -268,12 +268,21 @@ export class PositionMapWrapped extends Component<Props> {
           )}
           {this.area && (
             <SmartPolygon 
-              paths={this.area.points} 
+              paths={this.area.polys} 
               onClick={this.onClick}
               strokeColor='green'
               fillColor='green'
             />
           )}
+          <SmartPolygon 
+            paths={[
+              [{lat: 50, lng: 100}, {lat: 40, lng: 120}, {lat: 55, lng: 110}],
+              [{lat: 50, lng: 105}, {lat: 47, lng: 110}, {lat: 50, lng: 108}]
+            ]} 
+            onClick={this.onClick}
+            strokeColor='green'
+            fillColor='green'
+          />
           {/* {this.borderline && (
             <SmartPolygon 
               paths={this.border.points} 

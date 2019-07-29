@@ -14,7 +14,7 @@ type PolygonEventHandler = google.maps.MapMouseEventHandler |
 
 type PolygonProps = google.maps.PolygonOptions & 
 	PolygonEventsProps & {
-		paths: geo.Location[]
+		paths: geo.Location[] | geo.Location[][]
 	};
   
 type PolygonEventName = FeatureEventName |  
