@@ -49,6 +49,12 @@ module.exports = {
           { loader: 'sass-loader', options: { sourceMap: true } }
         ],
       },
+      {
+        test: /\.js\.map$/,
+        use: "source-map-loader",
+        enforce: "pre",
+        // include: path.join(__dirname, '/node_modules/@micelord')
+      }
     ]
   },
   plugins: [
