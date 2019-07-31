@@ -11,6 +11,7 @@ import {
   GeoPolygon,
   GridPoint,
   CenterPoint,
+  CellConnection,
 } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
 import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
@@ -46,13 +47,15 @@ export class PositionMapWrapped extends Component<Props> {
     type: 'hex',
     correction: 'merc',
     cellSize: 100000,
-    // isHorizontal: true,
+    isHorizontal: true,
   });
   @observable point: GeoPoint | undefined;
   @observable cell: Cell | undefined;
+  @observable cellA = new Cell(new CenterPoint(this.gridParams, 40, 36, -76));
   @observable cells: Cell[] = [] //testCells.map(
     // ({i, j ,k}) => new CenterPoint(this.gridParams, i, j, k).toCell()
   // );
+  @observable connection: CellConnection | undefined;
   @observable area = Area.fromCellCenters(this.cells.map(({center}) => center));
   @observable nextCells: Cell[] = [];
   @observable intersetions: GeoPoint[] = [];
@@ -123,9 +126,12 @@ export class PositionMapWrapped extends Component<Props> {
 
     if (!cell) return;
 
-    this.cells = [...this.cells, cell];
+    this.connection = CellConnection.fromCenters(this.cellA.center, this.cell.center);
 
-    this.area = Area.fromCellCenters(this.cells.map(({center}) => center))
+
+    // this.cells = [...this.cells, cell];
+
+    // this.area = Area.fromCellCenters(this.cells.map(({center}) => center))
 
     // console.log(cell.center);
 
@@ -296,15 +302,12 @@ export class PositionMapWrapped extends Component<Props> {
               key={`intersect-${index}`}
             />
           ))}
-          {/* {segments.map((segment, index) => {
-            return (
+          {this.connection && (
               <SmartPolyline 
-                path={segment.points}
-                key={`grid-point-${index}`}
+                path={this.connection.path}
                 strokeColor={'rgba(50, 0, 200, 0.5)'}
               />
-            );
-          })} */}
+          )}
           {this.nextCells.map((cell, index) => (
             <CellPoly
               cell={cell}
