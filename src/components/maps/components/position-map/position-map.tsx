@@ -121,12 +121,12 @@ export class PositionMapWrapped extends Component<Props> {
 
     this.point = point;
 
-    const cell = this.point.toCell(this.gridParams);
-    this.cell = cell;
+    // const cell = CenterPoint. (this.point, this.gridParams);
+    // this.cell = cell;
 
-    if (!cell) return;
+    // if (!cell) return;
 
-    this.connection = CellConnection.fromCenters(this.cellA.center, this.cell.center);
+    // this.connection = CellConnection.fromCenters(this.cellA.center, this.cell.center);
 
 
     // this.cells = [...this.cells, cell];
@@ -148,19 +148,19 @@ export class PositionMapWrapped extends Component<Props> {
     //   ];
     // }
 
-    this.intersetions = this.border.intersectsPoly(cell);
+    // this.intersetions = this.border.intersectsPoly(cell);
 
     // if (!cell) return;
 
-    console.log(cell)
+    // console.log(cell)
     // console.log(this.point)
 
     this.nextCells = this.border.reduceSides((nextCells, side) => {
-      const nextCell = cell.nextCellOnSegment(side);
+      // const nextCell = cell.nextCellOnSegment(side);
 
-      if (nextCell) {
-        nextCells.push(nextCell);
-      }
+      // if (nextCell) {
+      //   nextCells.push(nextCell);
+      // }
 
       return nextCells;
     }, [] as Cell[])

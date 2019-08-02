@@ -85,7 +85,7 @@ export class DumbEditableBorderline extends Component<Props> {
     const {border, gridParams} = this.props;
 
     const {selfIntersections} = border;
-    const cells = border.cellsInvalidForFigure(gridParams);
+    // const cells = border.cellsInvalidForFigure(gridParams);
 
     return (
       <>
@@ -99,9 +99,9 @@ export class DumbEditableBorderline extends Component<Props> {
         {selfIntersections.map((point, index) => (
           <SmartMarker position={point} title={`${index}`} key={index} />
         ))}
-        {cells.map((cell, index) => (
+        {/* {cells.map((cell, index) => (
           <SmartPolygon paths={cell.points} key={index} />
-        ))}
+        ))} */}
       </>
     );
   }
