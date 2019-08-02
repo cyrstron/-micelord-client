@@ -26,7 +26,7 @@
     },    
     "typeRoots": [
       "node_modules/@types",
-      "./src/**/*"
+      "./src/**/*",
     ],
     "allowSyntheticDefaultImports": true, 
     "esModuleInterop": true,
@@ -36,7 +36,7 @@
   },
   "include": [
     "./src/**/*",
-    "./node_modules/@micelord/grider",
+    "@micelord/grider",
     "tsconfig.json"
   ]
 }

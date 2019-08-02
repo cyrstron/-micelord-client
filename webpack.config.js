@@ -26,7 +26,7 @@ module.exports = {
     plugins: [
       new TsconfigPathsPlugin(),
     ],
-    extensions: ['.ts', '.tsx', '.js', '.css'],    
+    extensions: ['.ts', '.tsx', '.js', '.css', '.js.map'],    
     symlinks: false
   },
   module: {
@@ -53,7 +53,7 @@ module.exports = {
         test: /\.js\.map$/,
         use: "source-map-loader",
         enforce: "pre",
-        // include: path.join(__dirname, '/node_modules/@micelord')
+        include: path.join(__dirname, '/node_modules/@micelord')
       }
     ]
   },
