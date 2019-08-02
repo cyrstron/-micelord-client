@@ -43,7 +43,7 @@ export class PositionMapWrapped extends Component<Props> {
   gridAdded: boolean = false;
   startPoint: GeoPoint | undefined;
   activePoint: number = 0;
-  gridParams = new GridParams({
+  gridParams = GridParams.fromConfig({
     type: 'hex',
     correction: 'merc',
     cellSize: 100000,
@@ -68,7 +68,7 @@ export class PositionMapWrapped extends Component<Props> {
     {lat: 49.20018618540992, lng: 24.0576171875}, 
     {lat: 51.936842019727436, lng: 32.2314453125},
   ].map(({lat, lng}) => new GeoPoint(lat, lng)));
-  @observable borderline: IndexatedFigure;
+  @observable borderline?: IndexatedFigure;
   // @observable tilePoint = TileMercPoint.fromTile(38, 22, 512, 512, 7);
   // @observable poly?: google.maps.LatLngLiteral[];
   // @observable intersects: google.maps.LatLngLiteral[] = [];
@@ -99,7 +99,7 @@ export class PositionMapWrapped extends Component<Props> {
     // );
     this.geolocationStore = props.geolocationStore!;
     this.mapStore = props.mapStore!;
-    this.borderline = IndexatedFigure.fromShape(this.border, this.gridParams);
+    this.onBorderChange(this.border);
   }
 
   componentDidMount() {
@@ -181,9 +181,9 @@ export class PositionMapWrapped extends Component<Props> {
     this.mapStore.panTo(position);
   }
 
-  onBorderChange = (newBorder: GeoPolygon) => {
+  onBorderChange = async (newBorder: GeoPolygon) => {
     this.border = newBorder;
-    this.borderline = IndexatedFigure.fromShape(newBorder, this.gridParams);
+    this.borderline = await IndexatedFigure.fromShape(newBorder, this.gridParams);
   }
 
   render() {
@@ -314,10 +314,12 @@ export class PositionMapWrapped extends Component<Props> {
               key={`next-cell-${index}`}
             />
           ))}
-          <GridOverlay 
-            params={this.gridParams}
-            borderline={this.borderline}
-          />
+          {this.borderline && (
+            <GridOverlay 
+              params={this.gridParams}
+              borderline={this.borderline}
+            />
+          )}
           <PositionMarker />
           {this.props.children}
           {/* <EditableBorderline
