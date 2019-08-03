@@ -46,7 +46,7 @@ export class PositionMapWrapped extends Component<Props> {
   gridParams = GridParams.fromConfig({
     type: 'hex',
     correction: 'merc',
-    cellSize: 100000,
+    cellSize: 50000,
     isHorizontal: true,
   });
   @observable point: GeoPoint | undefined;

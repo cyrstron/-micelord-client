@@ -1,49 +1,76 @@
 import React, {Component, Fragment} from 'react';
-// import {StaticGrider, BorderRenderer, utils} from '@micelord/grider';
-import { GridParams, TileMercPoint, MapGridTile, IndexatedFigure, GeoPolygon, Point } from '@micelord/grider';
+import { 
+  GridParams, 
+  TileMercPoint, 
+  MapGridTile, 
+  IndexatedFigure, 
+  Point 
+} from '@micelord/grider';
 
 interface Props {
   params: GridParams;
   tilePoint: TileMercPoint;
-  // grider: StaticGrider;
-  // width: number;
-  // height: number;
-  // tileCoord: grider.Point,
-  // zoom: number,
-  // borderRenderer: BorderRenderer,
   borderline: IndexatedFigure,
-  // border: google.maps.LatLngLiteral[],
 }
 
-export class GridTile extends Component<Props> {
+interface State {
+  borderPoly: Point[] | null;
+}
+
+export class GridTile extends Component<Props, State> {
   mapTile: MapGridTile;
-  borderPoly: Point[] = [];
+
+  wasMounted: boolean = false;
+  wasUnmounted: boolean = false;
 
   constructor(props: Props) {
     super(props);
 
-    const {params, borderline, tilePoint} = props;
+    const {params, tilePoint} = props;
 
     this.mapTile = MapGridTile.fromTilePoint(tilePoint, params);
-    
+
+    this.state = {
+      borderPoly: null,
+    }
+
+    this.updateBorderPoly();
+  }
+
+  componentDidMount() {
+    this.wasMounted = true;
+  }
+
+  componentWillUnmount() {
+    this.wasUnmounted = true;
+  }
+
+  async updateBorderPoly() {
+    const {borderline, tilePoint} = this.props;
+
     try {
-      this.borderPoly = borderline.tilePoints(tilePoint)
+      const borderPoly = await borderline.tilePoints(tilePoint);
+
+      if (this.wasUnmounted) return;
+
+      if (!this.wasMounted) {
+        this.state = {borderPoly};
+      } else {
+        this.setState({
+          borderPoly
+        });
+      }
     } catch (err) {
       console.error(err);
-      console.error(tilePoint);
-      console.error(params);
-      console.error(borderline);
     }
   }
   
-  shouldComponentUpdate(nextProps: Props) {
+  shouldComponentUpdate(_nextProps: Props, nextState: State) {
     const {
-      tilePoint,
-      params,
-    } = this.props;
+      borderPoly,
+    } = this.state;
 
-    return !nextProps.tilePoint.isEqual(tilePoint) && 
-      !nextProps.params.isEqual(params);
+    return !borderPoly && !!nextState.borderPoly;
   }
 
   componentWillUpdate(nextProps: Props) {
@@ -57,7 +84,7 @@ export class GridTile extends Component<Props> {
     }
 
     if (nextProps.borderline !== borderline || nextProps.tilePoint !== tilePoint) {
-      this.borderPoly = nextProps.borderline.tilePoints(nextProps.tilePoint);
+      this.updateBorderPoly()
     }
   }
 
@@ -66,6 +93,10 @@ export class GridTile extends Component<Props> {
       tilePoint,
       params,
     } = this.props;
+
+    const {
+      borderPoly,
+    } = this.state;
     
     const minCellSize = params.minCellSize(tilePoint);
 
@@ -167,18 +198,10 @@ export class GridTile extends Component<Props> {
             width={tilePoint.tileWidth}
             height={tilePoint.tileHeight}
           />
-          {/* <rect 
-            mask={`url(#${maskId})`} 
-            fill={`rgba(40, 40, 40, ${strokeOpacity})`}
-            x={start.x * tilePoint.tileWidth}
-            y={start.y * tilePoint.tileHeight}
-            width={rectWidth}
-            height={rectHeight}
-          /> */}
-          {this.borderPoly.length > 0 && (
+          {borderPoly && borderPoly.length > 0 && (
             <polygon 
               mask={`url(#${maskId})`} 
-              points={this.borderPoly.map(({x, y}) => `${x},${y}`).join(' ')}
+              points={borderPoly.map(({x, y}) => `${x},${y}`).join(' ')}
               fill="rgba(0, 255, 0, 1)"
               stroke="rgba(0, 255, 0, 1)"
               strokeWidth={stokeWidth}
