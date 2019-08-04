@@ -15,26 +15,22 @@ interface Props {
 
 interface State {
   borderPoly: Point[] | null;
+  mapTile: MapGridTile | null;
 }
 
 export class GridTile extends Component<Props, State> {
-  mapTile: MapGridTile;
-
   wasMounted: boolean = false;
   wasUnmounted: boolean = false;
 
   constructor(props: Props) {
     super(props);
 
-    const {params, tilePoint} = props;
-
-    this.mapTile = MapGridTile.fromTilePoint(tilePoint, params);
-
     this.state = {
       borderPoly: null,
+      mapTile: null,
     }
 
-    this.updateBorderPoly();
+    this.updateTile();
   }
 
   componentDidMount() {
@@ -45,19 +41,21 @@ export class GridTile extends Component<Props, State> {
     this.wasUnmounted = true;
   }
 
-  async updateBorderPoly() {
-    const {borderline, tilePoint} = this.props;
+  async updateTile() {
+    const {borderline, tilePoint, params} = this.props;
 
     try {
       const borderPoly = await borderline.tilePoints(tilePoint);
+      const mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
 
       if (this.wasUnmounted) return;
 
       if (!this.wasMounted) {
-        this.state = {borderPoly};
+        this.state = {borderPoly, mapTile};
       } else {
         this.setState({
-          borderPoly
+          borderPoly,
+          mapTile,
         });
       }
     } catch (err) {
@@ -76,15 +74,9 @@ export class GridTile extends Component<Props, State> {
   componentWillUpdate(nextProps: Props) {
     const {params, borderline, tilePoint} = this.props;
 
-    if (nextProps.tilePoint !== tilePoint || nextProps.params !== params) {
-      this.mapTile = MapGridTile.fromTilePoint(
-        nextProps.tilePoint, 
-        nextProps.params
-      );
-    }
 
     if (nextProps.borderline !== borderline || nextProps.tilePoint !== tilePoint) {
-      this.updateBorderPoly()
+      this.updateTile()
     }
   }
 
@@ -96,6 +88,7 @@ export class GridTile extends Component<Props, State> {
 
     const {
       borderPoly,
+      mapTile
     } = this.state;
     
     const minCellSize = params.minCellSize(tilePoint);
@@ -137,7 +130,7 @@ export class GridTile extends Component<Props, State> {
           fill="transparent" 
           style={{border: '1px dashed green'}}
         >
-        {this.mapTile.patterns.map(({start, end, tile}, index) => {
+        {mapTile && mapTile.patterns.map(({start, end, tile}, index) => {
           const patternId = `pattern-${tileX}-${tileY}-${index}`;
           const patternWidth = tileWidth * tile.tileWidth;
           const patternHeight = tileHeight * tile.tileHeight;
@@ -174,7 +167,7 @@ export class GridTile extends Component<Props, State> {
           )
         })}  
           <mask id={maskId}>  
-            {this.mapTile.patterns.map(({start, end, tile}, index) => {
+            {mapTile && mapTile.patterns.map(({start, end, tile}, index) => {
               const patternId = `pattern-${tileX}-${tileY}-${index}`;
               const rectWidth = (end.x - start.x) * tileWidth;
               const rectHeight = (end.y - start.y) * tileHeight;
