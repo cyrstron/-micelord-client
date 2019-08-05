@@ -50,13 +50,13 @@ export class PositionMapWrapped extends Component<Props> {
     isHorizontal: true,
   });
   @observable point: GeoPoint | undefined;
+  @observable area: Area | undefined;
   @observable cell: Cell | undefined;
   @observable cellA = new Cell(new CenterPoint(this.gridParams, 40, 36, -76));
   @observable cells: Cell[] = [] //testCells.map(
     // ({i, j ,k}) => new CenterPoint(this.gridParams, i, j, k).toCell()
   // );
   @observable connection: CellConnection | undefined;
-  @observable area = Area.fromCellCenters(this.cells.map(({center}) => center));
   @observable nextCells: Cell[] = [];
   @observable intersetions: GeoPoint[] = [];
   // @observable projections: google.maps.LatLngLiteral[] = [];
@@ -110,7 +110,7 @@ export class PositionMapWrapped extends Component<Props> {
     this.geolocationStore.unwatchPosition();
   }
 
-  onClick = (e: google.maps.MouseEvent) => {
+  onClick = async (e: google.maps.MouseEvent) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
 
@@ -121,17 +121,19 @@ export class PositionMapWrapped extends Component<Props> {
 
     this.point = point;
 
-    // const cell = CenterPoint. (this.point, this.gridParams);
-    // this.cell = cell;
+    const center = CenterPoint.fromGeo(this.point, this.gridParams);
+    const cell = Cell.fromCenter(center);
 
-    // if (!cell) return;
+    if (!cell) return;
+
+    this.cell = cell;
 
     // this.connection = CellConnection.fromCenters(this.cellA.center, this.cell.center);
 
 
-    // this.cells = [...this.cells, cell];
+    this.cells = [...this.cells, cell];
 
-    // this.area = Area.fromCellCenters(this.cells.map(({center}) => center))
+    this.area = await Area.fromCellCenters(this.cells.map(({center}) => center))
 
     // console.log(cell.center);
 
@@ -258,12 +260,12 @@ export class PositionMapWrapped extends Component<Props> {
               zIndex={10}
             />
           )}
-          {this.cells.map((cell, index) => (
+          {/* {this.cells.map((cell, index) => (
             <CellPoly
               cell={cell}
               key={`cell-${index}`}
             />
-          ))}
+          ))} */}
           {this.borderline && (
             <SmartPolygon 
               paths={this.borderline.fullPoints.points} 
