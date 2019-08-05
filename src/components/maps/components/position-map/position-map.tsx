@@ -46,7 +46,7 @@ export class PositionMapWrapped extends Component<Props> {
   gridParams = GridParams.fromConfig({
     type: 'hex',
     correction: 'merc',
-    cellSize: 50000,
+    cellSize: 10000,
     isHorizontal: true,
   });
   @observable point: GeoPoint | undefined;
@@ -133,7 +133,7 @@ export class PositionMapWrapped extends Component<Props> {
 
     this.cells = [...this.cells, cell];
 
-    this.area = await Area.fromCellCenters(this.cells.map(({center}) => center))
+    // this.area = await Area.fromCellCenters(this.cells.map(({center}) => center))
 
     // console.log(cell.center);
 
@@ -150,7 +150,7 @@ export class PositionMapWrapped extends Component<Props> {
     //   ];
     // }
 
-    // this.intersetions = this.border.intersectsPoly(cell);
+    this.intersetions = this.border.intersectsPoly(cell);
 
     // if (!cell) return;
 
@@ -254,10 +254,8 @@ export class PositionMapWrapped extends Component<Props> {
             <SmartMarker position={point} title='pointCenter' />
           )} */}
           {this.cell && (
-            <SmartPolygon 
-              paths={this.cell.points} 
-              onClick={this.onClick}
-              zIndex={10}
+            <CellPoly 
+              cell={this.cell} 
             />
           )}
           {/* {this.cells.map((cell, index) => (
@@ -274,14 +272,14 @@ export class PositionMapWrapped extends Component<Props> {
               fillColor='transparent'
             />
           )}
-          {this.area && (
+          {/* {this.area && (
             <SmartPolygon 
               paths={this.area.polys} 
               onClick={this.onClick}
               strokeColor='green'
               fillColor='green'
             />
-          )}
+          )} */}
           <SmartPolygon 
             paths={[
               [{lat: 50, lng: 100}, {lat: 40, lng: 120}, {lat: 55, lng: 110}],
@@ -291,12 +289,12 @@ export class PositionMapWrapped extends Component<Props> {
             strokeColor='green'
             fillColor='green'
           />
-          {/* {this.borderline && (
+          {this.borderline && (
             <SmartPolygon 
               paths={this.border.points} 
               onClick={this.onClick}
             />
-          )} */}
+          )}
           {this.intersetions.map((point, index) => (
             <SmartMarker 
               position={point}
