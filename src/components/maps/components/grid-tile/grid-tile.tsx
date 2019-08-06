@@ -44,22 +44,36 @@ export class GridTile extends Component<Props, State> {
   async updateTile() {
     const {borderline, tilePoint, params} = this.props;
 
+    let borderPoly: Point[] = [];
+    let mapTile: MapGridTile | null = null;
+
     try {
-      const borderPoly = await borderline.tilePoints(tilePoint);
-      const mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
-
-      if (this.wasUnmounted) return;
-
-      if (!this.wasMounted) {
-        this.state = {borderPoly, mapTile};
-      } else {
-        this.setState({
-          borderPoly,
-          mapTile,
-        });
-      }
+      borderPoly = await borderline.tilePoints(tilePoint);
     } catch (err) {
+      console.error('Border tile error!');
+      console.error(tilePoint);
+      console.error(params);
       console.error(err);
+    }
+
+    try {
+      mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
+    } catch (err) {
+      console.error('Grid tile error!');
+      console.error(tilePoint);
+      console.error(params);
+      console.error(err);
+    }
+
+    if (this.wasUnmounted) return;
+
+    if (!this.wasMounted) {
+      this.state = {borderPoly, mapTile};
+    } else {
+      this.setState({
+        borderPoly,
+        mapTile,
+      });
     }
   }
   
@@ -72,8 +86,7 @@ export class GridTile extends Component<Props, State> {
   }
 
   componentWillUpdate(nextProps: Props) {
-    const {params, borderline, tilePoint} = this.props;
-
+    const {borderline, tilePoint} = this.props;
 
     if (nextProps.borderline !== borderline || nextProps.tilePoint !== tilePoint) {
       this.updateTile()

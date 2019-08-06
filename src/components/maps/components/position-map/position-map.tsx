@@ -131,11 +131,15 @@ export class PositionMapWrapped extends Component<Props> {
     // this.connection = CellConnection.fromCenters(this.cellA.center, this.cell.center);
 
 
-    this.cells = [...this.cells, cell];
+    const cells = [...this.cells, cell];
 
-    // this.area = await Area.fromCellCenters(this.cells.map(({center}) => center))
+    const centers = await Area.biggestSet(cells.map(({center}) => center));
 
-    // console.log(cell.center);
+    this.cells = centers.map((center) => Cell.fromCenter(center));
+
+    this.area = await Area.fromCellCenters(centers)
+
+    console.log(cell.center);
 
     // const cellIndex = this.cells.findIndex(
     //   (cellContaned) => cellContaned.isEqual(cell)
@@ -272,14 +276,14 @@ export class PositionMapWrapped extends Component<Props> {
               fillColor='transparent'
             />
           )}
-          {/* {this.area && (
+          {this.area && (
             <SmartPolygon 
               paths={this.area.polys} 
               onClick={this.onClick}
               strokeColor='green'
               fillColor='green'
             />
-          )} */}
+          )}
           <SmartPolygon 
             paths={[
               [{lat: 50, lng: 100}, {lat: 40, lng: 120}, {lat: 55, lng: 110}],
@@ -289,12 +293,12 @@ export class PositionMapWrapped extends Component<Props> {
             strokeColor='green'
             fillColor='green'
           />
-          {this.borderline && (
+          {/* {this.borderline && (
             <SmartPolygon 
               paths={this.border.points} 
               onClick={this.onClick}
             />
-          )}
+          )} */}
           {this.intersetions.map((point, index) => (
             <SmartMarker 
               position={point}
