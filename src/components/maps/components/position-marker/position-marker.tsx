@@ -1,7 +1,7 @@
 import {inject, observer} from 'mobx-react';
 import React, {Component} from 'react';
 import {GeolocationStore} from '@stores/geolocation';
-import {SmartMarker} from '@maps/feature';
+import {SmartMarker} from '@micelord/maps';
 
 interface MarkerProps {
   geolocationStore?: GeolocationStore;

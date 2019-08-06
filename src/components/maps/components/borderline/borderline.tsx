@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SmartPolyline, SmartMarker, SmartPolygon} from '@maps/feature';
+import {SmartPolyline, SmartMarker, SmartPolygon} from '@micelord/maps';
 // import {StaticGrider} from '@micelord/grider';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';

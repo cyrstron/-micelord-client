@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2017",
     "module": "commonjs", 
     "lib": [
       "esnext",
@@ -36,7 +36,6 @@
   },
   "include": [
     "./src/**/*",
-    "@micelord/grider",
     "tsconfig.json"
   ]
 }

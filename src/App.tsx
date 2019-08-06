@@ -2,7 +2,6 @@ import classNames from 'classnames/bind';
 import styles from './app.scss';
 import React, { Component } from 'react';
 import {PositionMap} from '@components/maps';
-import DevTools from 'mobx-react-devtools';
 
 const cx = classNames.bind(styles);
 

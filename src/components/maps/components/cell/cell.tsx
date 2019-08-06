@@ -1,6 +1,6 @@
 import React from 'react';
 import {SvgOverlay} from '../svg-overlay/svg-overlay';
-import {SmartPolygon} from '@maps/feature';
+import {SmartPolygon} from '@micelord/maps';
 import { Cell } from '@micelord/grider';
 
 export const CellPoly = ({

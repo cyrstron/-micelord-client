@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {SmartCustomOverlay} from '@maps/custom-overlay';
+import {SmartCustomOverlay} from '@micelord/maps';
 // import {utils} from '@micelord/grider';
 
 interface Props {

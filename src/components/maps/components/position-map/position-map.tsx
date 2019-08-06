@@ -14,9 +14,15 @@ import {
   CellConnection,
 } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
-import {CtrlMapStore, DumbCtrlMap, withCtrlMapCtx} from '@components/maps-objects';
+import {
+  CtrlMapStore, 
+  DumbCtrlMap, 
+  withCtrlMapCtx, 
+  SmartPolygon, 
+  SmartPolyline, 
+  SmartMarker
+} from '@micelord/maps';
 import {GridOverlay} from '../grid-overlay/grid-overlay';
-import {SmartPolygon, SmartPolyline, SmartMarker} from '@maps/feature';
 import {CellPoly} from '../cell/cell';
 
 import {PositionMarker} from '../position-marker';

@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {SmartTilesOverlay} from '@maps/tiles-overlay';
+import {SmartTilesOverlay} from '@micelord/maps';
 // import {StaticGrider, createBorderRenderer, BorderRenderer} from '@micelord/grider';
 import {GridTile} from '../grid-tile/grid-tile';
 // import {SmartMarker, SmartPolyline} from '@maps/feature';
 import {TileMercPoint, IndexatedFigure} from '@micelord/grider'
-import { GridParams } from '@micelord/grider/src';
+import { GridParams } from '@micelord/grider';
 
 interface Props {
   params: GridParams;

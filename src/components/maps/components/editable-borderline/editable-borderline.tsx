@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {DumbPolyline, SmartMarker, SmartPolygon} from '@maps/feature';
-import {PolylineStore} from '@maps/feature';
+import {DumbPolyline, SmartMarker, SmartPolygon} from '@micelord/maps';
+import {PolylineStore} from '@micelord/maps';
 import {GeoPolygon, GeoPoint, GridParams} from '@micelord/grider';
 import debounce from 'lodash/debounce';
 
