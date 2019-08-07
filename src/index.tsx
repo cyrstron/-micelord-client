@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import {Provider as ReduxProvider} from 'react-redux';
 import App from './app';
 import {configureStore} from './state';
-import {GoogleMapsStore, GeolocationStore} from './stores';
+import {GeolocationStore} from './stores';
+import {GoogleMapsStore} from '@micelord/maps';
 import './index.scss';
 
 const stores = {

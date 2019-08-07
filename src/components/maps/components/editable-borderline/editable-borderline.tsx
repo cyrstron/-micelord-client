@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {DumbPolyline, SmartMarker, SmartPolygon} from '@micelord/maps';
-import {PolylineStore} from '@micelord/maps';
+import {DumbPolyline, SmartMarker, PolylineStore} from '@micelord/maps';
 import {GeoPolygon, GeoPoint, GridParams} from '@micelord/grider';
 import debounce from 'lodash/debounce';
 
@@ -58,26 +57,26 @@ export class DumbEditableBorderline extends Component<Props> {
 
     if (!path) return;
 
-    const pathExtended = path.map(({lat, lng}) => new GeoPoint(lat, lng));
+    // const pathExtended = path.map(({lat, lng}) => new GeoPoint(lat, lng));
 
-    const borderPoints = pathExtended.slice(0, -1);
+    // const borderPoints = pathExtended.slice(0, -1);
 
-    if (!pathExtended[pathExtended.length - 1].isEqual(pathExtended[0])) {
-      borderPoints[0] = pathExtended[pathExtended.length - 1];
-    }
+    // if (!pathExtended[pathExtended.length - 1].isEqual(pathExtended[0])) {
+    //   borderPoints[0] = pathExtended[pathExtended.length - 1];
+    // }
 
-    const arePointsChanged = borderPoints.length !== border.points.length || border
-      .points.reduce((arePointsChanged: boolean, point, index) => {
-        if (arePointsChanged) return arePointsChanged;
+    // const arePointsChanged = borderPoints.length !== border.points.length || border
+    //   .points.reduce((arePointsChanged: boolean, point, index) => {
+    //     if (arePointsChanged) return arePointsChanged;
         
-        return point.isEqual(border.points[index]);
-      }, false);
+    //     return point.isEqual(border.points[index]);
+    //   }, false);
 
-    if (!arePointsChanged) return;
+    // if (!arePointsChanged) return;
 
-    const poly = new GeoPolygon(borderPoints)
+    // const poly = new GeoPolygon(borderPoints)
 
-    onPathChange(poly);
+    // onPathChange(poly);
   }, 500)
 
 
