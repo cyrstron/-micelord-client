@@ -34,7 +34,7 @@ class App extends Component<{}, {string: string}> {
         <header className={cx('App-header')}>
           {string}
         </header>
-        <PositionMap/>
+        <PositionMap apiKey={process.env.GOOGLE_MAPS_KEY}/>
         {/* <DevTools /> */}
       </div>
     );

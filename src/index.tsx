@@ -10,7 +10,6 @@ import './index.scss';
 
 const stores = {
   geolocationStore: new GeolocationStore(),
-  googleMapsStore: new GoogleMapsStore(process.env.GOOGLE_MAPS_KEY!),
 };
 
 ReactDOM.render((

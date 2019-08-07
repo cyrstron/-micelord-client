@@ -35,10 +35,11 @@ const cx = classNames.bind(styles);
 interface PositionMapProps {
   geolocationStore?: GeolocationStore;
   children?: ReactNode;
+  apiKey: string;
 }
 
 type Props = PositionMapProps & {
-  // mapStore: CtrlMapStore,
+  mapStore: CtrlMapStore,
 }
 
 @inject('geolocationStore')
@@ -104,7 +105,7 @@ export class PositionMapWrapped extends Component<Props> {
     //   this.grider.params
     // );
     this.geolocationStore = props.geolocationStore!;
-    // this.mapStore = props.mapStore!;
+    this.mapStore = props.mapStore!;
     this.onBorderChange(this.border);
   }
 
@@ -190,7 +191,7 @@ export class PositionMapWrapped extends Component<Props> {
 
     if (!position) return;
 
-    this.mapStore.panTo(position);
+    // this.mapStore.panTo(position);
   }
 
   onBorderChange = async (newBorder: GeoPolygon) => {
@@ -242,122 +243,123 @@ export class PositionMapWrapped extends Component<Props> {
     // polyIntersects.push(...this.borderline.splitSectionsByLng(this.tilePoint.eastBound));
     // polyIntersects.push(...this.borderline.splitSectionsByLng(this.tilePoint.westBound));
 
-    return null;
-    // return (
-      // <>
-      //   <DumbCtrlMap
-      //     className={cx('fullscreen-map')}
-      //     defaultCenter={position}
-      //     zoom={8}
-      //     clickableIcons={false}
-      //     disableDefaultUI={false}
-      //     gestureHandling='greedy'
-      //     mapTypeControl={false}
-      //     streetViewControl={false}
-      //     zoomControl={false}
-      //     fullscreenControl={false}
-      //     onClick={this.onClick}
-      //   >
-      //     {this.borderline && (
-      //       <SmartMarker position={this.borderline.points[0]} title='point' />
-      //     )}
-      //     {/* {point && (
-      //       <SmartMarker position={point} title='pointCenter' />
-      //     )} */}
-      //     {this.cell && (
-      //       <CellPoly 
-      //         cell={this.cell} 
-      //       />
-      //     )}
-      //     {/* {this.cells.map((cell, index) => (
-      //       <CellPoly
-      //         cell={cell}
-      //         key={`cell-${index}`}
-      //       />
-      //     ))} */}
-      //     {this.borderline && (
-      //       <SmartPolygon 
-      //         paths={this.borderline.fullPoints.points} 
-      //         onClick={this.onClick}
-      //         strokeColor='green'
-      //         fillColor='transparent'
-      //       />
-      //     )}
-      //     {this.area && (
-      //       <SmartPolygon 
-      //         paths={this.area.polys} 
-      //         onClick={this.onClick}
-      //         strokeColor='green'
-      //         fillColor='green'
-      //       />
-      //     )}
-      //     <SmartPolygon 
-      //       paths={[
-      //         [{lat: 50, lng: 100}, {lat: 40, lng: 120}, {lat: 55, lng: 110}],
-      //         [{lat: 50, lng: 105}, {lat: 47, lng: 110}, {lat: 50, lng: 108}]
-      //       ]} 
-      //       onClick={this.onClick}
-      //       strokeColor='green'
-      //       fillColor='green'
-      //     />
-      //     {/* {this.borderline && (
-      //       <SmartPolygon 
-      //         paths={this.border.points} 
-      //         onClick={this.onClick}
-      //       />
-      //     )} */}
-      //     {this.intersetions.map((point, index) => (
-      //       <SmartMarker 
-      //         position={point}
-      //         title={`{lat: ${point.lat}, lng: ${point.lng}}`}
-      //         key={`intersect-${index}`}
-      //       />
-      //     ))}
-      //     {this.connection && (
-      //         <SmartPolyline 
-      //           path={this.connection.path}
-      //           strokeColor={'rgba(50, 0, 200, 0.5)'}
-      //         />
-      //     )}
-      //     {this.nextCells.map((cell, index) => (
-      //       <CellPoly
-      //         cell={cell}
-      //         key={`next-cell-${index}`}
-      //       />
-      //     ))}
-      //     {this.borderline && (
-      //       <GridOverlay 
-      //         params={this.gridParams}
-      //         borderline={this.borderline}
-      //       />
-      //     )}
-      //     <PositionMarker />
-      //     {this.props.children}
-      //     {/* <EditableBorderline
-      //       border={this.border}
-      //       gridParams={this.gridParams}
-      //       onPathChange={this.onBorderChange}
-      //     /> */}
-      //     {/* <SmartPolygon
-      //       paths={this.tilePoint.toPoly().points}
-      //       onClick={this.onClick}
-      //       strokeColor={'#900'}
-      //     /> */}
-      //     {/* <SvgOverlay
-      //       bounds={{
-      //         east: 38.35,
-      //         north: 51,
-      //         south: 49,
-      //         west: 33.39,
-      //       }}
-      //     /> */}
-      //   </DumbCtrlMap>
-      //   <button onClick={this.onCenterClick}>Center</button>
-      // </>
-    // );
+    return (
+      <>
+        <DumbCtrlMap
+          className={cx('fullscreen-map')}
+          defaultCenter={position}
+          zoom={8}
+          clickableIcons={false}
+          disableDefaultUI={false}
+          gestureHandling='greedy'
+          mapTypeControl={false}
+          streetViewControl={false}
+          zoomControl={false}
+          fullscreenControl={false}
+          onClick={this.onClick}
+        >
+          {this.borderline && (
+            <SmartMarker position={this.borderline.points[0]} title='point' />
+          )}
+          {/* {point && (
+            <SmartMarker position={point} title='pointCenter' />
+          )} */}
+          {this.cell && (
+            <CellPoly 
+              cell={this.cell} 
+            />
+          )}
+          {/* {this.cells.map((cell, index) => (
+            <CellPoly
+              cell={cell}
+              key={`cell-${index}`}
+            />
+          ))} */}
+          {this.borderline && (
+            <SmartPolygon 
+              paths={this.borderline.fullPoints.points} 
+              onClick={this.onClick}
+              strokeColor='green'
+              fillColor='transparent'
+            />
+          )}
+          {this.area && (
+            <SmartPolygon 
+              paths={this.area.polys} 
+              onClick={this.onClick}
+              strokeColor='green'
+              fillColor='green'
+            />
+          )}
+          <SmartPolygon 
+            paths={[
+              [{lat: 50, lng: 100}, {lat: 40, lng: 120}, {lat: 55, lng: 110}],
+              [{lat: 50, lng: 105}, {lat: 47, lng: 110}, {lat: 50, lng: 108}]
+            ]} 
+            onClick={this.onClick}
+            strokeColor='green'
+            fillColor='green'
+          />
+          {/* {this.borderline && (
+            <SmartPolygon 
+              paths={this.border.points} 
+              onClick={this.onClick}
+            />
+          )} */}
+          {this.intersetions.map((point, index) => (
+            <SmartMarker 
+              position={point}
+              title={`{lat: ${point.lat}, lng: ${point.lng}}`}
+              key={`intersect-${index}`}
+            />
+          ))}
+          {this.connection && (
+              <SmartPolyline 
+                path={this.connection.path}
+                strokeColor={'rgba(50, 0, 200, 0.5)'}
+              />
+          )}
+          {this.nextCells.map((cell, index) => (
+            <CellPoly
+              cell={cell}
+              key={`next-cell-${index}`}
+            />
+          ))}
+          {this.borderline && (
+            <GridOverlay 
+              params={this.gridParams}
+              borderline={this.borderline}
+            />
+          )}
+          <PositionMarker />
+          {this.props.children}
+          {/* <EditableBorderline
+            border={this.border}
+            gridParams={this.gridParams}
+            onPathChange={this.onBorderChange}
+          /> */}
+          {/* <SmartPolygon
+            paths={this.tilePoint.toPoly().points}
+            onClick={this.onClick}
+            strokeColor={'#900'}
+          /> */}
+          {/* <SvgOverlay
+            bounds={{
+              east: 38.35,
+              north: 51,
+              south: 49,
+              west: 33.39,
+            }}
+          /> */}
+        </DumbCtrlMap>
+        <button onClick={this.onCenterClick}>Center</button>
+      </>
+    );
   }
 }
 
 // export const PositionMap = PositionMapWrapped;
 
-export const PositionMap = withCtrlMapCtx<PositionMapProps>(PositionMapWrapped);
+export const PositionMap = withCtrlMapCtx<PositionMapProps>(
+  PositionMapWrapped
+);
