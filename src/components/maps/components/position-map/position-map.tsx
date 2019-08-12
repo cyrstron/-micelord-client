@@ -14,14 +14,14 @@ import {
   CellConnection,
 } from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
-import {
-  CtrlMapStore, 
-  DumbCtrlMap, 
-  withCtrlMapCtx, 
-  SmartPolygon, 
-  SmartPolyline, 
-  SmartMarker
-} from '@micelord/maps';
+// import {
+//   CtrlMapStore, 
+//   DumbCtrlMap, 
+//   withCtrlMapCtx, 
+//   SmartPolygon, 
+//   SmartPolyline, 
+//   SmartMarker
+// } from '@micelord/maps';
 import {GridOverlay} from '../grid-overlay/grid-overlay';
 import {CellPoly} from '../cell/cell';
 
@@ -39,14 +39,14 @@ interface PositionMapProps {
 }
 
 type Props = PositionMapProps & {
-  mapStore: CtrlMapStore,
+  // mapStore: CtrlMapStore,
 }
 
 @inject('geolocationStore')
 @observer
 export class PositionMapWrapped extends Component<Props> {
   geolocationStore: GeolocationStore;
-  mapStore: CtrlMapStore;
+  // mapStore: CtrlMapStore;
   gridAdded: boolean = false;
   startPoint: GeoPoint | undefined;
   activePoint: number = 0;
@@ -105,7 +105,7 @@ export class PositionMapWrapped extends Component<Props> {
     //   this.grider.params
     // );
     this.geolocationStore = props.geolocationStore!;
-    this.mapStore = props.mapStore!;
+    // this.mapStore = props.mapStore!;
     this.onBorderChange(this.border);
   }
 
@@ -245,7 +245,7 @@ export class PositionMapWrapped extends Component<Props> {
 
     return (
       <>
-        <DumbCtrlMap
+        {/* <DumbCtrlMap
           className={cx('fullscreen-map')}
           defaultCenter={position}
           zoom={8}
@@ -261,20 +261,11 @@ export class PositionMapWrapped extends Component<Props> {
           {this.borderline && (
             <SmartMarker position={this.borderline.points[0]} title='point' />
           )}
-          {/* {point && (
-            <SmartMarker position={point} title='pointCenter' />
-          )} */}
           {this.cell && (
             <CellPoly 
               cell={this.cell} 
             />
           )}
-          {/* {this.cells.map((cell, index) => (
-            <CellPoly
-              cell={cell}
-              key={`cell-${index}`}
-            />
-          ))} */}
           {this.borderline && (
             <SmartPolygon 
               paths={this.borderline.fullPoints.points} 
@@ -300,12 +291,6 @@ export class PositionMapWrapped extends Component<Props> {
             strokeColor='green'
             fillColor='green'
           />
-          {/* {this.borderline && (
-            <SmartPolygon 
-              paths={this.border.points} 
-              onClick={this.onClick}
-            />
-          )} */}
           {this.intersetions.map((point, index) => (
             <SmartMarker 
               position={point}
@@ -333,33 +318,15 @@ export class PositionMapWrapped extends Component<Props> {
           )}
           <PositionMarker />
           {this.props.children}
-          {/* <EditableBorderline
-            border={this.border}
-            gridParams={this.gridParams}
-            onPathChange={this.onBorderChange}
-          /> */}
-          {/* <SmartPolygon
-            paths={this.tilePoint.toPoly().points}
-            onClick={this.onClick}
-            strokeColor={'#900'}
-          /> */}
-          {/* <SvgOverlay
-            bounds={{
-              east: 38.35,
-              north: 51,
-              south: 49,
-              west: 33.39,
-            }}
-          /> */}
-        </DumbCtrlMap>
+        </DumbCtrlMap> */}
         <button onClick={this.onCenterClick}>Center</button>
       </>
     );
   }
 }
 
-// export const PositionMap = PositionMapWrapped;
+export const PositionMap = PositionMapWrapped;
 
-export const PositionMap = withCtrlMapCtx<PositionMapProps>(
-  PositionMapWrapped
-);
+// export const PositionMap = withCtrlMapCtx<PositionMapProps>(
+//   PositionMapWrapped
+// );
