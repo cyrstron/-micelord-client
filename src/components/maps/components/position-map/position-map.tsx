@@ -1,32 +1,12 @@
 import classNames from 'classnames/bind';
-import { observable } from 'mobx';
 import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
-import {
-  GeoPoint,
-  GridParams,
-  Cell,
-  Area,
-  IndexatedFigure,
-  GeoPolygon,
-  GridPoint,
-  CenterPoint,
-  CellConnection,
-} from '@micelord/grider';
 import {GeolocationStore} from '@stores/geolocation';
-// import {
-//   CtrlMapStore, 
-//   DumbCtrlMap, 
-//   withCtrlMapCtx, 
-//   SmartPolygon, 
-//   SmartPolyline, 
-//   SmartMarker
-// } from '@micelord/maps';
-import {GridOverlay} from '../grid-overlay/grid-overlay';
-import {CellPoly} from '../cell/cell';
-
-import {PositionMarker} from '../position-marker';
-import testCells from './test-cells.json';
+import {
+  DumbMap,
+  withSmartMapCtx,
+  MapService,
+} from '@micelord/maps';
 
 import styles from './position-map.scss';
 
@@ -39,74 +19,18 @@ interface PositionMapProps {
 }
 
 type Props = PositionMapProps & {
-  // mapStore: CtrlMapStore,
+  mapService?: MapService,
 }
 
 @inject('geolocationStore')
 @observer
 export class PositionMapWrapped extends Component<Props> {
   geolocationStore: GeolocationStore;
-  // mapStore: CtrlMapStore;
-  gridAdded: boolean = false;
-  startPoint: GeoPoint | undefined;
-  activePoint: number = 0;
-  gridParams = GridParams.fromConfig({
-    type: 'hex',
-    correction: 'merc',
-    cellSize: 10000,
-    isHorizontal: true,
-  });
-  @observable point: GeoPoint | undefined;
-  @observable area: Area | undefined;
-  @observable cell: Cell | undefined;
-  @observable cellA = new Cell(new CenterPoint(this.gridParams, 40, 36, -76));
-  @observable cells: Cell[] = [] //testCells.map(
-    // ({i, j ,k}) => new CenterPoint(this.gridParams, i, j, k).toCell()
-  // );
-  @observable connection: CellConnection | undefined;
-  @observable nextCells: Cell[] = [];
-  @observable intersetions: GeoPoint[] = [];
-  // @observable projections: google.maps.LatLngLiteral[] = [];
-  @observable border: GeoPolygon = new GeoPolygon([
-    {lat: 47.06676604567628, lng: 36.796875}, 
-    {lat: 54.317706011018224, lng: 40.7470703125},  
-    {lat: 53.01600312774294, lng: 29.0234375},
-    {lat: 54.51822185091831, lng: 24.814453125}, 
-    {lat: 49.20018618540992, lng: 24.0576171875}, 
-    {lat: 51.936842019727436, lng: 32.2314453125},
-  ].map(({lat, lng}) => new GeoPoint(lat, lng)));
-  @observable borderline?: IndexatedFigure;
-  // @observable tilePoint = TileMercPoint.fromTile(38, 22, 512, 512, 7);
-  // @observable poly?: google.maps.LatLngLiteral[];
-  // @observable intersects: google.maps.LatLngLiteral[] = [];
-
-  @observable gridPointA: GridPoint | undefined;
-  @observable gridPointB: GridPoint | undefined;
-  @observable gridPointC: GridPoint | undefined;
-
-  @observable geoPointA: GeoPoint | undefined;
-  @observable geoPointB: GeoPoint | undefined;
-
-  active: number = 0;
 
   constructor(props: Props) {
     super(props);
 
-    // this.grider = createStaticGrider({
-    //   cellSize: 50000, // inner: 50000 - hex & rect - chack cleaner
-    //   type: 'hex',
-    //   correction: 'merc',
-    //   // isHorizontal: true,
-    // });
-    // this.startPoint = this.grider.figureBuilder.cellFinder.findStartPoint(
-    //   this.grider.calcGridCenterPointByGeoPoint(this.border[0]),
-    //   this.grider.buildPolyByGeoPoint(this.border[0]),
-    //   this.border,
-    //   this.grider.params
-    // );
     this.geolocationStore = props.geolocationStore!;
-    // this.mapStore = props.mapStore!;
-    this.onBorderChange(this.border);
   }
 
   componentDidMount() {
@@ -117,86 +41,13 @@ export class PositionMapWrapped extends Component<Props> {
     this.geolocationStore.unwatchPosition();
   }
 
-  onClick = async (e: google.maps.MouseEvent) => {
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
-
-    const point = new GeoPoint(lat, lng);
-
-    console.log(point);
-    console.log(this.border.containsPoint(point));
-
-    this.point = point;
-
-    const center = CenterPoint.fromGeo(this.point, this.gridParams);
-    const cell = Cell.fromCenter(center);
-
-    if (!cell) return;
-
-    this.cell = cell;
-
-    // this.connection = CellConnection.fromCenters(this.cellA.center, this.cell.center);
-
-
-    const cells = [...this.cells, cell];
-
-    const centers = await Area.biggestSet(cells.map(({center}) => center));
-
-    this.cells = centers.map((center) => Cell.fromCenter(center));
-
-    this.area = await Area.fromCellCenters(centers)
-
-    console.log(cell.center);
-
-    // const cellIndex = this.cells.findIndex(
-    //   (cellContaned) => cellContaned.isEqual(cell)
-    // );
-    
-    // if (cellIndex === -1) {
-    //   this.cells = [...this.cells, cell];
-    // } else {
-    //   this.cells = [
-    //     ...this.cells.slice(0, cellIndex),
-    //     ...this.cells.slice(cellIndex + 1),
-    //   ];
-    // }
-
-    this.intersetions = this.border.intersectsPoly(cell);
-
-    // if (!cell) return;
-
-    // console.log(cell)
-    // console.log(this.point)
-
-    this.nextCells = this.border.reduceSides((nextCells, side) => {
-      // const nextCell = cell.nextCellOnSegment(side);
-
-      // if (nextCell) {
-      //   nextCells.push(nextCell);
-      // }
-
-      return nextCells;
-    }, [] as Cell[])
-    // console.log(this.cell.center);
-    // console.log(this.cell.points);
-    // console.log(this.point.toGrid(this.gridParams));
-  }
-
-  // setBorderline = (borderline: google.maps.LatLngLiteral[]) => {
-  //   this.borderline = borderline;
-  // }
-
   onCenterClick = (): void => {
+    const {mapService} = this.props;
     const {position} = this.geolocationStore;
 
-    if (!position) return;
+    if (!position || !mapService) return;
 
-    // this.mapStore.panTo(position);
-  }
-
-  onBorderChange = async (newBorder: GeoPolygon) => {
-    this.border = newBorder;
-    this.borderline = await IndexatedFigure.fromShape(newBorder, this.gridParams);
+    mapService.panTo(position);
   }
 
   render() {
@@ -204,48 +55,9 @@ export class PositionMapWrapped extends Component<Props> {
 
     if (position === undefined) return null;
 
-    // const tileIntersection = this.borderline.indexation.tileIntersection(this.tilePoint);
-
-    const intersects: GeoPoint[] = [];
-
-    // this.borderline.indexation.indexations.forEach((
-    //   sideIndexation,
-    // ) => {
-    //   const northIntersect = sideIndexation.boundIntersection(this.tilePoint.northBound, this.tilePoint.toPoly(), 'north');
-    //   const southIntersect = sideIndexation.boundIntersection(this.tilePoint.southBound, this.tilePoint.toPoly(), 'south');
-    //   const eastIntersect = sideIndexation.boundIntersection(this.tilePoint.eastBound, this.tilePoint.toPoly(), 'east');
-    //   const westIntersect = sideIndexation.boundIntersection(this.tilePoint.westBound, this.tilePoint.toPoly(), 'west');
-
-    //   if (northIntersect) {
-    //     intersects.push(northIntersect.intersection);
-    //   }
-    //   if (southIntersect) {
-    //     intersects.push(southIntersect.intersection);
-    //   }
-    //   if (eastIntersect) {
-    //     intersects.push(eastIntersect.intersection);
-    //   }
-    //   if (westIntersect) {
-    //     intersects.push(westIntersect.intersection);
-    //   }
-    // });
-    // console.log(intersects.length);
-    // console.log(tileIntersection);
-
-    // const segments = tileIntersection.north;
-    // segments.push(...tileIntersection.east);
-    // segments.push(...tileIntersection.west);
-    // segments.push(...tileIntersection.south);
-
-    // const polyIntersects = this.borderline.splitSectionsByLat(this.tilePoint.northBound);
-
-    // polyIntersects.push(...this.borderline.splitSectionsByLat(this.tilePoint.southBound));
-    // polyIntersects.push(...this.borderline.splitSectionsByLng(this.tilePoint.eastBound));
-    // polyIntersects.push(...this.borderline.splitSectionsByLng(this.tilePoint.westBound));
-
     return (
       <>
-        {/* <DumbCtrlMap
+        <DumbMap
           className={cx('fullscreen-map')}
           defaultCenter={position}
           zoom={8}
@@ -256,9 +68,8 @@ export class PositionMapWrapped extends Component<Props> {
           streetViewControl={false}
           zoomControl={false}
           fullscreenControl={false}
-          onClick={this.onClick}
         >
-          {this.borderline && (
+          {/* {this.borderline && (
             <SmartMarker position={this.borderline.points[0]} title='point' />
           )}
           {this.cell && (
@@ -317,16 +128,12 @@ export class PositionMapWrapped extends Component<Props> {
             />
           )}
           <PositionMarker />
-          {this.props.children}
-        </DumbCtrlMap> */}
+          {this.props.children} */}
+        </DumbMap>
         <button onClick={this.onCenterClick}>Center</button>
       </>
     );
   }
 }
 
-export const PositionMap = PositionMapWrapped;
-
-// export const PositionMap = withCtrlMapCtx<PositionMapProps>(
-//   PositionMapWrapped
-// );
+export const PositionMap = withSmartMapCtx<PositionMapProps>(PositionMapWrapped);

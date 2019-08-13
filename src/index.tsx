@@ -5,7 +5,7 @@ import {Provider as ReduxProvider} from 'react-redux';
 import App from './app';
 import {configureStore} from './state';
 import {GeolocationStore} from './stores';
-import {GoogleMapsStore} from '@micelord/maps';
+import {GoogleApiProvider} from '@micelord/maps';
 import './index.scss';
 
 const stores = {
@@ -17,7 +17,9 @@ ReactDOM.render((
     <MobxProvider
       {...stores}
     >
-      <App />
+      <GoogleApiProvider apiKey={process.env.GOOGLE_MAPS_KEY}>
+        <App />
+      </GoogleApiProvider>
     </MobxProvider>
   </ReduxProvider>
 ), document.getElementById('root'));

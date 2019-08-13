@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SmartPolyline, SmartMarker, SmartPolygon} from '@micelord/maps';
+// import {SmartPolyline, SmartMarker, SmartPolygon} from '@micelord/maps';
 // import {StaticGrider} from '@micelord/grider';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
@@ -56,33 +56,34 @@ export class Borderline extends Component<Props> {
 
   render() {
     const {borderline} = this.props;
-    if (this.selfIntersects.length > 0) {
-      return this.selfIntersects.map((intersect) => (
-        <SmartMarker 
-          position={intersect}
-          title="Invalid intersecion!"
-        />
-      ))
-    }
+    return null;
+    // if (this.selfIntersects.length > 0) {
+    //   return this.selfIntersects.map((intersect) => (
+    //     <SmartMarker 
+    //       position={intersect}
+    //       title="Invalid intersecion!"
+    //     />
+    //   ))
+    // }
 
-    if (this.closeCells.length > 0) {
-      return this.closeCells.map((cell) => (
-        <SmartPolygon 
-          paths={cell}
-          strokeColor='#aa0000'
-          strokeOpacity={0.6}
-          fillColor='#aa0000'
-          fillOpacity={0.2}
-        />
-      ))
-    }
+    // if (this.closeCells.length > 0) {
+    //   return this.closeCells.map((cell) => (
+    //     <SmartPolygon 
+    //       paths={cell}
+    //       strokeColor='#aa0000'
+    //       strokeOpacity={0.6}
+    //       fillColor='#aa0000'
+    //       fillOpacity={0.2}
+    //     />
+    //   ))
+    // }
 
-    return (      
-      <SmartPolyline
-        path={borderline}
-        strokeColor='#880000'
-        strokeWeight={3}
-      />
-    );
+    // return (      
+    //   <SmartPolyline
+    //     path={borderline}
+    //     strokeColor='#880000'
+    //     strokeWeight={3}
+    //   />
+    // );
   }
 }

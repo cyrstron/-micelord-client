@@ -1,7 +1,7 @@
 import {inject, observer} from 'mobx-react';
 import React, {Component} from 'react';
 import {GeolocationStore} from '@stores/geolocation';
-import {SmartMarker} from '@micelord/maps';
+// import {SmartMarker} from '@micelord/maps';
 
 interface MarkerProps {
   geolocationStore?: GeolocationStore;
@@ -23,11 +23,13 @@ export class PositionMarker extends Component<MarkerProps> {
 
     if (position === undefined) return null;
 
-    return (
-      <SmartMarker
-        title='You are here'
-        position={position}
-      />
-    );
+    return null;
+
+    // return (
+    //   // <SmartMarker
+    //   //   title='You are here'
+    //   //   position={position}
+    //   // />
+    // );
   }
 }

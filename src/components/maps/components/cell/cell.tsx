@@ -1,6 +1,6 @@
 import React from 'react';
 import {SvgOverlay} from '../svg-overlay/svg-overlay';
-import {SmartPolygon} from '@micelord/maps';
+// import {SmartPolygon} from '@micelord/maps';
 import { Cell } from '@micelord/grider';
 
 export const CellPoly = ({
@@ -35,6 +35,6 @@ export const CellPoly = ({
         {'{'}i: {i}, j: {j}, k: {k}{'}'}
       </text>
     </SvgOverlay>
-    <SmartPolygon paths={points} fillColor='transparent'/>
+    {/* <SmartPolygon paths={points} fillColor='transparent'/> */}
   </>
 )

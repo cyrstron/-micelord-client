@@ -36,6 +36,6 @@
   },
   "include": [
     "./src/**/*",
-    "tsconfig.json"
+    "tsconfig.json", "../micelord-maps/src/components/google-api"
   ]
 }

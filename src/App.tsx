@@ -14,17 +14,17 @@ class App extends Component<{}, {string: string}> {
     };
   }
 
-  async componentDidMount() {
-    try {
-      const request = await fetch('/api/hello');
-      const string = await request.text();
-      this.setState({
-        string,
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  // async componentDidMount() {
+  //   try {
+  //     const request = await fetch('/api/hello');
+  //     const string = await request.text();
+  //     this.setState({
+  //       string,
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
 
   render() {
     const {string} = this.state;

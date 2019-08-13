@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {SmartCustomOverlay} from '@micelord/maps';
+// import {SmartCustomOverlay} from '@micelord/maps';
 // import {utils} from '@micelord/grider';
 
 interface Props {
@@ -28,22 +28,24 @@ export const SvgOverlay = ({bounds, children, fill}: Props) => {
 
   // const relHeight = (northMerc - southMerc) / (eastMerc - westMerc) * 100;
 
-  return (
-    <SmartCustomOverlay
-      bounds={bounds}
-    >
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        width='100%'
-        height='100%'
-        strokeOpacity='0'
-        // viewBox={`0 0 100 ${relHeight}`}
-        viewBox={`0 0 100 100`}
-        aria-labelledby='title' 
-        fill='none'
-      >
-        {children}
-      </svg>
-    </SmartCustomOverlay>
-  );
+  return null;
+
+  // return (
+  //   <SmartCustomOverlay
+  //     bounds={bounds}
+  //   >
+  //     <svg
+  //       xmlns='http://www.w3.org/2000/svg'
+  //       width='100%'
+  //       height='100%'
+  //       strokeOpacity='0'
+  //       // viewBox={`0 0 100 ${relHeight}`}
+  //       viewBox={`0 0 100 100`}
+  //       aria-labelledby='title' 
+  //       fill='none'
+  //     >
+  //       {children}
+  //     </svg>
+  //   </SmartCustomOverlay>
+  // );
 };

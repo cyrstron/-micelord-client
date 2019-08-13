@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {DumbPolyline, SmartMarker, PolylineStore} from '@micelord/maps';
+// import {DumbPolyline, SmartMarker, PolylineStore} from '@micelord/maps';
 import {GeoPolygon, GeoPoint, GridParams} from '@micelord/grider';
 import debounce from 'lodash/debounce';
 
@@ -10,52 +10,52 @@ export interface EditableBorderlineProps {
 }
 
 type Props = EditableBorderlineProps & {
-  featureStore: PolylineStore,
+  // featureStore: PolylineStore,
 };
 
 export class DumbEditableBorderline extends Component<Props> {
   pathObj: google.maps.MVCArray<google.maps.LatLng> | undefined;
   
   componentDidMount() {
-    const {
-      featureStore,
-    } = this.props;
+    // const {
+    //   featureStore,
+    // } = this.props;
 
-    const pathObj = featureStore.getPathObj();
+    // const pathObj = featureStore.getPathObj();
 
-    if (!pathObj) return;
+    // if (!pathObj) return;
 
-    this.pathObj = pathObj;
+    // this.pathObj = pathObj;
 
-    pathObj.addListener('insert_at', this.onDragBorder);
-    pathObj.addListener('remove_at', this.onDragBorder);
-    pathObj.addListener('set_at', this.onDragBorder);
+    // pathObj.addListener('insert_at', this.onDragBorder);
+    // pathObj.addListener('remove_at', this.onDragBorder);
+    // pathObj.addListener('set_at', this.onDragBorder);
   }
 
   componentDidUpdate() {
-    const {
-      featureStore,
-    } = this.props;
+    // const {
+    //   featureStore,
+    // } = this.props;
 
-    const pathObj = featureStore.getPathObj();
+    // const pathObj = featureStore.getPathObj();
 
-    if (!pathObj || pathObj === this.pathObj) return;
+    // if (!pathObj || pathObj === this.pathObj) return;
 
-    pathObj.addListener('insert_at', this.onDragBorder);
-    pathObj.addListener('remove_at', this.onDragBorder);
-    pathObj.addListener('set_at', this.onDragBorder);
+    // pathObj.addListener('insert_at', this.onDragBorder);
+    // pathObj.addListener('remove_at', this.onDragBorder);
+    // pathObj.addListener('set_at', this.onDragBorder);
   }
   
   onDragBorder: google.maps.MapMouseEventHandler = debounce(() => {
     const {
-      featureStore,
+      // featureStore,
       onPathChange,
       border,
     } = this.props;
 
-    const path = featureStore.getPath();
+    // const path = featureStore.getPath();
 
-    if (!path) return;
+    // if (!path) return;
 
     // const pathExtended = path.map(({lat, lng}) => new GeoPoint(lat, lng));
 
@@ -88,7 +88,7 @@ export class DumbEditableBorderline extends Component<Props> {
 
     return (
       <>
-        <DumbPolyline
+        {/* <DumbPolyline
           path={[...border.points, border.points[0]]}
           strokeColor='#000066'
           onDragEnd={this.onDragBorder}
@@ -97,7 +97,7 @@ export class DumbEditableBorderline extends Component<Props> {
         />
         {selfIntersections.map((point, index) => (
           <SmartMarker position={point} title={`${index}`} key={index} />
-        ))}
+        ))} */}
         {/* {cells.map((cell, index) => (
           <SmartPolygon paths={cell.points} key={index} />
         ))} */}

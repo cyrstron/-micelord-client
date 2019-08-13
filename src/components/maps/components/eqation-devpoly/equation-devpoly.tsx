@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SmartPolyline, SmartPolygon} from '@micelord/maps';
+// import {SmartPolyline, SmartPolygon} from '@micelord/maps';
 // import {StaticGrider, utils} from '@micelord/grider';
 
 interface Props {

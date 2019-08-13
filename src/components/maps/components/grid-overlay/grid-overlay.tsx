@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SmartTilesOverlay} from '@micelord/maps';
+// import {SmartTilesOverlay} from '@micelord/maps';
 // import {StaticGrider, createBorderRenderer, BorderRenderer} from '@micelord/grider';
 import {GridTile} from '../grid-tile/grid-tile';
 // import {SmartMarker, SmartPolyline} from '@maps/feature';
@@ -18,7 +18,7 @@ export class GridOverlay extends Component<Props> {
     } = this.props;
     return (
       <>
-        <SmartTilesOverlay width={512}>
+        {/* <SmartTilesOverlay width={512}>
           {({tileCoord: {x, y}, zoom, width, height}) => {
             const tilePoint = TileMercPoint.fromTile(x, y, width, height, zoom);
             
@@ -32,7 +32,7 @@ export class GridOverlay extends Component<Props> {
               />
             )
           }}
-        </SmartTilesOverlay>
+        </SmartTilesOverlay> */}
       </>
     )
   }
