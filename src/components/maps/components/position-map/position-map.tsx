@@ -2,13 +2,19 @@ import classNames from 'classnames/bind';
 import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
 import {GeolocationStore} from '@stores/geolocation';
+import {PositionMarker} from '../position-marker';
 import {
   DumbMap,
   withSmartMapCtx,
   MapService,
+  Marker,
 } from '@micelord/maps';
+import {
+  GeoPoint
+} from '@micelord/grider';
 
 import styles from './position-map.scss';
+import { observable } from 'mobx';
 
 const cx = classNames.bind(styles);
 
@@ -26,6 +32,7 @@ type Props = PositionMapProps & {
 @observer
 export class PositionMapWrapped extends Component<Props> {
   geolocationStore: GeolocationStore;
+  @observable point?: GeoPoint;
 
   constructor(props: Props) {
     super(props);
@@ -50,6 +57,13 @@ export class PositionMapWrapped extends Component<Props> {
     mapService.panTo(position);
   }
 
+  onClick = (e: google.maps.MouseEvent) => {
+    this.point = new GeoPoint(
+      e.latLng.lat(),
+      e.latLng.lng(),
+    )
+  }
+
   render() {
     const {position} = this.geolocationStore;
 
@@ -68,6 +82,7 @@ export class PositionMapWrapped extends Component<Props> {
           streetViewControl={false}
           zoomControl={false}
           fullscreenControl={false}
+          onClick={this.onClick}
         >
           {/* {this.borderline && (
             <SmartMarker position={this.borderline.points[0]} title='point' />
@@ -127,8 +142,14 @@ export class PositionMapWrapped extends Component<Props> {
               borderline={this.borderline}
             />
           )}
-          <PositionMarker />
           {this.props.children} */}
+          <PositionMarker />
+          {this.point && (
+            <Marker
+              position={this.point}
+              title="lala"
+            />
+          )}
         </DumbMap>
         <button onClick={this.onCenterClick}>Center</button>
       </>
