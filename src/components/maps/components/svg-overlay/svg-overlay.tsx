@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
-// import {SmartCustomOverlay} from '@micelord/maps';
-// import {utils} from '@micelord/grider';
+import {CustomOverlay} from '@micelord/maps';
+import {GeoPoint} from '@micelord/grider';
 
 interface Props {
   children?: ReactNode;
@@ -16,36 +16,34 @@ export const SvgOverlay = ({bounds, children, fill}: Props) => {
     south
   } = bounds;
 
-  // if (east - west > 180) {
-  //   east = utils.geography.reduceLng(east - 180);
-  //   west = utils.geography.reduceLng(west - 180);
-  // }
+  let northWest = new GeoPoint(north, west);
+  let southEast = new GeoPoint(south, east);
 
-  // const northMerc = utils.geography.spherLatToMercY(north);
-  // const southMerc = utils.geography.spherLatToMercY(south);
-  // const eastMerc = utils.geography.spherLngToMercX(east);
-  // const westMerc = utils.geography.spherLngToMercX(west);
+  if (east - west > 180) {
+    northWest = northWest.toOppositeHemisphere();
+    southEast = southEast.toOppositeHemisphere();
+  }
 
-  // const relHeight = (northMerc - southMerc) / (eastMerc - westMerc) * 100;
+  const {x: westX, y: northY} = northWest.toMerc();
+  const {x: eastX, y: southY} = southEast.toMerc();
 
-  return null;
+  const relHeight = (southY - northY) / (eastX - westX) * 100;
 
-  // return (
-  //   <SmartCustomOverlay
-  //     bounds={bounds}
-  //   >
-  //     <svg
-  //       xmlns='http://www.w3.org/2000/svg'
-  //       width='100%'
-  //       height='100%'
-  //       strokeOpacity='0'
-  //       // viewBox={`0 0 100 ${relHeight}`}
-  //       viewBox={`0 0 100 100`}
-  //       aria-labelledby='title' 
-  //       fill='none'
-  //     >
-  //       {children}
-  //     </svg>
-  //   </SmartCustomOverlay>
-  // );
+  return (
+    <CustomOverlay
+      bounds={bounds}
+    >
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        width='100%'
+        height='100%'
+        strokeOpacity='0'
+        viewBox={`0 0 100 ${relHeight}`}
+        aria-labelledby='title' 
+        fill='none'
+      >
+        {children}
+      </svg>
+    </CustomOverlay>
+  );
 };

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-// import {DumbPolyline, SmartMarker, PolylineStore} from '@micelord/maps';
-import {GeoPolygon, GeoPoint, GridParams} from '@micelord/grider';
+import {DumbPolyline, Marker, PolylineService} from '@micelord/maps';
+import {GeoPolygon, GeoPoint, GridParams, Figure} from '@micelord/grider';
 import debounce from 'lodash/debounce';
 
 export interface EditableBorderlineProps {
@@ -10,73 +10,78 @@ export interface EditableBorderlineProps {
 }
 
 type Props = EditableBorderlineProps & {
-  // featureStore: PolylineStore,
+  featureService?: PolylineService,
 };
 
 export class DumbEditableBorderline extends Component<Props> {
   pathObj: google.maps.MVCArray<google.maps.LatLng> | undefined;
   
   componentDidMount() {
-    // const {
-    //   featureStore,
-    // } = this.props;
+    const {
+      featureService,
+    } = this.props;
 
-    // const pathObj = featureStore.getPathObj();
+    if (!featureService) return;
 
-    // if (!pathObj) return;
+    const pathObj = featureService.object.getPath();
 
-    // this.pathObj = pathObj;
+    this.pathObj = pathObj;
 
-    // pathObj.addListener('insert_at', this.onDragBorder);
-    // pathObj.addListener('remove_at', this.onDragBorder);
-    // pathObj.addListener('set_at', this.onDragBorder);
+    pathObj.addListener('insert_at', this.onDragBorder);
+    pathObj.addListener('remove_at', this.onDragBorder);
+    pathObj.addListener('set_at', this.onDragBorder);
   }
 
   componentDidUpdate() {
-    // const {
-    //   featureStore,
-    // } = this.props;
+    const {
+      featureService,
+    } = this.props;
 
-    // const pathObj = featureStore.getPathObj();
+    if (!featureService) return;
 
-    // if (!pathObj || pathObj === this.pathObj) return;
+    const pathObj = featureService.object.getPath();
 
-    // pathObj.addListener('insert_at', this.onDragBorder);
-    // pathObj.addListener('remove_at', this.onDragBorder);
-    // pathObj.addListener('set_at', this.onDragBorder);
+    if (pathObj === this.pathObj) return;
+
+    pathObj.addListener('insert_at', this.onDragBorder);
+    pathObj.addListener('remove_at', this.onDragBorder);
+    pathObj.addListener('set_at', this.onDragBorder);
   }
   
   onDragBorder: google.maps.MapMouseEventHandler = debounce(() => {
     const {
-      // featureStore,
+      featureService,
       onPathChange,
       border,
     } = this.props;
+    
+    if (!featureService) return;
 
-    // const path = featureStore.getPath();
+    const path = featureService.object.getPath();
 
-    // if (!path) return;
+    const pathExtended = path.getArray().map((latLng) => new GeoPoint(
+      latLng.lat(), 
+      latLng.lng(),
+    ));
 
-    // const pathExtended = path.map(({lat, lng}) => new GeoPoint(lat, lng));
+    const borderPoints = pathExtended.slice(0, -1);
 
-    // const borderPoints = pathExtended.slice(0, -1);
+    if (!pathExtended[pathExtended.length - 1].isEqual(pathExtended[0])) {
+      borderPoints[0] = pathExtended[pathExtended.length - 1];
+    }
 
-    // if (!pathExtended[pathExtended.length - 1].isEqual(pathExtended[0])) {
-    //   borderPoints[0] = pathExtended[pathExtended.length - 1];
-    // }
-
-    // const arePointsChanged = borderPoints.length !== border.points.length || border
-    //   .points.reduce((arePointsChanged: boolean, point, index) => {
-    //     if (arePointsChanged) return arePointsChanged;
+    const arePointsChanged = borderPoints.length !== border.points.length || border
+      .points.reduce((arePointsChanged: boolean, point, index) => {
+        if (arePointsChanged) return arePointsChanged;
         
-    //     return point.isEqual(border.points[index]);
-    //   }, false);
+        return point.isEqual(border.points[index]);
+      }, false);
 
-    // if (!arePointsChanged) return;
+    if (!arePointsChanged) return;
 
-    // const poly = new GeoPolygon(borderPoints)
+    const poly = new GeoPolygon(borderPoints)
 
-    // onPathChange(poly);
+    onPathChange(poly);
   }, 500)
 
 
@@ -84,7 +89,7 @@ export class DumbEditableBorderline extends Component<Props> {
     const {border, gridParams} = this.props;
 
     const {selfIntersections} = border;
-    // const cells = border.cellsInvalidForFigure(gridParams);
+    // const cells =.cellsInvalidForFigure(gridParams);
 
     return (
       <>

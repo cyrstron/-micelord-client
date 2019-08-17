@@ -1,9 +1,10 @@
 import React from 'react';
 import {SvgOverlay} from '../svg-overlay/svg-overlay';
-// import {SmartPolygon} from '@micelord/maps';
+import {Polygon} from '@micelord/maps';
 import { Cell } from '@micelord/grider';
 
 export const CellPoly = ({
+  onClick,
   cell: {
     center: {i, j, k},
     points,
@@ -12,7 +13,8 @@ export const CellPoly = ({
     westernPoint,
     southernPoint,
 }}: {
-  cell: Cell
+  cell: Cell,
+  onClick: google.maps.MapMouseEventHandler
 }) => (
   <>
     <SvgOverlay
@@ -35,6 +37,10 @@ export const CellPoly = ({
         {'{'}i: {i}, j: {j}, k: {k}{'}'}
       </text>
     </SvgOverlay>
-    {/* <SmartPolygon paths={points} fillColor='transparent'/> */}
+    <Polygon 
+      paths={points} 
+      fillColor='transparent'
+      onClick={onClick}
+    />
   </>
 )

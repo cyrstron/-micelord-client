@@ -10,7 +10,7 @@ import {
 interface Props {
   params: GridParams;
   tilePoint: TileMercPoint;
-  borderline: IndexatedFigure,
+  // borderline: IndexatedFigure,
 }
 
 interface State {
@@ -42,19 +42,23 @@ export class GridTile extends Component<Props, State> {
   }
 
   async updateTile() {
-    const {borderline, tilePoint, params} = this.props;
+    const {
+      // borderline, 
+      tilePoint, 
+      params
+    } = this.props;
 
     let borderPoly: Point[] = [];
     let mapTile: MapGridTile | null = null;
 
-    try {
-      borderPoly = await borderline.tilePoints(tilePoint);
-    } catch (err) {
-      console.error('Border tile error!');
-      console.error(tilePoint);
-      console.error(params);
-      console.error(err);
-    }
+    // try {
+    //   borderPoly = await borderline.tilePoints(tilePoint);
+    // } catch (err) {
+    //   console.error('Border tile error!');
+    //   console.error(tilePoint);
+    //   console.error(params);
+    //   console.error(err);
+    // }
 
     try {
       mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
@@ -85,13 +89,13 @@ export class GridTile extends Component<Props, State> {
     return !borderPoly && !!nextState.borderPoly;
   }
 
-  componentWillUpdate(nextProps: Props) {
-    const {borderline, tilePoint} = this.props;
+  // componentWillUpdate(nextProps: Props) {
+  //   const {borderline, tilePoint} = this.props;
 
-    if (nextProps.borderline !== borderline || nextProps.tilePoint !== tilePoint) {
-      this.updateTile()
-    }
-  }
+  //   if (nextProps.borderline !== borderline || nextProps.tilePoint !== tilePoint) {
+  //     this.updateTile()
+  //   }
+  // }
 
   render() {
     const {

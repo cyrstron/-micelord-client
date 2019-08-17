@@ -10,11 +10,13 @@ import {
   Marker,
 } from '@micelord/maps';
 import {
-  GeoPoint
+  GeoPoint, Cell, GridParams
 } from '@micelord/grider';
 
 import styles from './position-map.scss';
 import { observable } from 'mobx';
+import { CellPoly } from '../cell/cell';
+import { GridOverlay } from '../grid-overlay/grid-overlay';
 
 const cx = classNames.bind(styles);
 
@@ -32,7 +34,14 @@ type Props = PositionMapProps & {
 @observer
 export class PositionMapWrapped extends Component<Props> {
   geolocationStore: GeolocationStore;
+  params = GridParams.fromConfig({
+    type: 'hex',
+    correction: 'merc',
+    cellSize: 100000,
+  });
+
   @observable point?: GeoPoint;
+  @observable cell?: Cell;
 
   constructor(props: Props) {
     super(props);
@@ -58,10 +67,13 @@ export class PositionMapWrapped extends Component<Props> {
   }
 
   onClick = (e: google.maps.MouseEvent) => {
-    this.point = new GeoPoint(
+    const point = new GeoPoint(
       e.latLng.lat(),
       e.latLng.lng(),
     )
+
+    this.cell = Cell.fromGeoPoint(point, this.params);
+    this.point = point;
   }
 
   render() {
@@ -82,17 +94,18 @@ export class PositionMapWrapped extends Component<Props> {
           streetViewControl={false}
           zoomControl={false}
           fullscreenControl={false}
-          onClick={this.onClick}
+          onClick={this.onClick}          
         >
           {/* {this.borderline && (
             <SmartMarker position={this.borderline.points[0]} title='point' />
-          )}
+          )} */}
           {this.cell && (
-            <CellPoly 
+            <CellPoly
               cell={this.cell} 
+              onClick={this.onClick}
             />
           )}
-          {this.borderline && (
+          {/* {this.borderline && (
             <SmartPolygon 
               paths={this.borderline.fullPoints.points} 
               onClick={this.onClick}
@@ -135,14 +148,14 @@ export class PositionMapWrapped extends Component<Props> {
               cell={cell}
               key={`next-cell-${index}`}
             />
-          ))}
-          {this.borderline && (
-            <GridOverlay 
-              params={this.gridParams}
-              borderline={this.borderline}
+          ))} */}
+          {(
+            <GridOverlay
+              params={this.params}
+              // borderline={this.borderline}
             />
           )}
-          {this.props.children} */}
+          {this.props.children}
           <PositionMarker />
           {this.point && (
             <Marker

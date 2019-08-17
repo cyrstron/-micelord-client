@@ -1,24 +1,25 @@
 import React, {Component} from 'react';
-// import {SmartTilesOverlay} from '@micelord/maps';
-// import {StaticGrider, createBorderRenderer, BorderRenderer} from '@micelord/grider';
+import {TilesOverlay} from '@micelord/maps';
 import {GridTile} from '../grid-tile/grid-tile';
-// import {SmartMarker, SmartPolyline} from '@maps/feature';
 import {TileMercPoint, IndexatedFigure, GridParams} from '@micelord/grider';
 
 interface Props {
   params: GridParams;
-  borderline: IndexatedFigure,
+  // borderline: IndexatedFigure,
 }
 
 export class GridOverlay extends Component<Props> {
   render() {
     const {
       params,
-      borderline,
+      // borderline,
     } = this.props;
     return (
       <>
-        {/* <SmartTilesOverlay width={512}>
+        <TilesOverlay 
+          width={512}
+          index={1}
+        >
           {({tileCoord: {x, y}, zoom, width, height}) => {
             const tilePoint = TileMercPoint.fromTile(x, y, width, height, zoom);
             
@@ -26,13 +27,11 @@ export class GridOverlay extends Component<Props> {
               <GridTile 
                 tilePoint={tilePoint}
                 params={params}
-                // borderRenderer={this.borderRenderer}
-                borderline={borderline}
-                // border={border}
+                // borderline={borderline}
               />
             )
           }}
-        </SmartTilesOverlay> */}
+        </TilesOverlay>
       </>
     )
   }
