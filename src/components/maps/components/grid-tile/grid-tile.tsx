@@ -10,84 +10,86 @@ import {
 interface Props {
   params: GridParams;
   tilePoint: TileMercPoint;
+  mapTile: MapGridTile;
   // borderline: IndexatedFigure,
 }
 
-interface State {
-  borderPoly: Point[] | null;
-  mapTile: MapGridTile | null;
-}
+// interface State {
+//   borderPoly: Point[] | null;
+//   mapTile: MapGridTile | null;
+// }
 
-export class GridTile extends Component<Props, State> {
+export class GridTile extends Component<Props, {}> {
   wasMounted: boolean = false;
   wasUnmounted: boolean = false;
 
-  constructor(props: Props) {
-    super(props);
+  // constructor(props: Props) {
+  //   super(props);
 
-    this.state = {
-      borderPoly: null,
-      mapTile: null,
-    }
+  //   this.state = {
+  //     borderPoly: null,
+  //     mapTile: null,
+  //   }
 
-    this.updateTile();
-  }
+  //   this.updateTile();
+  // }
 
-  componentDidMount() {
-    this.wasMounted = true;
-  }
+  // componentDidMount() {
+  //   this.wasMounted = true;
+  // }
 
-  componentWillUnmount() {
-    this.wasUnmounted = true;
-  }
+  // componentWillUnmount() {
+  //   this.wasUnmounted = true;
+  // }
 
-  async updateTile() {
-    const {
-      // borderline, 
-      tilePoint, 
-      params
-    } = this.props;
+  // async updateTile() {
+  //   const {
+  //     // borderline, 
+  //     tilePoint, 
+  //     params
+  //   } = this.props;
 
-    let borderPoly: Point[] = [];
-    let mapTile: MapGridTile | null = null;
+  //   let borderPoly: Point[] = [];
+  //   let mapTile: MapGridTile | null = null;
 
-    // try {
-    //   borderPoly = await borderline.tilePoints(tilePoint);
-    // } catch (err) {
-    //   console.error('Border tile error!');
-    //   console.error(tilePoint);
-    //   console.error(params);
-    //   console.error(err);
-    // }
+  //   // try {
+  //   //   borderPoly = await borderline.tilePoints(tilePoint);
+  //   // } catch (err) {
+  //   //   console.error('Border tile error!');
+  //   //   console.error(tilePoint);
+  //   //   console.error(params);
+  //   //   console.error(err);
+  //   // }
 
-    try {
-      mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
-    } catch (err) {
-      console.error('Grid tile error!');
-      console.error(tilePoint);
-      console.error(params);
-      console.error(err);
-    }
+  //   try {
+  //     mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
+  //   } catch (err) {
+  //     console.error('Grid tile error!');
+  //     console.error(tilePoint);
+  //     console.error(params);
+  //     console.error(err);
+  //   }
 
-    if (this.wasUnmounted) return;
+  //   if (this.wasUnmounted) return;
 
-    if (!this.wasMounted) {
-      this.state = {borderPoly, mapTile};
-    } else {
-      this.setState({
-        borderPoly,
-        mapTile,
-      });
-    }
-  }
+  //   if (!this.wasMounted) {
+  //     this.state = {borderPoly, mapTile};
+  //   } else {
+  //     this.setState({
+  //       borderPoly,
+  //       mapTile,
+  //     });
+  //   }
+  // }
   
-  shouldComponentUpdate(_nextProps: Props, nextState: State) {
-    const {
-      borderPoly,
-    } = this.state;
+  // shouldComponentUpdate(nextProps: Props, nextState: State) {
+  //   const {params} = this.props;
+  //   const {mapTile} = this.state;
 
-    return !borderPoly && !!nextState.borderPoly;
-  }
+  //   return params !== nextProps.params || (
+  //     !mapTile && !!nextState.mapTile
+  //   );
+  // }
 
   // componentWillUpdate(nextProps: Props) {
   //   const {borderline, tilePoint} = this.props;
@@ -101,12 +103,13 @@ export class GridTile extends Component<Props, State> {
     const {
       tilePoint,
       params,
+      mapTile,
     } = this.props;
 
-    const {
-      borderPoly,
-      mapTile
-    } = this.state;
+    // const {
+    //   borderPoly,
+    //   mapTile
+    // } = this.state;
     
     const minCellSize = params.minCellSize(tilePoint);
 
@@ -208,7 +211,7 @@ export class GridTile extends Component<Props, State> {
             width={tilePoint.tileWidth}
             height={tilePoint.tileHeight}
           />
-          {borderPoly && borderPoly.length > 0 && (
+          {/* {borderPoly && borderPoly.length > 0 && (
             <polygon 
               mask={`url(#${maskId})`} 
               points={borderPoly.map(({x, y}) => `${x},${y}`).join(' ')}
@@ -216,7 +219,7 @@ export class GridTile extends Component<Props, State> {
               stroke="rgba(0, 255, 0, 1)"
               strokeWidth={stokeWidth}
             />
-          )}
+          )} */}
         </svg>
       </>
     )
