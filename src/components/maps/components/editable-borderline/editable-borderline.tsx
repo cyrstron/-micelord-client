@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {DumbPolyline, Marker, PolylineService} from '@micelord/maps';
-import {GeoPolygon, GeoPoint, GridParams, Figure} from '@micelord/grider';
+import {DumbPolyline, Marker, PolylineService, Polygon} from '@micelord/maps';
+import {GeoPolygon, GeoPoint, GridParams, Figure, Cell} from '@micelord/grider';
 import debounce from 'lodash/debounce';
+import { observable } from 'mobx';
 
 export interface EditableBorderlineProps {
   border: GeoPolygon;
@@ -14,6 +15,9 @@ type Props = EditableBorderlineProps & {
 };
 
 export class DumbEditableBorderline extends Component<Props> {
+  @observable invalidCells: Cell[] = [];
+  @observable invalidPoints: GeoPoint[] = [];
+
   pathObj: google.maps.MVCArray<google.maps.LatLng> | undefined;
   
   componentDidMount() {
@@ -48,10 +52,11 @@ export class DumbEditableBorderline extends Component<Props> {
     pathObj.addListener('set_at', this.onDragBorder);
   }
   
-  onDragBorder: google.maps.MapMouseEventHandler = debounce(() => {
+  onDragBorder: google.maps.MapMouseEventHandler = debounce(async () => {
     const {
       featureService,
       onPathChange,
+      gridParams,
       border,
     } = this.props;
     
@@ -79,33 +84,35 @@ export class DumbEditableBorderline extends Component<Props> {
 
     if (!arePointsChanged) return;
 
-    const poly = new GeoPolygon(borderPoints)
+    const poly = new GeoPolygon(borderPoints);
+
+    const {cells, points} = await Figure.validateShape(poly, gridParams);
+
+    this.invalidCells = cells;
+    this.invalidPoints = points;
 
     onPathChange(poly);
   }, 500)
 
 
   render() {
-    const {border, gridParams} = this.props;
-
-    const {selfIntersections} = border;
-    // const cells =.cellsInvalidForFigure(gridParams);
+    const {border} = this.props;
 
     return (
       <>
-        {/* <DumbPolyline
+        <DumbPolyline
           path={[...border.points, border.points[0]]}
           strokeColor='#000066'
           onDragEnd={this.onDragBorder}
           editable={true}
           draggable={true}
         />
-        {selfIntersections.map((point, index) => (
-          <SmartMarker position={point} title={`${index}`} key={index} />
-        ))} */}
-        {/* {cells.map((cell, index) => (
-          <SmartPolygon paths={cell.points} key={index} />
-        ))} */}
+        {this.invalidPoints.map((point, index) => (
+          <Marker position={point} title={`${index}`} key={index} />
+        ))}
+        {this.invalidCells.map((cell, index) => (
+          <Polygon paths={cell.points} key={index} />
+        ))}
       </>
     );
   }

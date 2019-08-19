@@ -5,36 +5,36 @@ import {TileMercPoint, IndexatedFigure, GridParams, MapGridTile, Point} from '@m
 
 interface Props {
   params: GridParams;
-  // borderline: IndexatedFigure,
+  borderline: IndexatedFigure,
 }
 
 interface TileData {
-  // borderPoly: Point[] | null;
+  border: Point[] | null;
   mapTile: MapGridTile;
 }
-
-const tileWidth = 512;
 
 export class GridOverlay extends Component<Props> {
   extendPayload = async ({
     tileCoord: {x, y}, 
-    zoom
+    zoom,
+    width,
+    height,
   } : {
       tileCoord: google.maps.Point,
       zoom: number,
+      width: number,
+      height: number,
     }
   ): Promise<any> => {
-    const {params} = this.props;    
-    const tilePoint = TileMercPoint.fromTile(x, y, tileWidth, tileWidth, zoom);
+    const {params, borderline} = this.props;    
+    const tilePoint = TileMercPoint.fromTile(x, y, width, height, zoom);
 
     try {
       const mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
+      const border = await borderline.tilePoints(tilePoint);
 
-      return {mapTile};
+      return {mapTile, border};
     } catch (err) {
-      console.error('Grid tile error!');
-      console.error(tilePoint);
-      console.error(params);
       console.error(err);
     }
   }
@@ -42,11 +42,11 @@ export class GridOverlay extends Component<Props> {
   render() {
     const {
       params,
-      // borderline,
     } = this.props;
+
     return (
       <TilesOverlay
-        width={tileWidth}
+        width={512}
         extendPayload={this.extendPayload}
         index={1}
       >
@@ -54,14 +54,14 @@ export class GridOverlay extends Component<Props> {
           if (!data) return null;
 
           const tilePoint = TileMercPoint.fromTile(x, y, width, height, zoom);
-          const {mapTile} = data as TileData;
+          const {mapTile, border} = data as TileData;
           
           return (
             <GridTile 
               tilePoint={tilePoint}
               params={params}
               mapTile={mapTile}
-              // borderline={borderline}
+              border={border}
             />
           )
         }}

@@ -3,18 +3,24 @@ import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
 import {GeolocationStore} from '@stores/geolocation';
 import {PositionMarker} from '../position-marker';
+import {EditableBorderline} from '../editable-borderline';
 import {
   DumbMap,
   withSmartMapCtx,
   MapService,
   Marker,
+  Polygon,
 } from '@micelord/maps';
 import {
-  GeoPoint, Cell, GridParams
+  GeoPoint, 
+  Cell, 
+  GridParams, 
+  GeoPolygon,
+  IndexatedFigure
 } from '@micelord/grider';
 
 import styles from './position-map.scss';
-import { observable } from 'mobx';
+import { observable, transaction } from 'mobx';
 import { CellPoly } from '../cell/cell';
 import { GridOverlay } from '../grid-overlay/grid-overlay';
 
@@ -37,11 +43,21 @@ export class PositionMapWrapped extends Component<Props> {
   params = GridParams.fromConfig({
     type: 'hex',
     correction: 'merc',
-    cellSize: 100000,
+    cellSize: 10000,
   });
 
   @observable point?: GeoPoint;
   @observable cell?: Cell;
+  @observable border: GeoPolygon = new GeoPolygon([
+    {lat: 47.06676604567628, lng: 36.796875}, 
+    {lat: 54.317706011018224, lng: 40.7470703125},  
+    {lat: 53.01600312774294, lng: 29.0234375},
+    {lat: 54.51822185091831, lng: 24.814453125}, 
+    {lat: 49.20018618540992, lng: 24.0576171875}, 
+    {lat: 51.936842019727436, lng: 32.2314453125},
+  ].map(({lat, lng}) => new GeoPoint(lat, lng)));
+
+  @observable borderline?: IndexatedFigure;
 
   constructor(props: Props) {
     super(props);
@@ -49,12 +65,23 @@ export class PositionMapWrapped extends Component<Props> {
     this.geolocationStore = props.geolocationStore!;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.geolocationStore.watchPosition();
+
+    this.borderline = await IndexatedFigure.fromShape(this.border, this.params, false);
   }
 
   componentWillUnmount() {
     this.geolocationStore.unwatchPosition();
+  }
+
+  onBorderChange = async (shape: GeoPolygon) => {
+    const borderline = await IndexatedFigure.fromShape(shape, this.params, false);
+
+    transaction(() => {
+      this.borderline = borderline;
+      this.border = shape;
+    });
   }
 
   onCenterClick = (): void => {
@@ -79,7 +106,7 @@ export class PositionMapWrapped extends Component<Props> {
   render() {
     const {position} = this.geolocationStore;
 
-    if (position === undefined) return null;
+    if (position === undefined || !this.borderline) return null;
 
     return (
       <>
@@ -96,24 +123,26 @@ export class PositionMapWrapped extends Component<Props> {
           fullscreenControl={false}
           onClick={this.onClick}          
         >
-          {/* {this.borderline && (
-            <SmartMarker position={this.borderline.points[0]} title='point' />
-          )} */}
+          <EditableBorderline 
+            gridParams={this.params}
+            border={this.border}
+            onPathChange={this.onBorderChange}
+          />
           {this.cell && (
             <CellPoly
               cell={this.cell} 
               onClick={this.onClick}
             />
           )}
-          {/* {this.borderline && (
-            <SmartPolygon 
+          {this.borderline && (
+            <Polygon 
               paths={this.borderline.fullPoints.points} 
               onClick={this.onClick}
               strokeColor='green'
               fillColor='transparent'
             />
           )}
-          {this.area && (
+          {/* {this.area && (
             <SmartPolygon 
               paths={this.area.polys} 
               onClick={this.onClick}
@@ -149,12 +178,10 @@ export class PositionMapWrapped extends Component<Props> {
               key={`next-cell-${index}`}
             />
           ))} */}
-          {(
-            <GridOverlay
-              params={this.params}
-              // borderline={this.borderline}
-            />
-          )}
+          <GridOverlay
+            params={this.params}
+            borderline={this.borderline}
+          />
           {this.props.children}
           <PositionMarker />
           {this.point && (
