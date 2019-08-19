@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
 import {TilesOverlay} from '@micelord/maps';
 import {GridTile} from '../grid-tile/grid-tile';
-import {TileMercPoint, IndexatedFigure, GridParams, MapGridTile, Point} from '@micelord/grider';
+import {
+  TileMercPoint, 
+  IndexatedFigure, 
+  GridParams, 
+  MapGridTile, 
+  Point
+} from '@micelord/grider';
+import { CacheService } from '@services/cache-service';
 
 interface Props {
   params: GridParams;
@@ -9,31 +16,62 @@ interface Props {
 }
 
 interface TileData {
-  border: Point[] | null;
+  border: Point[];
   mapTile: MapGridTile;
 }
 
+interface GridTilePayload {
+  tileCoord: google.maps.Point,
+  zoom: number,
+  width: number,
+  height: number,
+}
+
 export class GridOverlay extends Component<Props> {
+  tilesCache: CacheService<TileData> = new CacheService({
+    minSize: 50,
+    maxSize: 100
+  });
+
+  componentWillUpdate(prevProps: Props) {
+    const {params, borderline} = this.props;
+
+    if (
+      params === prevProps.params && 
+      borderline === prevProps.borderline
+    ) return;
+
+    this.tilesCache = new CacheService({
+      minSize: 50,
+      maxSize: 100
+    });
+  }
+
   extendPayload = async ({
     tileCoord: {x, y}, 
     zoom,
     width,
     height,
-  } : {
-      tileCoord: google.maps.Point,
-      zoom: number,
-      width: number,
-      height: number,
-    }
-  ): Promise<any> => {
+  }: GridTilePayload): Promise<any> => {
+    const cacheKey = `${x}-${y}-${zoom}-${width}-${height}`;
     const {params, borderline} = this.props;    
     const tilePoint = TileMercPoint.fromTile(x, y, width, height, zoom);
+
+    const cached = this.tilesCache.get(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
 
     try {
       const mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
       const border = await borderline.tilePoints(tilePoint);
 
-      return {mapTile, border};
+      const result = {mapTile, border};
+
+      this.tilesCache.set(cacheKey, result);
+
+      return result;
     } catch (err) {
       console.error(err);
     }
