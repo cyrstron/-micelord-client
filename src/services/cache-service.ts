@@ -27,13 +27,9 @@ export class CacheService<StoredData> {
     this.calls[key] = 1;
     this.lastCalls[key] = Date.now();
     
-    if (this.size < this.minSize) return;
+    if (this.size < this.maxSize) return;
 
-    if (this.size < this.maxSize) {
-      this.clean();
-    } else {
-      this.clean(this.size - this.maxSize + 1);
-    }
+    this.clean();
   }
 
   delete(key: string) {
@@ -48,21 +44,16 @@ export class CacheService<StoredData> {
     this.size -= 1;
   }
 
-  clean(deleteNumber = 1) {
+  clean() {
     const keysByCalls = Object.keys(this.storage)
       .sort((keyA, keyB) => {
-        // const callsA = this.calls[keyA];
-        // const callsB = this.calls[keyB];
-
-        // if (callsA !== callsB) return callsB - callsA;
-
         const lastCallA = this.lastCalls[keyA];
         const lastCallB = this.lastCalls[keyB];
 
         return lastCallB - lastCallA;
       });
 
-    const keysForDelete = keysByCalls.slice(this.size - 1 - deleteNumber);
+    const keysForDelete = keysByCalls.slice(this.size - this.minSize + 1);
 
     keysForDelete.forEach((key) => {
       this.delete(key);
@@ -78,5 +69,11 @@ export class CacheService<StoredData> {
     this.lastCalls[key] = Date.now();
     
     return result;
+  }
+
+  reset() {
+    this.storage = {};
+    this.lastCalls = {};
+    this.calls = {};
   }
 }

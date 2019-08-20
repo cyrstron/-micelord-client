@@ -29,8 +29,8 @@ interface GridTilePayload {
 
 export class GridOverlay extends Component<Props> {
   tilesCache: CacheService<TileData> = new CacheService({
-    minSize: 50,
-    maxSize: 100
+    minSize: 500,
+    maxSize: 1000
   });
 
   componentWillUpdate(prevProps: Props) {
@@ -41,10 +41,7 @@ export class GridOverlay extends Component<Props> {
       borderline === prevProps.borderline
     ) return;
 
-    this.tilesCache = new CacheService({
-      minSize: 50,
-      maxSize: 100
-    });
+    this.tilesCache.reset();
   }
 
   extendPayload = async ({
