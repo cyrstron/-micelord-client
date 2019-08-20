@@ -27,7 +27,11 @@ module.exports = {
       new TsconfigPathsPlugin(),
     ],
     extensions: ['.ts', '.tsx', '.js', '.css', '.js.map'],    
-    symlinks: false
+    symlinks: false,
+    alias: {
+      'react': path.resolve('./node_modules/react'),
+      'react-dom': path.resolve('./node_modules/react-dom'),      
+    }
   },
   module: {
     rules: [
