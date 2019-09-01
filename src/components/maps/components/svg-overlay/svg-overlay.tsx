@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {CustomOverlay} from '@micelord/maps';
+import {Overlay} from '@micelord/maps';
 import {GeoPoint} from '@micelord/grider';
 
 interface Props {
@@ -30,7 +30,7 @@ export const SvgOverlay = ({bounds, children, fill}: Props) => {
   const relHeight = (southY - northY) / (eastX - westX) * 100;
 
   return (
-    <CustomOverlay
+    <Overlay
       bounds={bounds}
     >
       <svg
@@ -44,6 +44,6 @@ export const SvgOverlay = ({bounds, children, fill}: Props) => {
       >
         {children}
       </svg>
-    </CustomOverlay>
+    </Overlay>
   );
 };
