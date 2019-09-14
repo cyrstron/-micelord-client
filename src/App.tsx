@@ -1,7 +1,11 @@
 import classNames from 'classnames/bind';
-import styles from './app.scss';
 import React, { Component } from 'react';
+import {Route, Link} from 'react-router-dom';
+
 import {PositionMap} from '@components/maps';
+import { Auth } from '@components/auth';
+
+import styles from './app.scss';
 
 const cx = classNames.bind(styles);
 
@@ -14,28 +18,18 @@ class App extends Component<{}, {string: string}> {
     };
   }
 
-  // async componentDidMount() {
-  //   try {
-  //     const request = await fetch('/api/hello');
-  //     const string = await request.text();
-  //     this.setState({
-  //       string,
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
-
   render() {
     const {string} = this.state;
 
     return (
       <div className={cx('App')}>
         <header className={cx('App-header')}>
-          {string}
+          <Link to='/auth'>
+            Auth
+          </Link>
         </header>
-        <PositionMap apiKey={process.env.GOOGLE_MAPS_KEY}/>
-        {/* <DevTools /> */}
+        <Route path='/' component={PositionMap} exact />
+        <Route path='/auth' component={Auth} />
       </div>
     );
   }

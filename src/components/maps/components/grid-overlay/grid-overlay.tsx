@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Tiles} from '@micelord/maps';
+import {TilesOverlay} from '@micelord/maps';
 import {GridTile} from '../grid-tile/grid-tile';
 import {
   TileMercPoint, 
@@ -80,7 +80,7 @@ export class GridOverlay extends Component<Props> {
     } = this.props;
 
     return (
-      <Tiles
+      <TilesOverlay
         width={512}
         extendPayload={this.extendPayload}
         index={1}
@@ -100,7 +100,7 @@ export class GridOverlay extends Component<Props> {
             />
           )
         }}
-      </Tiles>
+      </TilesOverlay>
     )
   }
 }

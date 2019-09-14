@@ -21,13 +21,8 @@
     "paths": {
       "@stores/*": ["stores/*"],
       "@services/*": ["services/*"],
-      "@components/*": ["components/*"],
-      "@maps/*": ["components/maps-objects/components/*"]
-    },    
-    "typeRoots": [
-      "node_modules/@types",
-      "./src/**/*",
-    ],
+      "@components/*": ["components/*"]
+    }, 
     "allowSyntheticDefaultImports": true, 
     "esModuleInterop": true,
     "experimentalDecorators": true,   
@@ -36,6 +31,6 @@
   },
   "include": [
     "./src/**/*",
-    "tsconfig.json", "../micelord-maps/src/components/google-api"
+    "tsconfig.json"
   ]
 }

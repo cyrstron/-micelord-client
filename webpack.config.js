@@ -20,7 +20,8 @@ module.exports = {
   entry: './src/index.tsx',
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'bundle.min.js'
+    filename: 'bundle.min.js',
+    publicPath: '/'
   },
   resolve: {
     plugins: [
@@ -75,6 +76,7 @@ module.exports = {
   ],
   devServer: {
     port: 3000,
+    historyApiFallback: true,
     proxy: {
       '/api': {
         target: 'http://localhost:3001',

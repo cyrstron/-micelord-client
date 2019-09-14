@@ -29,7 +29,6 @@ const cx = classNames.bind(styles);
 interface PositionMapProps {
   geolocationStore?: GeolocationStore;
   children?: ReactNode;
-  apiKey: string;
 }
 
 type Props = PositionMapProps & {
