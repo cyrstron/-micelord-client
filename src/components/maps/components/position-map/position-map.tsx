@@ -16,7 +16,7 @@ import {
   Cell, 
   GridParams, 
   GeoPolygon,
-  IndexatedFigure
+  IndexatedFigure,
 } from '@micelord/grider';
 
 import styles from './position-map.scss';
@@ -57,6 +57,12 @@ export class PositionMapWrapped extends Component<Props> {
   ].map(({lat, lng}) => new GeoPoint(lat, lng)));
 
   @observable borderline?: IndexatedFigure;
+  @observable bounds = {
+    north: 40,
+    south: 30,
+    west: 30,
+    east: 40
+  }
 
   constructor(props: Props) {
     super(props);

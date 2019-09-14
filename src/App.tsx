@@ -10,17 +10,7 @@ import styles from './app.scss';
 const cx = classNames.bind(styles);
 
 class App extends Component<{}, {string: string}> {
-  constructor(props: {}) {
-    super(props);
-
-    this.state = {
-      string: 'hello',
-    };
-  }
-
   render() {
-    const {string} = this.state;
-
     return (
       <div className={cx('App')}>
         <header className={cx('App-header')}>
