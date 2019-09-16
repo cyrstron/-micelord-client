@@ -5,19 +5,30 @@ import {
   Store,
 } from 'redux';
 
-export interface Action<T> {
-  type: string;
-  payload?: T;
+import {
+  AuthState,
+  authReducer,
+} from './auth';
+
+import {rootReducer, RootState} from './root';
+
+export interface Action<
+  Type = string, 
+  Payload = any
+> {
+  type: Type;
+  payload?: Payload;
 }
 
 export interface State {
   root: RootState;
+  auth: AuthState;
 }
 
-import {rootReducer, RootState} from './root';
-export const configureStore = (): Store<State, Action<any>> => createStore(
-  combineReducers<State, Action<any>>({
+export const configureStore = (): Store<State, Action> => createStore(
+  combineReducers<State, Action>({
     root: rootReducer,
+    auth: authReducer,
   }),
   applyMiddleware(),
 );
