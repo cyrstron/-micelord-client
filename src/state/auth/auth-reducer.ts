@@ -27,11 +27,13 @@ export const authReducer = (
     case SET_PENDING:
       return {
         ...state,
+        error: undefined,
         isPending: payload,
       }
     case SET_TOKEN:
       return {
         ...state,
+        isPending: false,
         authToken: payload,
       }
     case RESET_TOKEN:
@@ -42,6 +44,7 @@ export const authReducer = (
     case SET_ERROR:
       return {
         ...state,
+        isPending: false,
         error: payload,
       }
     case RESET_ERROR:

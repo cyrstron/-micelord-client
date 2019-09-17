@@ -18,8 +18,10 @@ class App extends Component<{}, {string: string}> {
             Auth
           </Link>
         </header>
-        <Route path='/' component={PositionMap} exact />
-        <Route path='/auth' component={Auth} />
+        <main className={cx('App-main')}>
+          <Route path='/' component={PositionMap} exact />
+          <Route path='/auth' component={Auth} />
+        </main>
       </div>
     );
   }
