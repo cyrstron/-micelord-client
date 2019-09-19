@@ -20,13 +20,13 @@ export interface Action<
   payload?: Payload;
 }
 
-export interface State {
+export interface AppState {
   root: RootState;
   auth: AuthState;
 }
 
-export const configureStore = (): Store<State, Action> => createStore(
-  combineReducers<State, Action>({
+export const configureStore = (): Store<AppState, Action> => createStore(
+  combineReducers<AppState, Action>({
     root: rootReducer,
     auth: authReducer,
   }),

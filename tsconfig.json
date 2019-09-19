@@ -21,7 +21,8 @@
     "paths": {
       "@stores/*": ["stores/*"],
       "@services/*": ["services/*"],
-      "@components/*": ["components/*"]
+      "@components/*": ["components/*"],
+      "@state/*": ["state/*"]
     }, 
     "allowSyntheticDefaultImports": true, 
     "esModuleInterop": true,

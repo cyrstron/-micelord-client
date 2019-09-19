@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import {Route, Link} from 'react-router-dom';
 
 import {PositionMap} from '@components/maps';
-import { Auth } from '@components/auth';
+import { SignUp } from '@components/sign-up';
 
 import styles from './app.scss';
+import { AuthRoute } from '@components/auth-route';
 
 const cx = classNames.bind(styles);
 
@@ -19,8 +20,8 @@ class App extends Component<{}, {string: string}> {
           </Link>
         </header>
         <main className={cx('App-main')}>
-          <Route path='/' component={PositionMap} exact />
-          <Route path='/auth' component={Auth} />
+          <Route path='/sign-up' component={SignUp} />
+          <AuthRoute path='/' component={PositionMap} exact />
         </main>
       </div>
     );

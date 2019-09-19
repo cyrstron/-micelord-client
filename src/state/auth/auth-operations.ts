@@ -14,7 +14,7 @@ export interface SignUpPayload {
   password: string;
 }
 
-export const signUp = (dispatch: Dispatch) => async (user: SignUpPayload) => {
+export const createSignUp = (dispatch: Dispatch) => async (user: SignUpPayload) => {
   try {
     dispatch(setPending(true));
 
