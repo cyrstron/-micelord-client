@@ -7,6 +7,7 @@ import {
   resetError, 
   resetToken
 } from './auth-actions';
+import { localStorage } from '@services/local-storage';
 
 export interface SignUpPayload {
   email: string;
@@ -18,7 +19,7 @@ export const createSignUp = (dispatch: Dispatch) => async (user: SignUpPayload) 
   try {
     dispatch(setPending(true));
 
-    await axios.post('/signup', user);
+    await axios.post('/auth/signup', user);
 
     dispatch(setPending(false));
   } catch (err) {
@@ -31,16 +32,23 @@ export interface SignInPayload {
   password: string;
 }
 
-export const signIn = (dispatch: Dispatch) => async (user: SignInPayload) => {
+export const createSignIn = (dispatch: Dispatch) => async (user: SignInPayload) => {
   try {
     dispatch(setPending(true));
 
-    const {data: token} = await axios.post<string>('/signin', user);
+    const {data: token} = await axios.post<string>('/auth/signin', user);
 
     setAuth(token);
     
     dispatch(setToken(token));
+    localStorage.setItem('authToken', token);
   } catch (err) {
     dispatch(setError(err));
   }
+};
+
+export const createSignOut = (dispatch: Dispatch) => () => {
+  dispatch(resetToken());
+
+  localStorage.removeItem('authToken');
 };

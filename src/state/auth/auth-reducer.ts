@@ -6,6 +6,8 @@ import {
   RESET_ERROR
 } from './auth-consts';
 import {Action} from '../';
+import { localStorage } from '@services/local-storage';
+import { setAuth } from '@services/axios';
 
 export interface AuthState {
   readonly isPending: boolean;
@@ -13,9 +15,15 @@ export interface AuthState {
   readonly error?: Error;
 }
 
+const authToken = localStorage.getItem('authToken');
+
+if (authToken) {
+  setAuth(authToken);
+}
+
 const initialState: AuthState = {
   isPending: false,
-  authToken: undefined,
+  authToken: authToken || undefined,
   error: undefined,
 };
 

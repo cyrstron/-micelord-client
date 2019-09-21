@@ -1,24 +1,23 @@
 import React, {Component, ChangeEvent, FormEvent} from "react";
-import { SignUpPayload } from "state/auth/auth-operations";
+import { SignInPayload } from "state/auth/auth-operations";
 import { RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
+import GoogleLogin from 'react-google-login';
 
-export interface SignUpProps extends RouteComponentProps {
-  onSubmit: (userPayload: SignUpPayload)=> Promise<void>;
+export interface SignInProps extends RouteComponentProps {
+  onSubmit: (userPayload: SignInPayload)=> Promise<void>;
   error?: Error;
   isLoading: boolean; 
 }
 
-interface SignUpState extends SignUpPayload {
+interface SignInState extends SignInPayload {
 }
 
-export class SignUpForm extends Component<SignUpProps, SignUpState> {
-  constructor(props: SignUpProps) {
+export class SignInForm extends Component<SignInProps, SignInState> {
+  constructor(props: SignInProps) {
     super(props);
 
     this.state = {
       email: '',
-      name: '',
       password: '',
     }
   }
@@ -33,7 +32,7 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
     const {error, history} = this.props;
 
     if (!error) {
-      history.push('/sign-in');
+      history.push('/');
     }
   }
 
@@ -42,7 +41,6 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
 
     this.setState({      
       email: '',
-      name: '',
       password: '',
     });
   }
@@ -54,19 +52,19 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
       case 'email': 
         this.setState({email: value});
         break;
-      case 'name': 
-        this.setState({name: value});
-        break;
       case 'password': 
         this.setState({password: value});
         break;
     }
   }
 
+  responseGoogle = (res: any) => {
+    console.log(res);
+  }
+
   render() {
     const {
       email,
-      name,
       password,
     } = this.state;
 
@@ -77,10 +75,7 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
 
     return (
       <>
-        <h2>Sign up</h2>
-        <p>
-          Already have an account? <Link to='/sign-in'>Sign in</Link>
-        </p>
+        <h2>Sign in</h2>
         {isLoading && 'Loading...'}
         {error && error.message}
         <form 
@@ -98,15 +93,6 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
             />
           </div>
           <div>
-            <label htmlFor="name">Name:</label>
-            <input 
-              id="name" 
-              name="name"
-              value={name}
-              onChange={this.onChange}
-            />
-          </div>
-          <div>
             <label htmlFor="password">Password:</label>
             <input 
               id="password" 
@@ -119,6 +105,12 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
           <button type="submit">Submit</button>
           <button type="reset">Cancel</button>
         </form>
+        <GoogleLogin 
+          clientId={process.env.GAPI_KEY}
+          buttonText="LOGIN WITH GOOGLE"
+          onSuccess={this.responseGoogle}
+          onFailure={this.responseGoogle}
+        />
       </>
     );
   }
