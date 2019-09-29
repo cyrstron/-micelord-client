@@ -1,7 +1,7 @@
 import React, {Component, ChangeEvent, FormEvent} from "react";
 import { SignInPayload } from "state/auth/auth-operations";
 import { RouteComponentProps } from "react-router";
-import GoogleLogin from 'react-google-login';
+import { GoogleAuth } from "@components/google-auth";
 
 export interface SignInProps extends RouteComponentProps {
   onSubmit: (userPayload: SignInPayload)=> Promise<void>;
@@ -105,9 +105,7 @@ export class SignInForm extends Component<SignInProps, SignInState> {
           <button type="submit">Submit</button>
           <button type="reset">Cancel</button>
         </form>
-        <GoogleLogin 
-          clientId={process.env.GAPI_KEY}
-          buttonText="LOGIN WITH GOOGLE"
+        <GoogleAuth
           onSuccess={this.responseGoogle}
           onFailure={this.responseGoogle}
         />
