@@ -58,9 +58,9 @@ export class SignInForm extends Component<SignInProps, SignInState> {
     }
   }
 
-  responseGoogle = (res: any) => {
-    console.log(res);
-  }
+  // responseGoogle = (res: any) => {
+  //   console.log(res);
+  // }
 
   render() {
     const {
@@ -105,12 +105,12 @@ export class SignInForm extends Component<SignInProps, SignInState> {
           <button type="submit">Submit</button>
           <button type="reset">Cancel</button>
         </form>
-        <GoogleLogin 
+        {/* <GoogleLogin 
           clientId={process.env.GAPI_KEY}
           buttonText="LOGIN WITH GOOGLE"
           onSuccess={this.responseGoogle}
           onFailure={this.responseGoogle}
-        />
+        /> */}
       </>
     );
   }
