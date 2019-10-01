@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import { AuthNavComponent } from './auth-nav';
 import { AppState } from '@state/index';
-import { getAuthToken } from '@state/auth/auth-selectors';
+import { getAuthToken } from '@state/reducers/auth/auth-selectors';
 
 const mapStateToProps = (state: AppState) => ({
   authToken: getAuthToken(state),

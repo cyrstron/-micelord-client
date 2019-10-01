@@ -5,7 +5,7 @@ import {
   SET_ERROR,
   RESET_ERROR
 } from './auth-consts';
-import {Action} from '../';
+import {Action} from '../..';
 import { localStorage } from '@services/local-storage';
 import { setAuth } from '@services/axios';
 

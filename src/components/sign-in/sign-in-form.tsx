@@ -1,5 +1,5 @@
 import React, {Component, ChangeEvent, FormEvent} from "react";
-import { SignInPayload } from "state/auth/auth-operations";
+import { SignInPayload } from "@state/reducers/auth/auth-operations";
 import { RouteComponentProps } from "react-router";
 import { GoogleAuth } from "@components/google-auth";
 

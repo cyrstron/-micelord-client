@@ -3,7 +3,7 @@ import {
   pendingSuffix,
   successSuffix,
   failureSuffix,
-} from '../consts';
+} from '../../consts';
 
 export const authPrefix = `${rootPrefix}/auth`;
 

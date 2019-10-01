@@ -1,8 +1,8 @@
 import {SignUpForm} from './sign-up-form';
 import {connect} from 'react-redux';
-import { createSignUp } from '@state/auth/auth-operations';
+import { createSignUp } from '@state/reducers/auth/auth-operations';
 import { Dispatch } from 'redux';
-import { getError, getIsPending } from '@state/auth/auth-selectors';
+import { getError, getIsPending } from '@state/reducers/auth/auth-selectors';
 import { AppState } from '@state/index';
 import { withRouter } from 'react-router';
 
