@@ -4,10 +4,11 @@ import {
   setPending, 
   setToken, 
   setError, 
-  resetError, 
-  resetToken
+  resetToken,
+  onPending
 } from './auth-actions';
 import { localStorage } from '@services/local-storage';
+import { postRequest } from '@state/actions/http-request';
 
 export interface SignUpPayload {
   email: string;
@@ -15,16 +16,16 @@ export interface SignUpPayload {
   password: string;
 }
 
-export const createSignUp = (dispatch: Dispatch) => async (user: SignUpPayload) => {
-  try {
-    dispatch(setPending(true));
+export const createSignUp = (dispatch: Dispatch) => (user: SignUpPayload) => {
+  const action = postRequest({
+    url: '/auth/signup',
+    data: user,
+  }, {
+    pending: onPending,
+    reject: setError,
+  });
 
-    await axios.post('/auth/signup', user);
-
-    dispatch(setPending(false));
-  } catch (err) {
-    dispatch(setError(err));
-  }
+  return dispatch(action);
 };
 
 export interface SignInPayload {
@@ -33,18 +34,16 @@ export interface SignInPayload {
 }
 
 export const createSignIn = (dispatch: Dispatch) => async (user: SignInPayload) => {
-  try {
-    dispatch(setPending(true));
+  const action = postRequest({
+    url: '/auth/signin',
+    data: user,
+  }, {
+    resolve: setToken,
+    pending: onPending,
+    reject: setError,
+  });
 
-    const {data: token} = await axios.post<string>('/auth/signin', user);
-
-    setAuth(token);
-    
-    dispatch(setToken(token));
-    localStorage.setItem('authToken', token);
-  } catch (err) {
-    dispatch(setError(err));
-  }
+  return dispatch(action);
 };
 
 export const createSignOut = (dispatch: Dispatch) => () => {

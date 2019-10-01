@@ -25,7 +25,7 @@ export const apiRequest = (
   }
 });
 
-export const getRequest = (  
+export const getApiRequest = (  
   options: RequestOptions,
   effects: Effects
 ) => apiRequest({
@@ -33,7 +33,7 @@ export const getRequest = (
   method: 'GET'
 }, effects);
 
-export const postRequest = (  
+export const postApiRequest = (  
   options: HttpRequestOptions,
   effects: Effects
 ) => apiRequest({
@@ -41,7 +41,7 @@ export const postRequest = (
   method: 'POST'
 }, effects);
 
-export const putRequest = (  
+export const putApiRequest = (  
   options: HttpRequestOptions,
   effects: Effects
 ) => apiRequest({
@@ -49,7 +49,7 @@ export const putRequest = (
   method: 'PUT'
 }, effects);
 
-export const deleteRequest = (  
+export const deleteApiRequest = (  
   options: RequestOptions,
   effects: Effects
 ) => apiRequest({

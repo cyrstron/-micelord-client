@@ -8,9 +8,12 @@ import {
 import {
   AuthState,
   authReducer,
-} from './auth';
+} from './reducers/auth';
 
-import {rootReducer, RootState} from './root';
+
+import {rootReducer, RootState} from './reducers/root';
+import { handleHttpRequest } from './actions/http-request';
+import { handleApiRequest } from './actions/api-request';
 
 export interface Action<
   Type = string, 
@@ -30,5 +33,8 @@ export const configureStore = (): Store<AppState, Action> => createStore(
     root: rootReducer,
     auth: authReducer,
   }),
-  applyMiddleware(),
+  applyMiddleware(
+    handleApiRequest,
+    handleHttpRequest,
+  ),
 );

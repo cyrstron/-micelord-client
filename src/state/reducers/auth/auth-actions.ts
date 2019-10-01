@@ -11,6 +11,9 @@ export const setPending = (isPending: boolean) => ({
   payload: isPending,
 });
 
+export const onPending = () => setPending(true);
+export const offPending = () => setPending(false);
+
 export const setToken = (token: string) => ({
   type: SET_TOKEN,
   payload: token,
