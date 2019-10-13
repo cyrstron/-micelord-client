@@ -1,4 +1,4 @@
 import {DumbEditableBorderline, EditableBorderlineProps} from './editable-borderline';
-import {withSmartPolylineCtx} from '@micelord/maps';
+import {withSmartPolylineCtx} from 'react-google-maps-ts';
 
 export const EditableBorderline = withSmartPolylineCtx<EditableBorderlineProps>(DumbEditableBorderline);

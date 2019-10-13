@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TilesOverlay} from '@micelord/maps';
+import {TilesOverlay} from 'react-google-maps-ts';
 import {GridTile} from '../grid-tile/grid-tile';
 import {
   TileMercPoint, 

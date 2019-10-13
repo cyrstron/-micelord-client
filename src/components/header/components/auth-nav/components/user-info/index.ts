@@ -1,8 +1,8 @@
 import {connect} from 'react-redux';
 import { UserInfoComponent } from './user-info';
 import { AppState } from '@state/index';
-import { getAuthToken } from '@state/auth/auth-selectors';
-import { createSignOut } from '@state/auth/auth-operations';
+import { getAuthToken } from '@state/reducers/auth/auth-selectors';
+import { createSignOut } from '@state/reducers/auth/auth-operations';
 import { Dispatch } from 'redux';
 
 const mapStateToProps = (state: AppState) => ({

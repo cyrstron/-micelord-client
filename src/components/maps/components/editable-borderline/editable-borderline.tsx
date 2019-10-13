@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {DumbPolyline, Marker, PolylineService, Polygon} from '@micelord/maps';
+import {DumbPolyline, Marker, PolylineService, Polygon} from 'react-google-maps-ts';
 import {GeoPolygon, GeoPoint, GridParams, Figure, Cell} from '@micelord/grider';
 import debounce from 'lodash/debounce';
 import { observable } from 'mobx';

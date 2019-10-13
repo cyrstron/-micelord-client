@@ -16,7 +16,7 @@ export interface SignUpPayload {
   password: string;
 }
 
-export const createSignUp = (dispatch: Dispatch) => (user: SignUpPayload) => {
+export const createSignUp = (dispatch: Dispatch) => async (user: SignUpPayload) => {
   const action = postRequest({
     url: '/auth/signup',
     data: user,

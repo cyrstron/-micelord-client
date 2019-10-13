@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider as ReduxProvider} from 'react-redux';
 import {BrowserRouter as Router} from 'react-router-dom';
-import {GoogleApiProvider} from '@micelord/maps';
+import {GoogleApiProvider} from 'react-google-maps-ts';
 
 import App from './app';
 import {configureStore} from './state';

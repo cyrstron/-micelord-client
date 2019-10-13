@@ -1,7 +1,7 @@
 import {inject, observer} from 'mobx-react';
 import React, {Component} from 'react';
 import {GeolocationStore} from '@stores/geolocation';
-import {Marker} from '@micelord/maps';
+import {Marker} from 'react-google-maps-ts';
 
 interface MarkerProps {
   geolocationStore?: GeolocationStore;

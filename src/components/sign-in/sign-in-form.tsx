@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router";
 import { GoogleAuth } from "@components/google-auth";
 
 export interface SignInProps extends RouteComponentProps {
-  onSubmit: (userPayload: SignInPayload)=> Promise<void>;
+  onSubmit: (userPayload: SignInPayload)=> Promise<any>;
   error?: Error;
   isLoading: boolean; 
 }

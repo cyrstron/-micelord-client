@@ -10,7 +10,7 @@ import {
   MapService,
   Marker,
   Polygon,
-} from '@micelord/maps';
+} from 'react-google-maps-ts';
 import {
   GeoPoint, 
   Cell, 

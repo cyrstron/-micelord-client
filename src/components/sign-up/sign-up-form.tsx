@@ -1,12 +1,12 @@
 import React, {Component, ChangeEvent, FormEvent} from "react";
-import { SignUpPayload } from "state/auth/auth-operations";
+import { SignUpPayload } from "@state/reducers/auth/auth-operations";
 import { RouteComponentProps } from "react-router";
 import { axios } from "@services/axios";
 import debounce from 'lodash/debounce';
 import { Link } from "react-router-dom";
 
 export interface SignUpProps extends RouteComponentProps {
-  onSubmit: (userPayload: SignUpPayload)=> Promise<void>;
+  onSubmit: (userPayload: SignUpPayload)=> Promise<any>;
   error?: Error;
   isLoading: boolean; 
 }
