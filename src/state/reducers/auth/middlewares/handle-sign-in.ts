@@ -1,5 +1,5 @@
 import { Dispatch, MiddlewareAPI } from "redux";
-import { SET_TOKEN } from "../auth-consts";
+import { SIGN_IN_SUCCESS } from "../auth-consts";
 import { Action } from "@state/index";
 
 export const handleSignIn = (
@@ -9,7 +9,7 @@ export const handleSignIn = (
 ) => async (
   action: Action
 ) => {
-  if (action.type !== SET_TOKEN) return next(action);
+  if (action.type !== SIGN_IN_SUCCESS) return next(action);
 
   const {
     payload,

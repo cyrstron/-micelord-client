@@ -119,8 +119,17 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
     e.preventDefault();
 
     const {onSubmit} = this.props;
+    const {
+      email, 
+      name, 
+      password
+    } = this.state;
 
-    await onSubmit(this.state);
+    await onSubmit({
+      email, 
+      name, 
+      password
+    });
 
     const {error, history} = this.props;
 

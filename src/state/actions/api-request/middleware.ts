@@ -3,6 +3,7 @@ import { API_REQUEST } from "./consts";
 import { axios } from "@services/axios";
 import { ApiRequestAction } from "./actions";
 import { httpRequest } from "../http-request/actions";
+import { getAuthToken } from "@state/reducers/auth/auth-selectors";
 
 interface Action {
   type: string;
@@ -10,7 +11,7 @@ interface Action {
 }
 
 export const handleApiRequest = (
-  {dispatch}: MiddlewareAPI
+  {dispatch, getState}: MiddlewareAPI
 ) => (
   next: Dispatch
 ) => async (
@@ -18,9 +19,25 @@ export const handleApiRequest = (
 ) => {
   if (action.type !== API_REQUEST) return next(action);
 
+  const authToken = getAuthToken(getState());
+
   const {
-    payload: {options, effects},
+    payload: {
+      options: {url, ...options}, 
+      effects
+    },
   } = action as ApiRequestAction;
 
-  return dispatch(httpRequest(options, effects));
+  const httpAction = httpRequest({
+      ...options,
+      headers: {
+        ...options.headers,
+        authorization: authToken,
+      },
+      url: `/api/${url}`
+    }, 
+    effects
+  );
+
+  return dispatch(httpAction);
 }

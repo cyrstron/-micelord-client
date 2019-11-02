@@ -1,30 +1,41 @@
 import {
-  SET_PENDING,
-  SET_TOKEN,
-  RESET_TOKEN,
-  SET_ERROR,
-  RESET_ERROR
+  SIGN_UP_PENDING,
+  SIGN_UP_SUCCESS,
+  SIGN_UP_FAILURE,
+  SIGN_IN_PENDING,
+  SIGN_IN_SUCCESS,
+  SIGN_IN_FAILURE,
+  GET_CURRENT_USER_PENDING,
+  GET_CURRENT_USER_SUCCESS,
+  GET_CURRENT_USER_FAILURE,
+  SIGN_OUT,
 } from './auth-consts';
 import {Action} from '../..';
 import { localStorage } from '@services/local-storage';
-import { setAuth } from '@services/axios';
+import { User } from '@state/actions/users-requests/actions';
+
 
 export interface AuthState {
-  readonly isPending: boolean;
+  readonly isSignInPending: boolean;
+  readonly isGetCurrentUserPending: boolean;
+  readonly isSignUpPending: boolean;
+  readonly signInError?: Error;
+  readonly getCurrentUserError?: Error;
+  readonly signUpError?: Error;
   readonly authToken?: string;
   readonly error?: Error;
+  readonly currentUser?: User;
 }
 
 const authToken = localStorage.getItem('authToken');
 
-if (authToken) {
-  setAuth(authToken);
-}
-
 const initialState: AuthState = {
-  isPending: false,
+  isSignInPending: false,
+  isGetCurrentUserPending: false,
+  isSignUpPending: false,
   authToken: authToken || undefined,
   error: undefined,
+  currentUser: undefined,
 };
 
 export const authReducer = (
@@ -32,34 +43,64 @@ export const authReducer = (
   {type, payload}: Action
 ): AuthState => {
   switch (type) {    
-    case SET_PENDING:
+    case SIGN_UP_PENDING:
       return {
         ...state,
-        error: undefined,
-        isPending: payload,
-      }
-    case SET_TOKEN:
+        signUpError: undefined,
+        isSignUpPending: true,
+      };
+    case SIGN_UP_SUCCESS:
       return {
         ...state,
-        isPending: false,
+        isSignUpPending: false,
+      };
+    case SIGN_UP_FAILURE:
+      return {
+        ...state,
+        signUpError: payload,
+        isSignUpPending: false,
+      };
+    case SIGN_IN_PENDING:
+      return {
+        ...state,
+        signInError: undefined,
+        isSignInPending: true,
+      };
+    case SIGN_IN_SUCCESS:
+      return {
+        ...state,
+        isSignInPending: false,
         authToken: payload,
-      }
-    case RESET_TOKEN:
+      };
+    case SIGN_IN_FAILURE:
+      return {
+        ...state,
+        signInError: payload,
+        isSignUpPending: false,
+      };
+    case SIGN_OUT:
       return {
         ...state,
         authToken: undefined,
-      }
-    case SET_ERROR:
+        currentUser: undefined,
+      };    
+    case GET_CURRENT_USER_PENDING:
       return {
         ...state,
-        isPending: false,
-        error: payload,
-      }
-    case RESET_ERROR:
+        isGetCurrentUserPending: true,
+      };
+    case GET_CURRENT_USER_SUCCESS:
       return {
         ...state,
-        error: undefined,
-      }
+        currentUser: payload,
+        isGetCurrentUserPending: false,
+      };
+    case GET_CURRENT_USER_FAILURE:
+      return {
+        ...state,
+        getCurrentUserError: payload,
+        isGetCurrentUserPending: false,
+      };
     default:
       return state;
   }

@@ -1,33 +1,59 @@
 import {
-  SET_PENDING,
-  SET_TOKEN,
-  RESET_TOKEN,
-  SET_ERROR,
-  RESET_ERROR
+  SIGN_UP_PENDING,
+  SIGN_UP_SUCCESS,
+  SIGN_UP_FAILURE,
+  SIGN_IN_PENDING,
+  SIGN_IN_SUCCESS,
+  SIGN_IN_FAILURE,
+  GET_CURRENT_USER_PENDING,
+  GET_CURRENT_USER_SUCCESS,
+  GET_CURRENT_USER_FAILURE,
+  SIGN_OUT,
 } from './auth-consts';
 
-export const setPending = (isPending: boolean) => ({
-  type: SET_PENDING,
-  payload: isPending,
+import { User } from '@state/actions/users-requests/actions';
+
+export const signUpOnPending = () => ({
+  type: SIGN_UP_PENDING,
 });
 
-export const onPending = () => setPending(true);
-export const offPending = () => setPending(false);
-
-export const setToken = (token: string) => ({
-  type: SET_TOKEN,
-  payload: token,
+export const signUpOnSuccess = () => ({
+  type: SIGN_UP_SUCCESS,
 });
 
-export const resetToken = () => ({
-  type: RESET_TOKEN,
+export const signUpOnFailure = (err: Error) => ({
+  type: SIGN_UP_FAILURE,
+  payload: err,
 });
 
-export const setError = (error: Error) => ({
-  type: SET_ERROR,
-  payload: error,
+export const signInOnPending = () => ({
+  type: SIGN_IN_PENDING,
 });
 
-export const resetError = () => ({
-  type: RESET_ERROR,
+export const signInOnSuccess = (authToken: string) => ({
+  type: SIGN_IN_SUCCESS,
+  payload: authToken,
 });
+
+export const signInOnFailure = (err: Error) => ({
+  type: SIGN_IN_FAILURE,
+  payload: err,
+});
+
+export const getCurrentUserOnPending = () => ({
+  type: GET_CURRENT_USER_PENDING,
+});
+
+export const getCurrentUserOnSuccess = (user: User) => ({
+  type: GET_CURRENT_USER_SUCCESS,
+  payload: user,
+});
+
+export const getCurrentUserOnFailure = (err: Error) => ({
+  type: GET_CURRENT_USER_FAILURE,
+  payload: err,
+});
+
+export const signOut = () => ({
+  type: SIGN_OUT,
+})

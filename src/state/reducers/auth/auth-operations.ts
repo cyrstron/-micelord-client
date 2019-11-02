@@ -1,14 +1,18 @@
 import {Dispatch} from 'redux';
-import {axios, setAuth} from '@services/axios';
 import {
-  setPending, 
-  setToken, 
-  setError, 
-  resetToken,
-  onPending
+  signInOnFailure,
+  signInOnPending,
+  signInOnSuccess,
+  signUpOnFailure,
+  signUpOnPending,
+  signUpOnSuccess,
+  getCurrentUserOnFailure,
+  getCurrentUserOnPending,
+  getCurrentUserOnSuccess,
+  signOut
 } from './auth-actions';
-import { localStorage } from '@services/local-storage';
-import { postRequest } from '@state/actions/http-request';
+import { getCurrentUser } from '@state/actions/users-requests/actions';
+import { signIn, signUp } from '@state/actions/auth-request/actions';
 
 export interface SignUpPayload {
   email: string;
@@ -16,13 +20,21 @@ export interface SignUpPayload {
   password: string;
 }
 
+export const createGetCurrentUser = (dispatch: Dispatch) => async () => {
+  const action = getCurrentUser({
+    resolve: getCurrentUserOnSuccess,
+    pending: getCurrentUserOnPending,
+    reject: getCurrentUserOnFailure,
+  });
+
+  return dispatch(action);
+}
+
 export const createSignUp = (dispatch: Dispatch) => async (user: SignUpPayload) => {
-  const action = postRequest({
-    url: '/auth/signup',
-    data: user,
-  }, {
-    pending: onPending,
-    reject: setError,
+  const action = signUp(user, {
+    resolve: signUpOnSuccess,
+    pending: signUpOnPending,
+    reject: signUpOnFailure,
   });
 
   return dispatch(action);
@@ -34,20 +46,15 @@ export interface SignInPayload {
 }
 
 export const createSignIn = (dispatch: Dispatch) => async (user: SignInPayload) => {
-  const action = postRequest({
-    url: '/auth/signin',
-    data: user,
-  }, {
-    resolve: setToken,
-    pending: onPending,
-    reject: setError,
+  const action = signIn(user, {
+    resolve: signInOnSuccess,
+    pending: signInOnPending,
+    reject: signInOnFailure,
   });
 
   return dispatch(action);
 };
 
 export const createSignOut = (dispatch: Dispatch) => () => {
-  dispatch(resetToken());
-
-  localStorage.removeItem('authToken');
+  return dispatch(signOut());
 };

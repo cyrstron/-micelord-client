@@ -1,46 +1,25 @@
 import React, { Component } from 'react';
 import { axios } from '@services/axios';
+import { User } from '@state/actions/users-requests/actions';
 
 export interface UserInfoProps {
   signOut: () => void;
-}
-
-export interface UserInfoState {
+  getCurrentUser: () => Promise<any>;
+  error?: Error;
   isPending: boolean;
-  userName?: string;
+  currentUser?: User;
 }
 
-export class UserInfoComponent extends Component<UserInfoProps, UserInfoState> {
-  constructor(props: UserInfoProps) {
-    super(props);
-
-    this.state = {
-      isPending: true,
-      userName: undefined,
-    };
-  }
-
+export class UserInfoComponent extends Component<UserInfoProps> {
   async componentDidMount() {
-    const {signOut} = this.props;
+    const {
+      getCurrentUser, 
+      currentUser
+    } = this.props;
 
-    try {
-      const {data: {name}} = await axios.get<{
-        name: string,
-        email: string,
-        _id: string
-      }>('/api/users/current');
+    if (currentUser) return;
 
-      this.setState({
-        userName: name,
-      })
-    } catch (err) {
-      signOut();
-      console.error(err);
-    } finally {
-      this.setState({
-        isPending: false
-      });
-    }
+    getCurrentUser();
   }
 
   onSignOut = () => {
@@ -50,13 +29,21 @@ export class UserInfoComponent extends Component<UserInfoProps, UserInfoState> {
   }
 
   render() {
-    const {isPending, userName} = this.state;
+    const {
+      isPending, 
+      currentUser,
+      error,
+    } = this.props;
 
     if (isPending) return 'Loading...';
 
+    if (error) return error.message;
+
+    if (!currentUser) return null;
+
     return (
       <div>
-        Hello, {userName}!
+        Hello, {currentUser.name}!
         <button onClick={this.onSignOut}>Sign Out</button>
       </div>
     )
