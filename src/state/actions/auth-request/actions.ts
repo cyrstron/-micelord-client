@@ -5,24 +5,24 @@ import { getApiRequest } from "../api-request";
 
 export const signIn = (
     data: SignInPayload, 
-    effects: Effects<string>
+    effects?: Effects<string>
 ) => postRequest({url: '/auth/signin', data}, effects);
 
 export const validateName = (
     name: string, 
-    effects: Effects<void>
-) => postRequest({url: '/auth/signin', data: {name}}, effects);
+    effects?: Effects<void>
+) => postRequest({url: '/auth/validate-name', data: {name}}, effects);
 
 export const validateEmail = (
     email: string, 
-    effects: Effects<void>
-) => postRequest({url: '/auth/signin', data: {email}}, effects);
+    effects?: Effects<void>
+) => postRequest({url: '/auth/validate-email', data: {email}}, effects);
 
 export const signUp = (
     data: SignUpPayload, 
-    effects: Effects<string>
-) => postRequest({url: '/auth/signin', data}, effects);
+    effects?: Effects<string>
+) => postRequest({url: '/auth/signup', data}, effects);
 
 export const validateToken = (
-    effects: Effects<void>
+    effects?: Effects<void>
 ) => getApiRequest({url: '/auth/validate-token'}, effects);

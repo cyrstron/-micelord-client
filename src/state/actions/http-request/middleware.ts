@@ -19,10 +19,18 @@ export const handleHttpRequest = (
 
   const {
     payload: {
-      effects: {reject, resolve, pending} = {} as Effects,
+      effects,
       options,
     },
   } = action as HttpAction;
+
+  if (!effects) return axios.request(options);
+
+  const {
+    pending,
+    reject,
+    resolve,
+  } = effects;
 
   if (pending) {
     dispatch(pending());

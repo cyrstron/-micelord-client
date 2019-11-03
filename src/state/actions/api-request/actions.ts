@@ -11,12 +11,12 @@ export interface ApiHttpRequestPayload extends HttpRequestPayload {};
 
 export type ApiRequestAction = {
   type: typeof API_REQUEST,
-  payload: HttpRequestPayload
+  payload: ApiHttpRequestPayload
 };
 
 export const apiRequest = (
   options: HttpRequestOptions,
-  effects: Effects
+  effects?: Effects
 ): Action<string, HttpRequestPayload> => ({
   type: API_REQUEST,
   payload: {
@@ -27,7 +27,7 @@ export const apiRequest = (
 
 export const getApiRequest = (  
   options: RequestOptions,
-  effects: Effects
+  effects?: Effects
 ) => apiRequest({
   ...options,
   method: 'GET'
@@ -35,7 +35,7 @@ export const getApiRequest = (
 
 export const postApiRequest = (  
   options: HttpRequestOptions,
-  effects: Effects
+  effects?: Effects
 ) => apiRequest({
   ...options,
   method: 'POST'
@@ -43,7 +43,7 @@ export const postApiRequest = (
 
 export const putApiRequest = (  
   options: HttpRequestOptions,
-  effects: Effects
+  effects?: Effects
 ) => apiRequest({
   ...options,
   method: 'PUT'
@@ -51,7 +51,7 @@ export const putApiRequest = (
 
 export const deleteApiRequest = (  
   options: RequestOptions,
-  effects: Effects
+  effects?: Effects
 ) => apiRequest({
   ...options,
   method: 'DELETE'

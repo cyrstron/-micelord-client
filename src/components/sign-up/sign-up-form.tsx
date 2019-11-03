@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 
 export interface SignUpProps extends RouteComponentProps {
   onSubmit: (userPayload: SignUpPayload)=> Promise<any>;
+  validateName: (name: string) => Promise<any>;
+  validateEmail: (email: string) => Promise<any>;
   error?: Error;
   isLoading: boolean; 
 }
@@ -49,7 +51,7 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
 
   validateEmail = debounce(async (email: string) => {
     try {
-      await axios.post('/auth/validate-email', {email});
+      await this.props.validateEmail(email);
       
       const {email: currentEmail, isEmailValid} = this.state;
 
@@ -83,7 +85,7 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
 
   validateName = debounce(async (name: string) => {
     try {
-      await axios.post('/auth/validate-name', {name});
+      await this.props.validateName(name);
 
       const {name: currentName, isNameValid} = this.state;
 

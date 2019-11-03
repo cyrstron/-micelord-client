@@ -34,7 +34,7 @@ export const httpRequest = (
 
 export const getRequest = (  
   options: RequestOptions,
-  effects: Effects
+  effects?: Effects
 ) => httpRequest({
   ...options,
   method: 'GET'
@@ -42,7 +42,7 @@ export const getRequest = (
 
 export const postRequest = (  
   options: HttpRequestOptions,
-  effects: Effects
+  effects?: Effects
 ) => httpRequest({
   ...options,
   method: 'POST'
@@ -50,7 +50,7 @@ export const postRequest = (
 
 export const putRequest = (  
   options: HttpRequestOptions,
-  effects: Effects
+  effects?: Effects
 ) => httpRequest({
   ...options,
   method: 'PUT'
@@ -58,7 +58,7 @@ export const putRequest = (
 
 export const deleteRequest = (  
   options: RequestOptions,
-  effects: Effects
+  effects?: Effects
 ) => httpRequest({
   ...options,
   method: 'DELETE'
