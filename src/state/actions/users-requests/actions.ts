@@ -7,4 +7,7 @@ export interface User {
     _id: string;
 }
 
-export const getCurrentUser = (effects: Effects<User>) => getApiRequest({url: '/users/current'}, effects);
+export const getCurrentUser = (effects: Effects<User>) => getApiRequest(
+    {url: '/api/users/current'}, 
+    effects
+);

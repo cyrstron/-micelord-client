@@ -23,7 +23,7 @@ export const handleApiRequest = (
 
   const {
     payload: {
-      options: {url, ...options}, 
+      options, 
       effects
     },
   } = action as ApiRequestAction;
@@ -34,7 +34,6 @@ export const handleApiRequest = (
         ...options.headers,
         authorization: authToken,
       },
-      url: `/api/${url}`
     }, 
     effects
   );

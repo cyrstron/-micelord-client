@@ -9,10 +9,17 @@ import {
   getCurrentUserOnFailure,
   getCurrentUserOnPending,
   getCurrentUserOnSuccess,
+  validateTokenOnFailure,
+  validateTokenOnPending,
+  validateTokenOnSuccess,
   signOut
 } from './auth-actions';
 import { getCurrentUser } from '@state/actions/users-requests/actions';
-import { signIn, signUp } from '@state/actions/auth-request/actions';
+import { 
+  signIn, 
+  signUp, 
+  validateToken 
+} from '@state/actions/auth-request/actions';
 
 export interface SignUpPayload {
   email: string;
@@ -54,6 +61,16 @@ export const createSignIn = (dispatch: Dispatch) => async (user: SignInPayload) 
 
   return dispatch(action);
 };
+
+export const createValidateToken = (dispatch: Dispatch) => async () => {
+  const action = validateToken({
+    resolve: validateTokenOnSuccess,
+    pending: validateTokenOnPending,
+    reject: validateTokenOnFailure,
+  });
+
+  return dispatch(action);
+}
 
 export const createSignOut = (dispatch: Dispatch) => () => {
   return dispatch(signOut());

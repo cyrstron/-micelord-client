@@ -8,8 +8,7 @@ import {
 import {
   AuthState,
   authReducer,
-  handleSignIn,
-  handleSignOut,
+  authMiddlewares,
 } from './reducers/auth';
 
 
@@ -38,7 +37,6 @@ export const configureStore = (): Store<AppState, Action> => createStore(
   applyMiddleware(
     handleApiRequest,
     handleHttpRequest,
-    handleSignIn,
-    handleSignOut,
+    ...authMiddlewares
   ),
 );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import classNames from 'classnames/bind';
 
 import styles from './auth-nav.scss';
@@ -8,20 +8,43 @@ import { UserInfo } from './components/user-info';
 const cx = classNames.bind(styles);
 
 export interface AuthInfoProps {
-  authToken?: string;
+  isAuthenticated: boolean;
+  needValidation: boolean;
+  isPending: boolean;
+  validateToken: () => Promise<any>
   className?: string;
 }
 
-export const AuthNavComponent = ({authToken, className}: AuthInfoProps) => (
-  <div className={cx(classNames)}>
-    {authToken && (
-      <UserInfo />
-    )}
-    {!authToken && (
-      <>
-        <Link to='/sign-up'>Sign Up</Link>
-        <Link to='/sign-in'>Sign In</Link>
-      </>
-    )}
-  </div>
-);
+export class AuthNavComponent extends Component<AuthInfoProps> {
+  componentDidMount() {
+    const {
+      needValidation,
+      validateToken,
+    } = this.props;
+
+    if (!needValidation) return;
+
+    validateToken();
+  }
+
+  render() {
+    const {isAuthenticated, isPending} = this.props;
+
+    return (
+      <div className={cx(classNames)}>
+        {isPending && (
+          'Loading...'
+        )}
+        {isAuthenticated && (
+          <UserInfo />
+        )}
+        {!isAuthenticated && (
+          <>
+            <Link to='/sign-up'>Sign Up</Link>
+            <Link to='/sign-in'>Sign In</Link>
+          </>
+        )}
+      </div>
+    );
+  }
+}

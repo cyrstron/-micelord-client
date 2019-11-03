@@ -8,6 +8,9 @@ import {
   GET_CURRENT_USER_PENDING,
   GET_CURRENT_USER_SUCCESS,
   GET_CURRENT_USER_FAILURE,
+  VALIDATE_TOKEN_PENDING,
+  VALIDATE_TOKEN_SUCCESS,
+  VALIDATE_TOKEN_FAILURE,
   SIGN_OUT,
 } from './auth-consts';
 import {Action} from '../..';
@@ -19,10 +22,12 @@ export interface AuthState {
   readonly isSignInPending: boolean;
   readonly isGetCurrentUserPending: boolean;
   readonly isSignUpPending: boolean;
+  readonly isValidateTokenPending: boolean;
   readonly signInError?: Error;
   readonly getCurrentUserError?: Error;
   readonly signUpError?: Error;
   readonly authToken?: string;
+  readonly isAuthTokenValid?: boolean;
   readonly error?: Error;
   readonly currentUser?: User;
 }
@@ -33,9 +38,8 @@ const initialState: AuthState = {
   isSignInPending: false,
   isGetCurrentUserPending: false,
   isSignUpPending: false,
+  isValidateTokenPending: false,
   authToken: authToken || undefined,
-  error: undefined,
-  currentUser: undefined,
 };
 
 export const authReducer = (
@@ -70,6 +74,7 @@ export const authReducer = (
       return {
         ...state,
         isSignInPending: false,
+        isAuthTokenValid: true,
         authToken: payload,
       };
     case SIGN_IN_FAILURE:
@@ -78,12 +83,6 @@ export const authReducer = (
         signInError: payload,
         isSignUpPending: false,
       };
-    case SIGN_OUT:
-      return {
-        ...state,
-        authToken: undefined,
-        currentUser: undefined,
-      };    
     case GET_CURRENT_USER_PENDING:
       return {
         ...state,
@@ -101,6 +100,25 @@ export const authReducer = (
         getCurrentUserError: payload,
         isGetCurrentUserPending: false,
       };
+    case VALIDATE_TOKEN_FAILURE:
+        return {
+          ...state,
+          isAuthTokenValid: false,
+          isValidateTokenPending: false,
+        };
+    case VALIDATE_TOKEN_SUCCESS:
+      return {
+        ...state,
+        isAuthTokenValid: true,
+        isValidateTokenPending: false,
+      };
+    case SIGN_OUT:
+      return {
+        ...state,
+        isAuthTokenValid: undefined,
+        authToken: undefined,
+        currentUser: undefined,
+      };    
     default:
       return state;
   }

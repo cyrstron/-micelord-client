@@ -8,6 +8,9 @@ import {
   GET_CURRENT_USER_PENDING,
   GET_CURRENT_USER_SUCCESS,
   GET_CURRENT_USER_FAILURE,
+  VALIDATE_TOKEN_PENDING,
+  VALIDATE_TOKEN_SUCCESS,
+  VALIDATE_TOKEN_FAILURE,
   SIGN_OUT,
 } from './auth-consts';
 
@@ -52,6 +55,18 @@ export const getCurrentUserOnSuccess = (user: User) => ({
 export const getCurrentUserOnFailure = (err: Error) => ({
   type: GET_CURRENT_USER_FAILURE,
   payload: err,
+});
+
+export const validateTokenOnPending = () => ({
+  type: VALIDATE_TOKEN_PENDING,
+});
+
+export const validateTokenOnSuccess = () => ({
+  type: VALIDATE_TOKEN_SUCCESS,
+});
+
+export const validateTokenOnFailure = (err: Error) => ({
+  type: VALIDATE_TOKEN_FAILURE,
 });
 
 export const signOut = () => ({

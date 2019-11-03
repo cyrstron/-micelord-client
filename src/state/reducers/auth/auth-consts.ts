@@ -19,4 +19,8 @@ export const GET_CURRENT_USER_PENDING = `${authPrefix}/GET_CURRENT_USER${pending
 export const GET_CURRENT_USER_SUCCESS = `${authPrefix}/GET_CURRENT_USER${successSuffix}`;
 export const GET_CURRENT_USER_FAILURE = `${authPrefix}/GET_CURRENT_USER${failureSuffix}`;
 
-export const SIGN_OUT = `${authPrefix}/SIGN_OUT${pendingSuffix}`;
+export const VALIDATE_TOKEN_PENDING = `${authPrefix}/VALIDATE_TOKEN${pendingSuffix}`;
+export const VALIDATE_TOKEN_SUCCESS = `${authPrefix}/VALIDATE_TOKEN${successSuffix}`;
+export const VALIDATE_TOKEN_FAILURE = `${authPrefix}/VALIDATE_TOKEN${failureSuffix}`;
+
+export const SIGN_OUT = `${authPrefix}/SIGN_OUT`;
