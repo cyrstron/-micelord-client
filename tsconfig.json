@@ -19,6 +19,7 @@
     "jsx": "react",  
     "baseUrl": "./src",           
     "paths": {
+      "@app/*": [""],
       "@stores/*": ["stores/*"],
       "@services/*": ["services/*"],
       "@components/*": ["components/*"],
