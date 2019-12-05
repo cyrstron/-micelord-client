@@ -8,7 +8,8 @@ export class InputsStore {
     this.inputs = inputs;
   }
 
-  @computed isValid() {
+  @computed 
+  get isValid() {
     return this.inputs.reduce(
       (isValid, input) => isValid && input.isValid, 
       true

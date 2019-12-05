@@ -52,7 +52,7 @@ export class SignUpStore {
   validateEmail = async (value: string) => {
     if (!value) throw Error('Email is required field');
 
-    if (!emailValidationRegex.test(value)) throw Error('Email is required field');
+    if (!emailValidationRegex.test(value)) throw Error('Email is not valid');
 
     await this.dispatch(validateEmail(value));    
   }
@@ -88,22 +88,6 @@ export class SignUpStore {
       name: this.name.value,
       password: this.password.value,
     }
-  }
-
-  setEmail = (value: string) => {
-    this.email.setValue(value);
-  }
-
-  setName = (value: string) => {
-    this.name.setValue(value);
-  }
-
-  setPassword = (value: string) => {
-    this.password.setValue(value);
-  }
-
-  setPasswordConfirm = (value: string) => {
-    this.passwordConfirm.setValue(value);
   }
 
   async validate() {

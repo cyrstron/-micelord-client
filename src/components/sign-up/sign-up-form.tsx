@@ -1,10 +1,11 @@
 import React, {Component, ChangeEvent, FormEvent} from "react";
 import { SignUpPayload } from "@state/reducers/auth/auth-operations";
 import { RouteComponentProps } from "react-router";
-import debounce from 'lodash/debounce';
 import { Link } from "react-router-dom";
 import { SignUpStore } from "./stores/sign-up-store";
 import {Dispatch} from 'redux';
+import { Input } from "@components/elements/inputs/input";
+import { observer } from "mobx-react";
 
 export interface SignUpProps extends RouteComponentProps {
   onSubmit: (userPayload: SignUpPayload) => Promise<any>;
@@ -15,15 +16,14 @@ export interface SignUpProps extends RouteComponentProps {
 
 interface SignUpState {
 }
-
-export class SignUpForm extends Component<SignUpProps, SignUpState> {
+@observer
+class SignUpForm extends Component<SignUpProps, SignUpState> {
   signUpStore: SignUpStore;
 
   constructor(props: SignUpProps) {
     super(props);
 
     const {
-      onSubmit,
       dispatch,
     } = props;
 
@@ -61,33 +61,13 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
     this.signUpStore.reset();
   }
 
-  onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const {value, name} = e.target;
-
-    switch(name) {
-      case 'email': 
-        this.signUpStore.setEmail(value);
-        break;
-      case 'name': 
-        this.signUpStore.setName(value);
-        break;
-      case 'password': 
-        this.signUpStore.setPassword(value);
-        break;
-      case 'repeat-password':
-        this.signUpStore.setPasswordConfirm(value);        
-        break;
-    }
-  }
-
   render() {
     const {
       isValid,
-      reset,
-      email: {value: email},
-      name: {value: name},
-      password: {value: password},
-      passwordConfirm: {value: passwordConfirm},
+      email,
+      name,
+      password,
+      passwordConfirm,
     } = this.signUpStore;
 
     const {
@@ -107,80 +87,26 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
           onSubmit={this.onSubmit}
           onReset={this.onReset}
         >
-          <div>
-            <label htmlFor="email">Email:</label>
-            <input 
-              id="email" 
-              name="email"
-              type="email"
-              value={email}
-              onChange={this.onChange}
-              required
-              style={{
-                backgroundColor: isEmailPending ? '#aaa' : '#fff',
-                borderColor: isEmailValid === undefined ? undefined : 
-                  isEmailValid ? '#0f0' : '#f00',
-              }}
-            />
-            {emailErrorMsg && (
-              <span>{emailErrorMsg}</span>
-            )}
-          </div>
-          <div>
-            <label htmlFor="name">Name:</label>
-            <input 
-              id="name" 
-              name="name"
-              minLength={3}
-              value={name}
-              onChange={this.onChange}
-              required
-              style={{
-                backgroundColor: isNamePending ? '#aaa' : '#fff',
-                borderColor: isNameValid === undefined ? undefined : 
-                  isNameValid ? '#0f0' : '#f00',
-              }}
-            />
-            {nameErrorMsg && (
-              <span>{nameErrorMsg}</span>
-            )}
-          </div>
-          <div>
-            <label htmlFor="password">Password:</label>
-            <input 
-              id="password" 
-              name="password"
-              type="password"
-              value={password}
-              required
-              onChange={this.onChange}
-              style={{
-                borderColor: isPasswordValid === undefined ? undefined : 
-                  isPasswordValid ? '#0f0' : '#f00',
-              }}
-            />
-            {passwordErrorMsg && (
-              <span>{passwordErrorMsg}</span>
-            )}
-          </div>
-          <div>
-            <label htmlFor="repeat-password">Repeat password:</label>
-            <input 
-              id="repeat-password" 
-              name="repeat-password"
-              type="password"
-              value={repeatPassword}
-              onChange={this.onChange}
-              required
-              style={{
-                borderColor: isRepeatPasswordValid === undefined ? undefined : 
-                  isRepeatPasswordValid ? '#0f0' : '#f00',
-              }}
-            />
-            {repeatPasswordErrorMsg && (
-              <span>{repeatPasswordErrorMsg}</span>
-            )}
-          </div>
+          <Input
+            title='Email:'
+            inputStore={email}
+            id='signup-email-field'
+          />          
+          <Input
+            title='Name:'
+            inputStore={name}
+            id='signup-name-field'
+          />        
+          <Input
+            title='Password:'
+            inputStore={password}
+            id='signup-password-field'
+          />        
+          <Input
+            title='Confirm password:'
+            inputStore={passwordConfirm}
+            id='signup-password-confirm-field'
+          />
           <button type="submit" disabled={!isValid}>Submit</button>
           <button type="reset">Cancel</button>
         </form>
@@ -188,3 +114,5 @@ export class SignUpForm extends Component<SignUpProps, SignUpState> {
     );
   }
 }
+
+export {SignUpForm};
