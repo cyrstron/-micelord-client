@@ -23,6 +23,16 @@
   padding: 5px;
   padding-right: 20px;
   box-sizing: border-box;
+  border-radius: 5px;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #4444ee66;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
 }
 
 .label {

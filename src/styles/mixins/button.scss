@@ -2,7 +2,7 @@
   background-color: $buttonColor;
   border-color: darken($buttonColor, 10%);
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: lighten($buttonColor, 10%);
     border-color: $buttonColor;
   }
