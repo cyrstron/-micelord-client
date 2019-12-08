@@ -26,7 +26,9 @@ export class InputsStore {
 
   async validate() {
     await Promise.all(
-      this.inputs.map((input) => input.validate())
+      this.inputs
+        .filter(({isTouched}) => isTouched)
+        .map((input) => input.validate())
     );
   }
 

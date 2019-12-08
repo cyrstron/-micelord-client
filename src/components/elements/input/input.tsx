@@ -1,7 +1,7 @@
 import React, { InputHTMLAttributes, Component, ChangeEvent, ReactNode } from 'react';
 import classNames from 'classnames/bind';
 
-import styles from './styles.scss';
+import styles from './input.scss';
 import { InputStore } from '@stores/input-store';
 import { observer } from 'mobx-react';
 
@@ -42,7 +42,7 @@ export class Input extends Component<InputProps, {}> {
   
     return (
       <div      
-        className={cx('input-wrapper', className, {
+        className={cx('control', className, {
           'is-invalid': !isValid && isTouched,
           'is-valid': isValid && isTouched,
           'is-pending': isPending,
@@ -54,13 +54,15 @@ export class Input extends Component<InputProps, {}> {
         >
           {title}
         </label>
-        <input
-          {...props}
-          id={id}
-          value={value}
-          onChange={this.onChange}
-          className={cx('input')}
-        />
+        <span className={cx('input-wrapper')}>
+          <input
+            {...props}
+            id={id}
+            value={value}
+            onChange={this.onChange}
+            className={cx('input')}
+          />
+        </span>
         {error && (
           <span 
             className={cx('error')}

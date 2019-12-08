@@ -1,0 +1,7 @@
+@import '../../../../styles/mixins/button.scss';
+
+.btn {
+  @include button(#229922);
+
+  color: #fff;
+}

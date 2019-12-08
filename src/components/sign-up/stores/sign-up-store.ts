@@ -83,10 +83,6 @@ export class SignUpStore {
     return this.inputs.isValid;
   }
 
-  get isTouched() {
-    return this.inputs.isTouched;
-  }
-
   @computed
   get values(): SignUpPayload {
     return {
@@ -113,9 +109,7 @@ export class SignUpStore {
     
     this.isPending = true;
 
-    if (!this.isTouched) {
-      await this.validate();
-    }
+    await this.validate();
 
     try {
       if (this.isValid) {

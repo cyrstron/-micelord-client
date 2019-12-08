@@ -1,0 +1,17 @@
+.btn {
+  background-color: #aaa;
+  padding: 5px 10px;
+  display: inline-block;
+  border: 1px solid #888;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

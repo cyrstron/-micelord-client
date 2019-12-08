@@ -1,9 +1,16 @@
 import React, {Component, FormEvent} from "react";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
+import classnames from 'classnames/bind';
 import { SignUpStore } from "./stores/sign-up-store";
-import { Input } from "@components/elements/inputs/input";
+import { Input } from "@components/elements/input/input";
 import { observer } from "mobx-react";
+
+import styles from './sign-up-form.scss';
+import { SubmitBtn } from "@components/elements/buttons/submit-btn/submit-btn";
+import { CancelBtn } from "@components/elements/buttons/cancel-btn/cancel-btn";
+
+const cx = classnames.bind(styles);
 
 export interface SignUpProps extends RouteComponentProps {
 }
@@ -46,7 +53,7 @@ class SignUpForm extends Component<SignUpProps> {
     } = this.signUpStore;
 
     return (
-      <>
+      <div className={cx('form')}>
         <h2>Sign up</h2>
         <p>
           Already have an account? <Link to='/sign-in'>Sign in</Link>
@@ -58,31 +65,50 @@ class SignUpForm extends Component<SignUpProps> {
           onReset={this.onReset}
         >
           <Input
+            className={cx('input')}
             title='Email:'
             inputStore={email}
             id='signup-email-field'
           />          
           <Input
+            className={cx('input')}
             title='Name:'
             inputStore={name}
             id='signup-name-field'
           />        
           <Input
+            className={cx('input')}
             title='Password:'
             inputStore={password}
             type='password'
             id='signup-password-field'
           />        
           <Input
+            className={cx('input')}
             title='Confirm password:'
             inputStore={passwordConfirm}
             type='password'
             id='signup-password-confirm-field'
           />
-          <button type="submit" disabled={!isValid}>Submit</button>
-          <button type="reset">Cancel</button>
+          <div
+            className={cx('btn-wrapper')}
+          >
+            <SubmitBtn
+              className={cx('submit-btn', 'btn')}
+              type='submit'
+              disabled={!isValid}
+            >
+              Submit
+            </SubmitBtn>
+            <CancelBtn
+              className={cx('cancel-btn', 'btn')}
+              type='reset'
+            >
+              Cancel
+            </CancelBtn>
+          </div>
         </form>
-      </>
+      </div>
     );
   }
 }

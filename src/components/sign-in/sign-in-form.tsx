@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { SignInStore } from "./stores/sign-in-store";
 import { Link } from "react-router-dom";
-import { Input } from "@components/elements/inputs/input";
+import { Input } from "@components/elements/input/input";
 
 export interface SignInProps extends RouteComponentProps {
   signIn: (userPayload: SignInPayload)=> Promise<void>;
@@ -36,9 +36,7 @@ class SignInForm extends Component<SignInProps> {
       values,
     } = this.signInStore;
 
-    if (!isTouched) {
-      await inputs.validate();
-    }
+    await inputs.validate();
 
     if (!isValid) return;
 

@@ -1,0 +1,14 @@
+@mixin button($buttonColor) {
+  background-color: $buttonColor;
+  border-color: darken($buttonColor, 10%);
+
+  &:hover {
+    background-color: lighten($buttonColor, 10%);
+    border-color: $buttonColor;
+  }
+
+  &:active {
+    background-color: darken($buttonColor, 10%);
+    border-color:  darken($buttonColor, 20%);
+  }
+}
