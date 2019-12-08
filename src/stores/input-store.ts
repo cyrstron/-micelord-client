@@ -117,7 +117,7 @@ export class InputStore<Value = string> {
     this.validate();
 
     this.relatedInputs.forEach((input) => {
-      input.validate();
+      input.isTouched && input.validate();
     })
   }
 

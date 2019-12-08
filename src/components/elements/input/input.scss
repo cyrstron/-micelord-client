@@ -49,14 +49,26 @@
   } 
 } 
 
-.is-invalid .input-wrapper::before {
-  color: red;
-  content: '✘';
+.is-invalid {  
+  .input {
+    border-color: red;
+  }
+
+  .input-wrapper::before {
+    color: red;
+    content: '✘';
+  }
 }
 
-.is-valid .input-wrapper::before {
-  color: green;
-  content: '✔';
+.is-valid {
+  .input {
+    border-color: green;
+  }
+  
+  .input-wrapper::before {
+    color: green;
+    content: '✔';
+  }
 }
 
 .is-pending .input-wrapper::before {

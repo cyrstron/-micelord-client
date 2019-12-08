@@ -11,4 +11,8 @@
     background-color: darken($buttonColor, 10%);
     border-color:  darken($buttonColor, 20%);
   }
+
+  &:focus {
+    box-shadow: 0 0 0 2px rgba($buttonColor, 0.5);
+  }
 }
