@@ -2,13 +2,14 @@ import React, {Component, FormEvent} from "react";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import classnames from 'classnames/bind';
+import { observer } from "mobx-react";
 import { SignUpStore } from "./stores/sign-up-store";
 import { Input } from "@components/elements/input/input";
-import { observer } from "mobx-react";
 
-import styles from './sign-up-form.scss';
 import { SubmitBtn } from "@components/elements/buttons/submit-btn/submit-btn";
 import { CancelBtn } from "@components/elements/buttons/cancel-btn/cancel-btn";
+
+import styles from './sign-up-form.scss';
 
 const cx = classnames.bind(styles);
 

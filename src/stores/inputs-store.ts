@@ -11,24 +11,16 @@ export class InputsStore {
   @computed 
   get isValid() {
     return this.inputs.reduce(
-      (isValid, input) => isValid && input.isValid && !input.isPending, 
+      (isValid, input) => isValid && input.isValid !== false && !input.isPending, 
       true
-    );
-  }
-
-  @computed 
-  get isTouched() {
-    return this.inputs.reduce(
-      (isTouched, input) => isTouched && input.isTouched, 
-      false
     );
   }
 
   async validate() {
     await Promise.all(
       this.inputs
-        .filter(({isTouched}) => isTouched)
-        .map((input) => input.validate())
+        .filter(({isValid, debouncePromise}) => isValid === undefined || !!debouncePromise)
+        .map((input) => input.debouncePromise || input.validate())
     );
   }
 

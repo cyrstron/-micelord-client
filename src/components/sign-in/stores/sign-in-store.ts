@@ -48,10 +48,6 @@ export class SignInStore {
     return this.inputs.isValid;
   }
 
-  get isTouched() {
-    return this.inputs.isTouched;
-  }
-
   @computed
   get values(): SignInPayload {
     return {

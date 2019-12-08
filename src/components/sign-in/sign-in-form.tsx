@@ -1,10 +1,17 @@
 import React, {Component, FormEvent} from "react";
-import { SignInPayload } from "@state/reducers/auth/auth-operations";
 import { RouteComponentProps } from "react-router";
+import classnames from 'classnames/bind';
 import { observer } from "mobx-react";
 import { SignInStore } from "./stores/sign-in-store";
 import { Link } from "react-router-dom";
 import { Input } from "@components/elements/input/input";
+import { SignInPayload } from "@state/reducers/auth/auth-operations";
+import { SubmitBtn } from "@components/elements/buttons/submit-btn/submit-btn";
+import { CancelBtn } from "@components/elements/buttons/cancel-btn/cancel-btn";
+
+import styles from './sign-in-form.scss';
+
+const cx = classnames.bind(styles);
 
 export interface SignInProps extends RouteComponentProps {
   signIn: (userPayload: SignInPayload)=> Promise<void>;
@@ -30,13 +37,15 @@ class SignInForm extends Component<SignInProps> {
     } = this.props;
 
     const {
-      isTouched,
-      isValid,
       inputs,
-      values,
     } = this.signInStore;
 
     await inputs.validate();
+
+    const {
+      isValid,
+      values,
+    } = this.signInStore;
 
     if (!isValid) return;
 
@@ -66,7 +75,9 @@ class SignInForm extends Component<SignInProps> {
     } = this.props;
 
     return (
-      <>
+      <div
+        className={cx('form')}
+      >
         <h2>Sign in</h2>
         <p>
           Don't have an account? <Link to='/sign-up'>Sign up</Link>
@@ -78,20 +89,37 @@ class SignInForm extends Component<SignInProps> {
           onReset={this.onReset}
         >
           <Input
+            className={cx('input')}
             title='Email:'
             inputStore={email}
             id='signup-email-field'
           /> 
           <Input
+            className={cx('input')}
             title='Password:'
             inputStore={password}
             type='password'
             id='signup-password-field'
           /> 
-          <button type="submit" disabled={!isValid}>Submit</button>
-          <button type="reset">Cancel</button>
+          <div
+            className={cx('btn-wrapper')}
+          >
+            <SubmitBtn
+              className={cx('submit-btn', 'btn')}
+              type='submit'
+              disabled={!isValid}
+            >
+              Submit
+            </SubmitBtn>
+            <CancelBtn
+              className={cx('cancel-btn', 'btn')}
+              type='reset'
+            >
+              Cancel
+            </CancelBtn>
+          </div>
         </form>
-      </>
+      </div>
     );
   }
 }

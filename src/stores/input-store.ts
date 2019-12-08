@@ -9,13 +9,14 @@ interface InputStoreProps<Value> {
   value: Value;
   defaultValue?: Value;
   validate?: ValidateFunc<Value>;
+  relatedInputs?: InputStore[];
   type?: InputType;
 }
 
 export class InputStore<Value = string> {
   @observable value: Value;
 
-  @observable isValid: boolean = true;
+  @observable isValid?: boolean;
   @observable isTouched: boolean = false;
   @observable isPending: boolean = false;
   @observable error?: Error;
@@ -27,14 +28,18 @@ export class InputStore<Value = string> {
   debouncePromise?: Promise<void>;
   resolveValidation?: () => void;
 
+  relatedInputs: InputStore[] = [];
+
   constructor({
     value,
     validate,
     defaultValue,
+    relatedInputs = [],
   }: InputStoreProps<Value>) {
     this.value = value;
     this.validationCallback = validate;
     this.defaultValue = defaultValue;
+    this.relatedInputs = relatedInputs;
   }
 
   @action
@@ -42,10 +47,6 @@ export class InputStore<Value = string> {
     let isValid: boolean = true;
     let error: Error | undefined;
     let validationPromise: Promise<void | never> | undefined;
-
-    if (!this.isTouched) {
-      this.isTouched = true;
-    }
 
     try {
       validationPromise = this.validationCallback && 
@@ -85,6 +86,10 @@ export class InputStore<Value = string> {
   validateDebounced = debounce(this.validateValue, 500);
 
   validate() {
+    if (!this.isTouched) {
+      this.isTouched = true;
+    }
+
     if (!this.debouncePromise) {
       this.debouncePromise = new Promise((res) => {
         this.resolveValidation = res;
@@ -110,12 +115,17 @@ export class InputStore<Value = string> {
     this.value = value;
 
     this.validate();
+
+    this.relatedInputs.forEach((input) => {
+      input.validate();
+    })
   }
 
   @action reset() {
-    this.isValid = true;
+    this.isValid = undefined;
     this.isTouched = false;
     this.isPending = false;
+    this.error = undefined;
     this.value = this.defaultValue || '' as unknown as Value;
   }
 }

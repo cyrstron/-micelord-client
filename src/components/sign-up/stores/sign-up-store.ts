@@ -34,13 +34,16 @@ export class SignUpStore {
       value: '',
       validate: this.validateName
     });
-    this.password = new InputStore({
-      value: '',
-      validate: this.validatePassword
-    });
     this.passwordConfirm = new InputStore({
       value: '',
       validate: this.validatePasswordConfirm
+    });
+    this.password = new InputStore({
+      value: '',
+      validate: this.validatePassword,
+      relatedInputs: [
+        this.passwordConfirm,
+      ]
     });
 
     this.inputs = new InputsStore([

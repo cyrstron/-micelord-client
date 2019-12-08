@@ -43,7 +43,7 @@ export class Input extends Component<InputProps, {}> {
     return (
       <div      
         className={cx('control', className, {
-          'is-invalid': !isValid && isTouched,
+          'is-invalid': isValid === false,
           'is-valid': isValid && isTouched,
           'is-pending': isPending,
         })}
