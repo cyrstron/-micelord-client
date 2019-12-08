@@ -70,11 +70,13 @@ class SignUpForm extends Component<SignUpProps> {
           <Input
             title='Password:'
             inputStore={password}
+            type='password'
             id='signup-password-field'
           />        
           <Input
             title='Confirm password:'
             inputStore={passwordConfirm}
+            type='password'
             id='signup-password-confirm-field'
           />
           <button type="submit" disabled={!isValid}>Submit</button>

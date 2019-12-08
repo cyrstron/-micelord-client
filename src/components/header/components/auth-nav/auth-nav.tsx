@@ -11,7 +11,7 @@ export interface AuthInfoProps {
   isAuthenticated: boolean;
   needValidation: boolean;
   isPending: boolean;
-  validateToken: () => Promise<any>
+  validateToken: () => Promise<void>
   className?: string;
 }
 

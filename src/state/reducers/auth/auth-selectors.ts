@@ -7,7 +7,7 @@ export const selectAuthToken = (state: AppState) => state.auth.authToken;
 export const selectIsAuthTokenValidated = (state: AppState) => state.auth.isAuthTokenValidated;
 export const selectNeedTokenValidation = (state: AppState) => (
   !!selectAuthToken(state) &&
-  selectIsAuthTokenValidated(state) === undefined
+  !selectIsAuthTokenValidated(state)
 );
 export const selectIsAuthenticated = (state: AppState) => (
   !!selectAuthToken(state) && 

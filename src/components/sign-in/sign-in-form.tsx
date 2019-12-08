@@ -87,6 +87,7 @@ class SignInForm extends Component<SignInProps> {
           <Input
             title='Password:'
             inputStore={password}
+            type='password'
             id='signup-password-field'
           /> 
           <button type="submit" disabled={!isValid}>Submit</button>
