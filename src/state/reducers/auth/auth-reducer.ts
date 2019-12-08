@@ -88,7 +88,7 @@ export const authReducer = (
         isValidateTokenPending: false,
         authToken: undefined,
         currentUser: undefined,
-      };    
+      };
     default:
       return state;
   }

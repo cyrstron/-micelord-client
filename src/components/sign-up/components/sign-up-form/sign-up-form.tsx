@@ -1,6 +1,5 @@
 import React, {Component, FormEvent} from "react";
 import { RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
 import classnames from 'classnames/bind';
 import { observer } from "mobx-react";
 import { SignUpStore } from "./stores/sign-up-store";
@@ -55,10 +54,6 @@ class SignUpForm extends Component<SignUpProps> {
 
     return (
       <div className={cx('form')}>
-        <h2>Sign up</h2>
-        <p>
-          Already have an account? <Link to='/sign-in'>Sign in</Link>
-        </p>
         {isPending && 'Loading...'}
         {error && error.message}
         <form 

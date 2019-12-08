@@ -6,7 +6,6 @@ import {
   getCurrentUserOnFailure,
   getCurrentUserOnPending,
   getCurrentUserOnSuccess,
-  validateTokenOnFailure,
   validateTokenOnPending,
   validateTokenOnSuccess,
   signOut,
@@ -39,7 +38,7 @@ export const getCurrentUser = () => async (
 
     dispatch(onSuccess);
   } catch (err) {
-    const onFailure = signOut();
+    const onFailure = getCurrentUserOnFailure(err);
 
     dispatch(onFailure);
   }
@@ -85,7 +84,7 @@ export const validateToken = () => async (
 
     dispatch(onSuccess);
   } catch (err) {
-    const onFailure = validateTokenOnFailure(err);
+    const onFailure = signOut();
 
     dispatch(onFailure);
   }

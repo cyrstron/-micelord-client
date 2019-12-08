@@ -10,7 +10,6 @@ import {
   GET_CURRENT_USER_FAILURE,
   VALIDATE_TOKEN_PENDING,
   VALIDATE_TOKEN_SUCCESS,
-  VALIDATE_TOKEN_FAILURE,
   SIGN_OUT,
 } from './auth-consts';
 
@@ -65,10 +64,6 @@ export const validateTokenOnSuccess = () => ({
   type: VALIDATE_TOKEN_SUCCESS,
 });
 
-export const validateTokenOnFailure = (err: Error) => ({
-  type: VALIDATE_TOKEN_FAILURE,
-});
-
 export const signOut = () => ({
   type: SIGN_OUT,
-})
+});
