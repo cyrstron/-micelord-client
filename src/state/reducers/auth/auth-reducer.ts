@@ -1,16 +1,11 @@
 import {
-  SIGN_UP_PENDING,
-  SIGN_UP_SUCCESS,
-  SIGN_UP_FAILURE,
   SIGN_IN_PENDING,
   SIGN_IN_SUCCESS,
   SIGN_IN_FAILURE,
   GET_CURRENT_USER_PENDING,
   GET_CURRENT_USER_SUCCESS,
   GET_CURRENT_USER_FAILURE,
-  VALIDATE_TOKEN_PENDING,
   VALIDATE_TOKEN_SUCCESS,
-  VALIDATE_TOKEN_FAILURE,
   SIGN_OUT,
 } from './auth-consts';
 import {Action} from '../..';
@@ -21,49 +16,29 @@ import { User } from '@state/actions/users-requests/actions';
 export interface AuthState {
   readonly isSignInPending: boolean;
   readonly isGetCurrentUserPending: boolean;
-  readonly isSignUpPending: boolean;
   readonly isValidateTokenPending: boolean;
-  readonly signInError?: Error;
-  readonly getCurrentUserError?: Error;
-  readonly signUpError?: Error;
   readonly authToken?: string;
-  readonly isAuthTokenValid?: boolean;
-  readonly error?: Error;
+  readonly isAuthTokenValidated: boolean;
   readonly currentUser?: User;
+  readonly signInError?: Error;
+  readonly currentUserError?: Error;
 }
 
 const authToken = localStorage.getItem('authToken');
 
 const initialState: AuthState = {
+  authToken: authToken || undefined,
+  isAuthTokenValidated: false,
   isSignInPending: false,
   isGetCurrentUserPending: false,
-  isSignUpPending: false,
   isValidateTokenPending: false,
-  authToken: authToken || undefined,
 };
 
 export const authReducer = (
   state: AuthState = initialState, 
   {type, payload}: Action
 ): AuthState => {
-  switch (type) {    
-    case SIGN_UP_PENDING:
-      return {
-        ...state,
-        signUpError: undefined,
-        isSignUpPending: true,
-      };
-    case SIGN_UP_SUCCESS:
-      return {
-        ...state,
-        isSignUpPending: false,
-      };
-    case SIGN_UP_FAILURE:
-      return {
-        ...state,
-        signUpError: payload,
-        isSignUpPending: false,
-      };
+  switch (type) {
     case SIGN_IN_PENDING:
       return {
         ...state,
@@ -74,14 +49,14 @@ export const authReducer = (
       return {
         ...state,
         isSignInPending: false,
-        isAuthTokenValid: true,
+        isAuthTokenValidated: true,
         authToken: payload,
       };
     case SIGN_IN_FAILURE:
       return {
         ...state,
         signInError: payload,
-        isSignUpPending: false,
+        isSignInPending: false,
       };
     case GET_CURRENT_USER_PENDING:
       return {
@@ -97,25 +72,20 @@ export const authReducer = (
     case GET_CURRENT_USER_FAILURE:
       return {
         ...state,
-        getCurrentUserError: payload,
+        currentUserError: payload,
         isGetCurrentUserPending: false,
       };
-    case VALIDATE_TOKEN_FAILURE:
-        return {
-          ...state,
-          isAuthTokenValid: false,
-          isValidateTokenPending: false,
-        };
     case VALIDATE_TOKEN_SUCCESS:
       return {
         ...state,
-        isAuthTokenValid: true,
+        isAuthTokenValidated: true,
         isValidateTokenPending: false,
       };
     case SIGN_OUT:
       return {
         ...state,
-        isAuthTokenValid: undefined,
+        isAuthTokenValidated: false,
+        isValidateTokenPending: false,
         authToken: undefined,
         currentUser: undefined,
       };    

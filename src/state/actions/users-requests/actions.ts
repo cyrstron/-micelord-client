@@ -1,5 +1,5 @@
-import { getApiRequest } from "../api-request";
-import { Effects } from "../http-request/actions";
+import { getApiRequest } from "../api-request/actions";
+import { AppState } from "@state/index";
 
 export interface User {
     email: string;
@@ -7,7 +7,7 @@ export interface User {
     _id: string;
 }
 
-export const getCurrentUser = (effects?: Effects<User>) => getApiRequest(
-    {url: '/api/users/current'}, 
-    effects
+export const getCurrentUserRequest = (getState: () => AppState) => getApiRequest<User>(
+    {url: '/api/users/current'},
+    getState
 );

@@ -2,7 +2,7 @@ import React, { ComponentType } from 'react';
 import {connect} from 'react-redux';
 import {RouteProps} from 'react-router-dom';
 import { AppState } from 'state';
-import { getAuthToken } from '@state/reducers/auth/auth-selectors';
+import { selectAuthToken } from '@state/reducers/auth/auth-selectors';
 import { ProtectedRoute } from './protected-route';
 
 export interface AuthRouteProps extends RouteProps {
@@ -14,14 +14,14 @@ const AuthRouteComponent = ({
   ...props
 }: AuthRouteProps) => (
   <ProtectedRoute
-    condition={isAuthorized}
+    isAllowed={isAuthorized}
     redirectTo='/sign-in'
     {...props}
   />
 );
 
 const mapStateToProps = (state: AppState) => ({
-  isAuthorized: !!getAuthToken(state),
+  isAuthorized: !!selectAuthToken(state),
 });
 
 export const AuthRoute = connect(mapStateToProps)(AuthRouteComponent);

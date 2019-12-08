@@ -43,8 +43,9 @@ export class Input extends Component<InputProps, {}> {
     return (
       <div      
         className={cx('input-wrapper', className, {
-          'is-valid': isValid || !isTouched,
-          'is-panding': isPending,
+          'is-invalid': !isValid && isTouched,
+          'is-valid': isValid && isTouched,
+          'is-pending': isPending,
         })}
       >
         <label 

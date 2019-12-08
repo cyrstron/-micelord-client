@@ -3,23 +3,20 @@ import {
   signInOnFailure,
   signInOnPending,
   signInOnSuccess,
-  signUpOnFailure,
-  signUpOnPending,
-  signUpOnSuccess,
   getCurrentUserOnFailure,
   getCurrentUserOnPending,
   getCurrentUserOnSuccess,
   validateTokenOnFailure,
   validateTokenOnPending,
   validateTokenOnSuccess,
-  signOut
+  signOut,
 } from './auth-actions';
-import { getCurrentUser } from '@state/actions/users-requests/actions';
+import { getCurrentUserRequest } from '@state/actions/users-requests/actions';
 import { 
-  signIn, 
-  signUp, 
-  validateToken 
+  signInRequest, 
+  validateTokenRequest
 } from '@state/actions/auth-request/actions';
+import { AppState } from '@state/index';
 
 export interface SignUpPayload {
   email: string;
@@ -27,51 +24,71 @@ export interface SignUpPayload {
   password: string;
 }
 
-export const createGetCurrentUser = (dispatch: Dispatch) => async () => {
-  const action = getCurrentUser({
-    resolve: getCurrentUserOnSuccess,
-    pending: getCurrentUserOnPending,
-    reject: getCurrentUserOnFailure,
-  });
+export const getCurrentUser = () => async (
+  dispatch: Dispatch, 
+  getState: () => AppState
+) => {
+  const onPending = getCurrentUserOnPending();
 
-  return dispatch(action);
+  dispatch(onPending);
+
+  try {    
+    const currentUser = await getCurrentUserRequest(getState);
+
+    const onSuccess = getCurrentUserOnSuccess(currentUser);
+
+    dispatch(onSuccess);
+  } catch (err) {
+    const onFailure = signOut();
+
+    dispatch(onFailure);
+  }
 }
-
-export const createSignUp = (dispatch: Dispatch) => async (user: SignUpPayload) => {
-  const action = signUp(user, {
-    resolve: signUpOnSuccess,
-    pending: signUpOnPending,
-    reject: signUpOnFailure,
-  });
-
-  return dispatch(action);
-};
 
 export interface SignInPayload {
   email: string;
   password: string;
 }
 
-export const createSignIn = (dispatch: Dispatch) => async (user: SignInPayload) => {
-  const action = signIn(user, {
-    resolve: signInOnSuccess,
-    pending: signInOnPending,
-    reject: signInOnFailure,
-  });
+export const signIn = (user: SignInPayload) => async (
+  dispatch: Dispatch
+) => {
+  const onPending = signInOnPending();
 
-  return dispatch(action);
+  dispatch(onPending);
+
+  try {
+    const authToken = await signInRequest(user);
+
+    const onSuccess = signInOnSuccess(authToken);
+
+    dispatch(onSuccess);
+  } catch (err) {
+    const onFailure = signInOnFailure(err);
+
+    dispatch(onFailure);
+  }
 };
 
-export const createValidateToken = (dispatch: Dispatch) => async () => {
-  const action = validateToken({
-    resolve: validateTokenOnSuccess,
-    pending: validateTokenOnPending,
-    reject: validateTokenOnFailure,
-  });
+export const validateToken = () => async (
+  dispatch: Dispatch, 
+  getState: () => AppState
+) => {
+  const onPending = validateTokenOnPending();
 
-  return dispatch(action);
+  dispatch(onPending);
+
+  try {
+    await validateTokenRequest(getState);
+
+    const onSuccess = validateTokenOnSuccess();
+
+    dispatch(onSuccess);
+  } catch (err) {
+    const onFailure = validateTokenOnFailure(err);
+
+    dispatch(onFailure);
+  }
 }
 
-export const createSignOut = (dispatch: Dispatch) => () => {
-  return dispatch(signOut());
-};
+export {signOut};

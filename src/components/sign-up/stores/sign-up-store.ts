@@ -2,28 +2,30 @@ import {action, observable, computed} from 'mobx';
 import {InputStore} from '@stores/input-store';
 import { InputsStore } from '@stores/inputs-store';
 import { SignUpPayload } from '@state/reducers/auth/auth-operations';
-import { Dispatch } from 'redux';
 import {emailValidationRegex} from '../../../consts';
-import { validateEmail, validateName } from '@state/actions/auth-request/actions';
+import { 
+  validateEmailRequest, 
+  validateNameRequest,
+  signUpRequest,
+} from '@state/actions/auth-request/actions';
 
 interface SignUpStoreProps {
-  dispatch: Dispatch;
 }
 
 export class SignUpStore {
+  @observable isPending: boolean = false;
+  @observable error?: Error;
+
+  isSubmitted: boolean = false;
+
   email: InputStore<string>;
   name: InputStore<string>;
   password: InputStore<string>;
   passwordConfirm: InputStore<string>;
 
   inputs: InputsStore;
-  dispatch: Dispatch;
 
-  constructor({
-    dispatch,
-  }: SignUpStoreProps) {
-    this.dispatch = dispatch;
-
+  constructor() {
     this.email = new InputStore({
       value: '',
       validate: this.validateEmail
@@ -54,7 +56,7 @@ export class SignUpStore {
 
     if (!emailValidationRegex.test(value)) throw Error('Email is not valid');
 
-    await this.dispatch(validateEmail(value));    
+    await validateEmailRequest(value);
   }
 
   validateName = async (value: string) => {
@@ -62,13 +64,13 @@ export class SignUpStore {
 
     if (value.length < 3) throw Error('Name should have at least 3 characters');
 
-    await this.dispatch(validateName(value));    
+    await validateNameRequest(value);    
   }
 
   validatePassword = (value: string) => {
     if (!value) throw Error('Password is required field');
 
-    if (value.length) throw Error('Password should have at least 3 characters');
+    if (value.length < 3) throw Error('Password should have at least 3 characters');
   }
 
   validatePasswordConfirm = (value: string) => {
@@ -79,6 +81,10 @@ export class SignUpStore {
 
   get isValid() {
     return this.inputs.isValid;
+  }
+
+  get isTouched() {
+    return this.inputs.isTouched;
   }
 
   @computed
@@ -95,7 +101,32 @@ export class SignUpStore {
   }
 
   @action
-  reset = () => {
+  reset() {
     this.inputs.reset();
+  }
+
+  @action 
+  async submit() {
+    if (this.error) {
+      this.error = undefined;
+    }
+    
+    this.isPending = true;
+
+    if (!this.isTouched) {
+      await this.validate();
+    }
+
+    try {
+      if (this.isValid) {
+        await signUpRequest(this.values);
+
+        this.isSubmitted = true;
+      };
+    } catch (err) {
+      this.error = err;
+    } finally {
+      this.isPending = false;
+    }
   }
 }

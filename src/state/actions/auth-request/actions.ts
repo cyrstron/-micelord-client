@@ -1,28 +1,24 @@
-import { postRequest } from "../http-request"
-import { Effects } from "../http-request/actions"
+import { postRequest } from "../http-request/actions";
 import { SignInPayload, SignUpPayload } from "@state/reducers/auth/auth-operations";
-import { getApiRequest } from "../api-request";
+import { getApiRequest } from "../api-request/actions";
+import { AppState } from "@state/index";
 
-export const signIn = (
+export const signInRequest = (
     data: SignInPayload, 
-    effects?: Effects<string>
-) => postRequest({url: '/auth/signin', data}, effects);
+) => postRequest<string>({url: '/auth/signin', data});
 
-export const validateName = (
+export const validateNameRequest = (
     name: string, 
-    effects?: Effects<void>
-) => postRequest({url: '/auth/validate-name', data: {name}}, effects);
+) => postRequest<void>({url: '/auth/validate-name', data: {name}});
 
-export const validateEmail = (
-    email: string, 
-    effects?: Effects<void>
-) => postRequest({url: '/auth/validate-email', data: {email}}, effects);
+export const validateEmailRequest = (
+    email: string,
+) => postRequest<void>({url: '/auth/validate-email', data: {email}});
 
-export const signUp = (
+export const signUpRequest = (
     data: SignUpPayload, 
-    effects?: Effects<string>
-) => postRequest({url: '/auth/signup', data}, effects);
+) => postRequest<void>({url: '/auth/signup', data});
 
-export const validateToken = (
-    effects?: Effects<void>
-) => getApiRequest({url: '/auth/validate-token'}, effects);
+export const validateTokenRequest = (
+    getState: () => AppState
+) => getApiRequest<void>({url: '/auth/validate-token'}, getState);

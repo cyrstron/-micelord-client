@@ -1,65 +1,46 @@
-import { HTTP_REQUEST } from "./consts";
-import { AxiosRequestConfig } from "axios";
-import { Action } from "@state/index";
-
-export interface Effects<Result = any, Error = any> {
-  pending?: () => Action;
-  reject?: (err: Error) => Action<string, Error>;
-  resolve?: (result: Result) => Action<string, Result>;
-}
+import axios, {AxiosRequestConfig } from "axios";
 
 export type HttpRequestOptions = AxiosRequestConfig;
 export type RequestOptions = Omit<HttpRequestOptions, 'method'>;
 
-export interface HttpRequestPayload {
-  options: HttpRequestOptions;
-  effects?: Effects;
-};
-
-export type HttpAction = {
-  type: typeof HTTP_REQUEST, 
-  payload: HttpRequestPayload
-};
-
-export const httpRequest = (
+export const httpRequest = async <Response>(
   options: HttpRequestOptions,
-  effects?: Effects
-): HttpAction => ({
-  type: HTTP_REQUEST,
-  payload: {
-    options,
-    effects
-  }
-});
+) => { 
+  try {
+    const {data} = await axios.request<Response>(options);
 
-export const getRequest = (  
-  options: RequestOptions,
-  effects?: Effects
-) => httpRequest({
+    return data;
+  } catch (err) {
+    const {data} = err.response;
+
+    throw new Error(data);
+  }
+};
+
+export const getRequest = <Response>(  
+  options: RequestOptions
+) => httpRequest<Response>({
   ...options,
   method: 'GET'
-}, effects);
+});
 
-export const postRequest = (  
-  options: HttpRequestOptions,
-  effects?: Effects
-) => httpRequest({
+export const postRequest = <Response>(  
+  options: HttpRequestOptions
+) => httpRequest<Response>({
   ...options,
   method: 'POST'
-}, effects);
+});
 
-export const putRequest = (  
-  options: HttpRequestOptions,
-  effects?: Effects
-) => httpRequest({
+export const putRequest = <Response>(  
+  options: HttpRequestOptions
+) => httpRequest<Response>({
   ...options,
   method: 'PUT'
-}, effects);
+});
 
-export const deleteRequest = (  
-  options: RequestOptions,
-  effects?: Effects
-) => httpRequest({
+export const deleteRequest = <Response>(  
+  options: RequestOptions
+) => httpRequest<Response>({
   ...options,
   method: 'DELETE'
-}, effects);
+});

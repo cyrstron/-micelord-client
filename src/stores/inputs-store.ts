@@ -11,8 +11,16 @@ export class InputsStore {
   @computed 
   get isValid() {
     return this.inputs.reduce(
-      (isValid, input) => isValid && input.isValid, 
+      (isValid, input) => isValid && input.isValid && !input.isPending, 
       true
+    );
+  }
+
+  @computed 
+  get isTouched() {
+    return this.inputs.reduce(
+      (isTouched, input) => isTouched && input.isTouched, 
+      false
     );
   }
 

@@ -5,16 +5,15 @@ import {
   Store,
 } from 'redux';
 
+import thunk from 'redux-thunk';
+
 import {
   AuthState,
   authReducer,
   authMiddlewares,
 } from './reducers/auth';
 
-
 import {rootReducer, RootState} from './reducers/root';
-import { handleHttpRequest } from './actions/http-request';
-import { handleApiRequest } from './actions/api-request';
 
 export interface Action<
   Type = string, 
@@ -35,8 +34,9 @@ export const configureStore = (): Store<AppState, Action> => createStore(
     auth: authReducer,
   }),
   applyMiddleware(
-    handleApiRequest,
-    handleHttpRequest,
+    thunk,
+    // handleApiRequest,
+    // handleHttpRequest,
     ...authMiddlewares
   ),
 );

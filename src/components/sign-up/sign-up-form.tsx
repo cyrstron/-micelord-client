@@ -1,58 +1,31 @@
-import React, {Component, ChangeEvent, FormEvent} from "react";
-import { SignUpPayload } from "@state/reducers/auth/auth-operations";
+import React, {Component, FormEvent} from "react";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { SignUpStore } from "./stores/sign-up-store";
-import {Dispatch} from 'redux';
 import { Input } from "@components/elements/inputs/input";
 import { observer } from "mobx-react";
 
 export interface SignUpProps extends RouteComponentProps {
-  onSubmit: (userPayload: SignUpPayload) => Promise<any>;
-  dispatch: Dispatch;
-  error?: Error;
-  isLoading: boolean; 
 }
 
-interface SignUpState {
-}
 @observer
-class SignUpForm extends Component<SignUpProps, SignUpState> {
+class SignUpForm extends Component<SignUpProps> {
   signUpStore: SignUpStore;
 
   constructor(props: SignUpProps) {
     super(props);
 
-    const {
-      dispatch,
-    } = props;
-
-    this.signUpStore = new SignUpStore({
-      dispatch,
-    });
+    this.signUpStore = new SignUpStore();
   }
 
   onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const {onSubmit} = this.props;
+    await this.signUpStore.submit();
 
-    await this.signUpStore.validate();
+    if (!this.signUpStore.isSubmitted) return;
 
-    const {
-      values,
-      isValid
-    } = this.signUpStore;
-
-    if (!isValid) return;
-
-    await onSubmit(values);
-
-    const {error, history} = this.props;
-
-    if (!error) {
-      history.push('/sign-in');
-    }
+    this.props.history.push('/sign-in');
   }
 
   onReset = (e: FormEvent) => {
@@ -64,16 +37,13 @@ class SignUpForm extends Component<SignUpProps, SignUpState> {
   render() {
     const {
       isValid,
+      error,
+      isPending,
       email,
       name,
       password,
       passwordConfirm,
     } = this.signUpStore;
-
-    const {
-      isLoading,
-      error,
-    } = this.props;
 
     return (
       <>
@@ -81,7 +51,7 @@ class SignUpForm extends Component<SignUpProps, SignUpState> {
         <p>
           Already have an account? <Link to='/sign-in'>Sign in</Link>
         </p>
-        {isLoading && 'Loading...'}
+        {isPending && 'Loading...'}
         {error && error.message}
         <form 
           onSubmit={this.onSubmit}

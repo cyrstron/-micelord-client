@@ -1,25 +1,26 @@
 import {SignInForm} from './sign-in-form';
 import {connect} from 'react-redux';
-import { createSignIn } from '@state/reducers/auth/auth-operations';
-import { Dispatch } from 'redux';
-import { getSignInError, getSignInPending, getAuthToken } from '@state/reducers/auth/auth-selectors';
+import { signIn } from '@state/reducers/auth/auth-operations';
+import { 
+  selectSignInError, 
+  selectSignInPending, 
+  selectAuthToken 
+} from '@state/reducers/auth/auth-selectors';
 import { AppState } from '@state/index';
 import { withRouter } from 'react-router';
 
 const mapStateToProps = (state: AppState) => ({
-  error: getSignInError(state),
-  authToken: getAuthToken(state),
-  isLoading: getSignInPending(state),
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onSubmit: createSignIn(dispatch)
+  error: selectSignInError(state),
+  authToken: selectAuthToken(state),
+  isLoading: selectSignInPending(state),
 });
 
 export const SignIn = withRouter(
   connect(
     mapStateToProps, 
-    mapDispatchToProps
+    {
+      signIn
+    }
   )(SignInForm)
 );
 

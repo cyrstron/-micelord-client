@@ -1,58 +1,50 @@
-import { API_REQUEST } from "./consts";
 import { 
-  HttpRequestPayload, 
-  HttpRequestOptions, 
-  Effects, 
-  RequestOptions
+  HttpRequestOptions,
+  RequestOptions,
+  httpRequest
 } from "../http-request/actions";
-import { Action } from "@state/index";
+import { AppState } from "@state/index";
+import { selectAuthToken } from "@state/reducers/auth/auth-selectors";
 
-export interface ApiHttpRequestPayload extends HttpRequestPayload {};
-
-export type ApiRequestAction = {
-  type: typeof API_REQUEST,
-  payload: ApiHttpRequestPayload
-};
-
-export const apiRequest = (
+export const apiRequest = <Response>(
   options: HttpRequestOptions,
-  effects?: Effects
-): Action<string, HttpRequestPayload> => ({
-  type: API_REQUEST,
-  payload: {
-    options,
-    effects
+  getState: () => AppState,
+) => httpRequest<Response>({
+  ...options,
+  headers: {
+    ...options.headers,
+    authorization: selectAuthToken(getState())
   }
 });
 
-export const getApiRequest = (  
+export const getApiRequest = <Response>(  
   options: RequestOptions,
-  effects?: Effects
-) => apiRequest({
+  getState: () => AppState,
+) => apiRequest<Response>({
   ...options,
   method: 'GET'
-}, effects);
+}, getState);
 
-export const postApiRequest = (  
+export const postApiRequest = <Response>(  
   options: HttpRequestOptions,
-  effects?: Effects
-) => apiRequest({
+  getState: () => AppState,
+) => apiRequest<Response>({
   ...options,
   method: 'POST'
-}, effects);
+}, getState);
 
-export const putApiRequest = (  
+export const putApiRequest = <Response>(  
   options: HttpRequestOptions,
-  effects?: Effects
-) => apiRequest({
+  getState: () => AppState,
+) => apiRequest<Response>({
   ...options,
   method: 'PUT'
-}, effects);
+}, getState);
 
-export const deleteApiRequest = (  
+export const deleteApiRequest = <Response>(  
   options: RequestOptions,
-  effects?: Effects
-) => apiRequest({
+  getState: () => AppState,
+) => apiRequest<Response>({
   ...options,
   method: 'DELETE'
-}, effects);
+}, getState);

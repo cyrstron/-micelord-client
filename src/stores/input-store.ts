@@ -1,6 +1,5 @@
 import {observable, action} from 'mobx';
 import debounce = require('lodash/debounce');
-import { ChangeEvent } from 'react';
 
 export type ValidateFunc<Value> = (value: Value) => void | never | Promise<void | never>;
 
@@ -25,6 +24,9 @@ export class InputStore<Value = string> {
   defaultValue?: Value;
   validations: Set<Promise<void | never>> = new Set();
 
+  debouncePromise?: Promise<void>;
+  resolveValidation?: () => void;
+
   constructor({
     value,
     validate,
@@ -36,7 +38,7 @@ export class InputStore<Value = string> {
   }
 
   @action
-  async validate() {
+  validateValue = async () => {
     let isValid: boolean = true;
     let error: Error | undefined;
     let validationPromise: Promise<void | never> | undefined;
@@ -72,9 +74,27 @@ export class InputStore<Value = string> {
       this.error = error;
       this.isValid = isValid;
       this.isPending = false;
+
+      this.resolveValidation && this.resolveValidation();
+
+      this.debouncePromise = undefined;
+      this.resolveValidation = undefined;
     }
   }
 
+  validateDebounced = debounce(this.validateValue, 500);
+
+  validate() {
+    if (!this.debouncePromise) {
+      this.debouncePromise = new Promise((res) => {
+        this.resolveValidation = res;
+      });
+    };
+
+    this.validateDebounced();
+    
+    return this.debouncePromise;
+  }
 
   @action setValue(value: Value) {
     if (!this.isTouched) {

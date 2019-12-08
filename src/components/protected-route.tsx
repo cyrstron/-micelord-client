@@ -2,16 +2,27 @@ import React from 'react';
 import {Route, Redirect, RouteProps} from 'react-router-dom';
 
 interface ProtectedRouteProps extends RouteProps {
-  condition: boolean;
+  isAllowed: boolean;
   redirectTo: string;
 };
 
 export const ProtectedRoute = ({
-  condition,
+  isAllowed,
   redirectTo,
+  component,
   ...props
-}: ProtectedRouteProps) => condition ? (
-  <Route {...props} />
+}: ProtectedRouteProps) => isAllowed ? (
+  <Route 
+    component={component}
+    {...props} 
+  />
 ) : (
-  <Redirect to={redirectTo} />
+  <Route 
+    {...props} 
+    render={
+      () => (
+        <Redirect to={redirectTo} />
+      )
+    }
+  />
 );

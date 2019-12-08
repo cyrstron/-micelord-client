@@ -1,115 +1,100 @@
-import React, {Component, ChangeEvent, FormEvent} from "react";
+import React, {Component, FormEvent} from "react";
 import { SignInPayload } from "@state/reducers/auth/auth-operations";
 import { RouteComponentProps } from "react-router";
-import { GoogleAuth } from "@components/google-auth";
+import { observer } from "mobx-react";
+import { SignInStore } from "./stores/sign-in-store";
+import { Link } from "react-router-dom";
+import { Input } from "@components/elements/inputs/input";
 
 export interface SignInProps extends RouteComponentProps {
-  onSubmit: (userPayload: SignInPayload)=> Promise<any>;
+  signIn: (userPayload: SignInPayload)=> Promise<void>;
   error?: Error;
-  isLoading: boolean; 
+  isPending: boolean; 
 }
 
-interface SignInState extends SignInPayload {
-}
+@observer
+class SignInForm extends Component<SignInProps> {
+  signInStore: SignInStore;
 
-export class SignInForm extends Component<SignInProps, SignInState> {
   constructor(props: SignInProps) {
     super(props);
 
-    this.state = {
-      email: '',
-      password: '',
-    }
+    this.signInStore = new SignInStore();
   }
 
   onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const {onSubmit} = this.props;
+    const {
+      signIn
+    } = this.props;
 
-    await onSubmit(this.state);
+    const {
+      isTouched,
+      isValid,
+      inputs,
+      values,
+    } = this.signInStore;
 
-    const {error, history} = this.props;
-
-    if (!error) {
-      history.push('/');
+    if (!isTouched) {
+      await inputs.validate();
     }
+
+    if (!isValid) return;
+
+    await signIn(values);
+
+    if (this.props.error) return;
+
+    this.props.history.push('/');
   }
 
   onReset = (e: FormEvent) => {
     e.preventDefault();
 
-    this.setState({      
-      email: '',
-      password: '',
-    });
-  }
-
-  onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const {value, name} = e.target;
-
-    switch(name) {
-      case 'email': 
-        this.setState({email: value});
-        break;
-      case 'password': 
-        this.setState({password: value});
-        break;
-    }
-  }
-
-  responseGoogle = (res: any) => {
-    console.log(res);
+    this.signInStore.reset();
   }
 
   render() {
     const {
+      isValid,
       email,
       password,
-    } = this.state;
+    } = this.signInStore;
 
     const {
-      isLoading,
+      isPending,
       error,
     } = this.props;
 
     return (
       <>
         <h2>Sign in</h2>
-        {isLoading && 'Loading...'}
+        <p>
+          Don't have an account? <Link to='/sign-up'>Sign up</Link>
+        </p>
+        {isPending && 'Loading...'}
         {error && error.message}
         <form 
           onSubmit={this.onSubmit}
           onReset={this.onReset}
         >
-          <div>
-            <label htmlFor="email">Email:</label>
-            <input 
-              id="email" 
-              name="email"
-              type="email"
-              value={email}
-              onChange={this.onChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">Password:</label>
-            <input 
-              id="password" 
-              name="password"
-              type="password"
-              value={password}
-              onChange={this.onChange}
-            />
-          </div>
-          <button type="submit">Submit</button>
+          <Input
+            title='Email:'
+            inputStore={email}
+            id='signup-email-field'
+          /> 
+          <Input
+            title='Password:'
+            inputStore={password}
+            id='signup-password-field'
+          /> 
+          <button type="submit" disabled={!isValid}>Submit</button>
           <button type="reset">Cancel</button>
         </form>
-        <GoogleAuth
-          onSuccess={this.responseGoogle}
-          onFailure={this.responseGoogle}
-        />
       </>
     );
   }
 }
+
+export {SignInForm};
