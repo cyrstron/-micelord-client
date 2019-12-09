@@ -17,12 +17,6 @@ import {
 } from '@state/actions/auth-request/actions';
 import { AppState } from '@state/index';
 
-export interface SignUpPayload {
-  email: string;
-  name: string;
-  password: string;
-}
-
 export const getCurrentUser = () => async (
   dispatch: Dispatch, 
   getState: () => AppState
@@ -44,10 +38,16 @@ export const getCurrentUser = () => async (
   }
 }
 
-export interface SignInPayload {
+interface DefaultSignInPayload {
   email: string;
   password: string;
 }
+
+interface GoogleSignInPayload {
+  googleToken: string;
+}
+
+export type SignInPayload = DefaultSignInPayload | GoogleSignInPayload;
 
 export const signIn = (user: SignInPayload) => async (
   dispatch: Dispatch

@@ -2,101 +2,91 @@ import React, {Component, FormEvent} from "react";
 import { RouteComponentProps } from "react-router";
 import classnames from 'classnames/bind';
 import { observer } from "mobx-react";
-import { SignInStore } from "./stores/sign-in-store";
-import { Link } from "react-router-dom";
 import { Input } from "@components/elements/input/input";
 import { SignInPayload } from "@state/reducers/auth/auth-operations";
+
+import { ExternalAuthStore } from "./stores/external-auth-store";
 import { SubmitBtn } from "@components/elements/buttons/submit-btn/submit-btn";
 import { CancelBtn } from "@components/elements/buttons/cancel-btn/cancel-btn";
 
-import styles from './sign-in-form.scss';
+import styles from './external-auth-form.scss';
 
 const cx = classnames.bind(styles);
 
-export interface SignInProps extends RouteComponentProps {
-  signIn: (userPayload: SignInPayload)=> Promise<void>;
-  error?: Error;
-  isPending: boolean; 
+export interface ExternalAuthFormProps extends RouteComponentProps {
+  signIn: (user: SignInPayload) => void;
+  signInError?: Error;
+  isSignedIn: boolean;
+  googleToken: string;
+  isAuthPending: boolean;
 }
 
 @observer
-class SignInForm extends Component<SignInProps> {
-  signInStore: SignInStore;
+class ExternalAuthForm extends Component<ExternalAuthFormProps> {
+  extrenalAuthStore: ExternalAuthStore;
 
-  constructor(props: SignInProps) {
+  constructor(props: ExternalAuthFormProps) {
     super(props);
 
-    this.signInStore = new SignInStore();
+    this.extrenalAuthStore = new ExternalAuthStore(props.googleToken);
   }
 
   onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const {
-      signIn
-    } = this.props;
+    await this.extrenalAuthStore.submit();
 
-    await this.signInStore.validate();
+    if (!this.extrenalAuthStore.isSubmitted) return;
 
-    const {
-      isValid,
-      values,
-    } = this.signInStore;
+    const {googleToken, signIn} = this.props;
 
-    if (!isValid) return;
+    await signIn({
+      googleToken
+    });
 
-    await signIn(values);
+    const {isSignedIn, history} = this.props;
 
-    if (this.props.error) return;
+    if (!isSignedIn) return;
 
-    this.props.history.push('/');
+    history.push('/');
   }
 
   onReset = (e: FormEvent) => {
     e.preventDefault();
 
-    this.signInStore.reset();
+    this.extrenalAuthStore.reset();
   }
 
   render() {
     const {
       isValid,
-      email,
-      password,
-    } = this.signInStore;
+      error: storeError,
+      isPending: isStorePending,
+      name,
+    } = this.extrenalAuthStore;
 
     const {
-      isPending,
-      error,
+      signInError,
+      isAuthPending
     } = this.props;
 
+    const error = signInError || storeError;
+    const isPending = isStorePending || isAuthPending;
+
     return (
-      <div
-        className={cx('form')}
-      >
-        <h2>Sign in</h2>
-        <p>
-          Don't have an account? <Link to='/sign-up'>Sign up</Link>
-        </p>
+      <div className={cx('form')}>
         {isPending && 'Loading...'}
         {error && error.message}
         <form 
           onSubmit={this.onSubmit}
           onReset={this.onReset}
-        >
+        >   
           <Input
             className={cx('input')}
-            title='Email:'
-            inputStore={email}
-            id='signup-email-field'
-          /> 
-          <Input
-            className={cx('input')}
-            title='Password:'
-            inputStore={password}
-            type='password'
-            id='signup-password-field'
-          /> 
+            title='Name:'
+            inputStore={name}
+            id='signup-name-field'
+          />
           <div
             className={cx('btn-wrapper')}
           >
@@ -120,4 +110,4 @@ class SignInForm extends Component<SignInProps> {
   }
 }
 
-export {SignInForm};
+export {ExternalAuthForm};

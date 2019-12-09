@@ -1,7 +1,6 @@
 import {action, observable, computed} from 'mobx';
 import {InputStore} from '@stores/input-store';
 import { InputsStore } from '@stores/inputs-store';
-import { SignUpPayload } from '@state/reducers/auth/auth-operations';
 import {emailValidationRegex} from '../../../../../consts';
 import { 
   validateEmailRequest, 
@@ -87,7 +86,7 @@ export class SignUpStore {
   }
 
   @computed
-  get values(): SignUpPayload {
+  get values() {
     return {
       email: this.email.value,
       name: this.name.value,

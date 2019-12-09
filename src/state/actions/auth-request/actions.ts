@@ -1,5 +1,5 @@
 import { postRequest } from "../http-request/actions";
-import { SignInPayload, SignUpPayload } from "@state/reducers/auth/auth-operations";
+import { SignInPayload } from "@state/reducers/auth/auth-operations";
 import { getApiRequest } from "../api-request/actions";
 import { AppState } from "@state/index";
 
@@ -16,7 +16,14 @@ export const validateEmailRequest = (
 ) => postRequest<void>({url: '/auth/validate-email', data: {email}});
 
 export const signUpRequest = (
-    data: SignUpPayload, 
+    data: {
+        email: string,
+        password: string,
+        name: string
+    } | {
+        name: string,
+        googleToken: string,
+    }, 
 ) => postRequest<void>({url: '/auth/signup', data});
 
 export const validateTokenRequest = (
