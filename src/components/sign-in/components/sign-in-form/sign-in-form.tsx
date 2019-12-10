@@ -74,10 +74,6 @@ class SignInForm extends Component<SignInProps> {
       <div
         className={cx('form')}
       >
-        <h2>Sign in</h2>
-        <p>
-          Don't have an account? <Link to='/sign-up'>Sign up</Link>
-        </p>
         {isPending && 'Loading...'}
         {error && error.message}
         <form 

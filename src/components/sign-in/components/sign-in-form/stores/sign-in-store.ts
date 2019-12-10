@@ -2,10 +2,7 @@ import {action, observable, computed} from 'mobx';
 import {InputStore} from '@stores/input-store';
 import { InputsStore } from '@stores/inputs-store';
 import { SignInPayload } from '@state/reducers/auth/auth-operations';
-import {emailValidationRegex} from '../../../consts';
-import { 
-  signInRequest,
-} from '@state/actions/auth-request/actions';
+import {emailValidationRegex} from '../../../../../consts';
 
 interface SignInStoreProps {
 }

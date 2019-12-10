@@ -8,7 +8,7 @@ import {
   selectAuthPending 
 } from "@state/reducers/auth/auth-selectors";
 import { signIn } from "@state/reducers/auth/auth-operations";
-import { ComponentType } from "react";
+import { Dispatch } from "redux";
 
 const mapStateToProps = (state: AppState) => ({
   signInError: selectSignInError(state),
@@ -16,8 +16,12 @@ const mapStateToProps = (state: AppState) => ({
   isAuthPending: selectAuthPending(state),
 });
 
-export const ExternalSignUp = connect(mapStateToProps, {
-  signIn
-})(
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  signIn: async (googleToken: string) => {
+    await signIn({googleToken})(dispatch);
+  }
+})
+
+export const ExternalSignUp = connect(mapStateToProps, mapDispatchToProps)(
   withRouter(ExternalAuthForm)
 );

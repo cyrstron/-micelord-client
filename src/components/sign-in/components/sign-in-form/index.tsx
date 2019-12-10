@@ -1,4 +1,4 @@
-import {SignInForm} from './sign-in-form';
+import {SignInForm as SignInFormComponent} from './sign-in-form';
 import {connect} from 'react-redux';
 import { signIn } from '@state/reducers/auth/auth-operations';
 import { 
@@ -12,15 +12,15 @@ import { withRouter } from 'react-router';
 const mapStateToProps = (state: AppState) => ({
   error: selectSignInError(state),
   authToken: selectAuthToken(state),
-  isLoading: selectSignInPending(state),
+  isPending: selectSignInPending(state),
 });
 
-export const SignIn = withRouter(
+export const SignInForm = withRouter(
   connect(
     mapStateToProps, 
     {
       signIn
     }
-  )(SignInForm)
+  )(SignInFormComponent)
 );
 

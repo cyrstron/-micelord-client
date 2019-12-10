@@ -10,7 +10,7 @@ import {
   validateTokenOnSuccess,
   signOut,
 } from './auth-actions';
-import { getCurrentUserRequest } from '@state/actions/users-requests/actions';
+import { getCurrentUserRequest, getUserByGoogleToken } from '@state/actions/users-requests/actions';
 import { 
   signInRequest, 
   validateTokenRequest
@@ -68,6 +68,16 @@ export const signIn = (user: SignInPayload) => async (
     dispatch(onFailure);
   }
 };
+
+export const signInWithGoogle = (googleToken: string) => async (
+  dispatch: Dispatch
+) => {
+  const user = await getUserByGoogleToken(googleToken);
+
+  if (user) {
+    await signIn({googleToken})(dispatch);
+  }
+}
 
 export const validateToken = () => async (
   dispatch: Dispatch, 

@@ -5,9 +5,9 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 
 import {ExternalAuth} from '../elements/external-auth';
-import { SignUpForm } from "./components/sign-up-form";
+import { SignInForm } from "./components/sign-in-form";
 
-import styles from './sign-up.scss';
+import styles from './sign-in.scss';
 
 const cx = classnames.bind(styles);
 
@@ -15,7 +15,7 @@ export interface SignUpProps {
 }
 
 @observer
-class SignUp extends Component<SignUpProps> {
+class SignIn extends Component<SignUpProps> {
   @observable isFormShown: boolean = true;
 
   hideForm = () => {
@@ -25,21 +25,21 @@ class SignUp extends Component<SignUpProps> {
   render() {
 
     return (
-      <div className={cx('sign-up')}>
-        <h2>Sign up</h2>
+      <div className={cx('sign-in')}>
+        <h2>Sign in</h2>
         <p>
-          Already have an account? <Link to='/sign-in'>Sign in</Link>
+            Don't have an account? <Link to='/sign-up'>Sign up</Link>
         </p>
         <ExternalAuth 
           className={cx('external-auth')} 
           onAuthToken={this.hideForm}
         />
         {this.isFormShown && (
-          <SignUpForm />
+          <SignInForm />
         )}
       </div>
     );
   }
 }
 
-export {SignUp};
+export {SignIn};

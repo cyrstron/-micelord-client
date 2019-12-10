@@ -48,6 +48,12 @@ export class GoogleLogin extends Component<GoogleLoginProps> {
 
   componentWillUnmount() {
     this.script && this.script.remove();
+
+    if (!window.gapi.auth2) return;
+
+    const auth2 = window.gapi.auth2.getAuthInstance();
+
+    auth2.signOut();
   }
 
   render() {

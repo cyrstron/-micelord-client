@@ -5,7 +5,7 @@ import {Route, Link} from 'react-router-dom';
 import { AuthRoute } from '@components/auth-route';
 import { Header } from '@components/header/header';
 import {PositionMap} from '@components/maps';
-import { SignUp } from '@components/sign-up/sign-up';
+import { SignUp } from '@components/sign-up';
 import { SignIn } from '@components/sign-in';
 
 import styles from './app.scss';

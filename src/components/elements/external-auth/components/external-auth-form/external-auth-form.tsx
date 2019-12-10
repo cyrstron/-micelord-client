@@ -3,7 +3,6 @@ import { RouteComponentProps } from "react-router";
 import classnames from 'classnames/bind';
 import { observer } from "mobx-react";
 import { Input } from "@components/elements/input/input";
-import { SignInPayload } from "@state/reducers/auth/auth-operations";
 
 import { ExternalAuthStore } from "./stores/external-auth-store";
 import { SubmitBtn } from "@components/elements/buttons/submit-btn/submit-btn";
@@ -14,7 +13,7 @@ import styles from './external-auth-form.scss';
 const cx = classnames.bind(styles);
 
 export interface ExternalAuthFormProps extends RouteComponentProps {
-  signIn: (user: SignInPayload) => void;
+  signIn: (googleToken: string) => Promise<void>;
   signInError?: Error;
   isSignedIn: boolean;
   googleToken: string;
@@ -40,9 +39,7 @@ class ExternalAuthForm extends Component<ExternalAuthFormProps> {
 
     const {googleToken, signIn} = this.props;
 
-    await signIn({
-      googleToken
-    });
+    await signIn(googleToken);
 
     const {isSignedIn, history} = this.props;
 
