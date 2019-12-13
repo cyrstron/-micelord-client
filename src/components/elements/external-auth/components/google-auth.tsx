@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 interface GoogleLoginProps {
+  className?: string;
   clientId: string;
   onSuccess: (user: gapi.auth2.GoogleUser) => void;
   onFailure?: (reason: { error: string }) => void;
@@ -36,7 +37,7 @@ export class GoogleLogin extends Component<GoogleLoginProps> {
 
       window.gapi.load('signin2', () => {
         window.gapi.signin2.render('google-login-btn', {
-          width: 250,
+          width: 220,
           longtitle: true,
           height: 40,
           onsuccess: this.props.onSuccess,
@@ -57,8 +58,12 @@ export class GoogleLogin extends Component<GoogleLoginProps> {
   }
 
   render() {
+    const {className} = this.props;
+
     return (
-      <div id='google-login-btn' />
+      <div className={className}>
+        <div id='google-login-btn' />
+      </div>
     );
   }
 }

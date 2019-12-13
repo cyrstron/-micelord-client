@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-import { ExternalAuthForm } from "./external-auth-form";
+import { ExternalAuthForm as ExternalAuthFormComponent } from "./external-auth-form";
 import { AppState } from "@state/index";
 import { 
   selectSignInError, 
@@ -9,6 +9,7 @@ import {
 } from "@state/reducers/auth/auth-selectors";
 import { signIn } from "@state/reducers/auth/auth-operations";
 import { Dispatch } from "redux";
+import { ExternalAuthData } from "@state/actions/auth-request/actions";
 
 const mapStateToProps = (state: AppState) => ({
   signInError: selectSignInError(state),
@@ -17,11 +18,13 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  signIn: async (googleToken: string) => {
-    await signIn({googleToken})(dispatch);
+  signIn: async (authData: ExternalAuthData) => {
+    if ('googleToken' in authData) {
+      await signIn(authData)(dispatch);
+    }
   }
 })
 
-export const ExternalSignUp = connect(mapStateToProps, mapDispatchToProps)(
-  withRouter(ExternalAuthForm)
+export const ExternalAuthForm = connect(mapStateToProps, mapDispatchToProps)(
+  withRouter(ExternalAuthFormComponent)
 );

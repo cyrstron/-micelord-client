@@ -1,26 +1,38 @@
-import React, {Component} from 'react';
+import React, {Component, ReactNode} from 'react';
 import classnames from 'classnames/bind';
 import { GoogleLogin } from './components/google-auth';
-import { observable } from 'mobx';
-
-import styles from './external-auth.scss';
+import { FacebookLogin, FacebookUser } from './components/facebook-auth';
 import { observer } from 'mobx-react';
-import { ExternalSignUp } from './components/external-auth-form';
+import { ExternalAuthForm } from './components/external-auth-form';
 import { RouteComponentProps } from 'react-router';
+import { observable, computed } from 'mobx';
+
+import { FacebookAuthData, ExternalAuthData } from '@state/actions/auth-request/actions';
+import styles from './external-auth.scss';
 
 const cx = classnames.bind(styles);
 
 interface ExternalAuthProps extends RouteComponentProps {
   className?: string;
   signInWithGoogle: (googleToken: string) => Promise<void>;
-  onAuthToken: (token: string) => void;
+  signInWithFacebook: (
+    email: string,
+    facebookToken: string,
+  ) => Promise<void>;
   isSignedIn: boolean;
+  authError?: Error;
+  children: ReactNode
 }
 
 @observer
 class ExternalAuth extends Component<ExternalAuthProps> {
-  @observable googleError?: string;
   @observable googleToken?: string;
+  @observable fbInfo?: FacebookAuthData;
+
+  @computed
+  get hasToken(): boolean {
+    return !!this.googleToken || !!this.fbInfo;
+  }
 
   onGoogleSuccess = async (googleUser: gapi.auth2.GoogleUser) => {
     const {id_token: googleToken} = googleUser.getAuthResponse();
@@ -28,7 +40,7 @@ class ExternalAuth extends Component<ExternalAuthProps> {
 
     await signInWithGoogle(googleToken);
 
-    const {isSignedIn, history, onAuthToken} = this.props;
+    const {isSignedIn, history, authError} = this.props;
 
     if (isSignedIn) {
       history.push('/');
@@ -36,31 +48,72 @@ class ExternalAuth extends Component<ExternalAuthProps> {
       return;
     }
 
-    this.googleToken = googleToken;
+    if (authError) return;
 
-    onAuthToken(googleToken);
+    this.googleToken = googleToken;
   }
 
-  onGoogleFailure = ({error}: {error: string}) => {
-    this.googleError = error;
+  onFacebookSuccess = async (
+    fbResponse: fb.AuthResponse,
+    user: FacebookUser,
+  ) => {
+    const {accessToken} = fbResponse;
+    const {email} = user;
+    
+    const {signInWithFacebook} = this.props;
+
+    await signInWithFacebook(email, accessToken);
+
+    const {isSignedIn, history, authError} = this.props;
+
+    if (isSignedIn) {
+      history.push('/');
+
+      return;
+    }
+
+    if (authError) return;
+    
+    this.fbInfo = {
+      email,
+      facebookToken: accessToken,
+    };
   }
 
   render() {
-    const {className} = this.props;
+    const {
+      className, 
+      authError, 
+      children,
+    } = this.props;
 
     return (
       <>
         <div className={cx('wrapper', className)}>
-          <GoogleLogin     
+          <GoogleLogin
+            className={cx('auth-item')}
             clientId={process.env.GAPI_KEY}
             onSuccess={this.onGoogleSuccess}
-            onFailure={this.onGoogleFailure}
+          />
+          <FacebookLogin
+            className={cx('auth-item')}
+            appId={process.env.FB_KEY}
+            onSuccess={this.onFacebookSuccess}
           />
         </div>
-        {this.googleToken && (
-          <ExternalSignUp 
-            googleToken={this.googleToken}
+        {authError && (
+          authError.message
+        )}
+        {!authError && this.hasToken && (
+          <ExternalAuthForm 
+            authData={{
+              googleToken: this.googleToken,
+              ...this.fbInfo,
+            } as ExternalAuthData}
           />
+        )}
+        {!this.hasToken && (
+          children
         )}
       </>
     );

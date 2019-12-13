@@ -10,10 +10,12 @@ import {
   validateTokenOnSuccess,
   signOut,
 } from './auth-actions';
-import { getCurrentUserRequest, getUserByGoogleToken } from '@state/actions/users-requests/actions';
+import { getCurrentUserRequest, getUserByGoogle, getUserByFacebook } from '@state/actions/users-requests/actions';
 import { 
   signInRequest, 
-  validateTokenRequest
+  validateTokenRequest,
+  GoogleAuthData,
+  FacebookAuthData
 } from '@state/actions/auth-request/actions';
 import { AppState } from '@state/index';
 
@@ -43,11 +45,7 @@ interface DefaultSignInPayload {
   password: string;
 }
 
-interface GoogleSignInPayload {
-  googleToken: string;
-}
-
-export type SignInPayload = DefaultSignInPayload | GoogleSignInPayload;
+export type SignInPayload = DefaultSignInPayload | GoogleAuthData | FacebookAuthData;
 
 export const signIn = (user: SignInPayload) => async (
   dispatch: Dispatch
@@ -72,10 +70,23 @@ export const signIn = (user: SignInPayload) => async (
 export const signInWithGoogle = (googleToken: string) => async (
   dispatch: Dispatch
 ) => {
-  const user = await getUserByGoogleToken(googleToken);
+  const user = await getUserByGoogle(googleToken);
 
   if (user) {
     await signIn({googleToken})(dispatch);
+  }
+}
+
+export const signInWithFacebook = (
+  email: string, 
+  facebookToken: string
+) => async (
+  dispatch: Dispatch
+) => {
+  const user = await getUserByFacebook(email, facebookToken);
+
+  if (user) {
+    await signIn({email, facebookToken})(dispatch);
   }
 }
 

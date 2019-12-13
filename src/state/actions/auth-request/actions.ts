@@ -3,9 +3,37 @@ import { SignInPayload } from "@state/reducers/auth/auth-operations";
 import { getApiRequest } from "../api-request/actions";
 import { AppState } from "@state/index";
 
+export interface FacebookAuthData {
+    email: string;
+    facebookToken: string;
+};
+
+export interface GoogleAuthData {
+    googleToken: string;
+};
+  
+export type ExternalAuthData = FacebookAuthData | GoogleAuthData;
+
+export type AuthStrategy = 'google' | 'facebook' | 'default';
+  
 export const signInRequest = (
     data: SignInPayload, 
-) => postRequest<string>({url: '/auth/signin', data});
+) => {
+    let authStrategy: AuthStrategy;
+
+    if ('googleToken' in data) {
+        authStrategy = 'google';
+    } else if ('facebookToken' in data) {
+        authStrategy = 'facebook';
+    } else {
+        authStrategy = 'default';
+    }
+
+    return postRequest<string>({
+        url: `/auth/signin?strategy=${authStrategy}`, 
+        data
+    });
+};
 
 export const validateNameRequest = (
     name: string, 
@@ -20,11 +48,25 @@ export const signUpRequest = (
         email: string,
         password: string,
         name: string
-    } | {
+    } | ExternalAuthData & {
         name: string,
-        googleToken: string,
     }, 
-) => postRequest<void>({url: '/auth/signup', data});
+) => {    
+    let authStrategy: AuthStrategy;
+
+    if ('googleToken' in data) {
+        authStrategy = 'google';
+    } else if ('facebookToken' in data) {
+        authStrategy = 'facebook';
+    } else {
+        authStrategy = 'default';
+    }
+    
+    return postRequest<void>({
+        url: `/auth/signup?strategy=${authStrategy}`, 
+        data
+    });
+};
 
 export const validateTokenRequest = (
     getState: () => AppState

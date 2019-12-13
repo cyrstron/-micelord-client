@@ -9,15 +9,16 @@ import { SubmitBtn } from "@components/elements/buttons/submit-btn/submit-btn";
 import { CancelBtn } from "@components/elements/buttons/cancel-btn/cancel-btn";
 
 import styles from './external-auth-form.scss';
+import { ExternalAuthData } from "@state/actions/auth-request/actions";
 
 const cx = classnames.bind(styles);
 
-export interface ExternalAuthFormProps extends RouteComponentProps {
-  signIn: (googleToken: string) => Promise<void>;
+interface ExternalAuthFormProps extends RouteComponentProps {
+  signIn: (authData: ExternalAuthData) => Promise<void>;
   signInError?: Error;
   isSignedIn: boolean;
-  googleToken: string;
   isAuthPending: boolean;
+  authData: ExternalAuthData;
 }
 
 @observer
@@ -27,7 +28,7 @@ class ExternalAuthForm extends Component<ExternalAuthFormProps> {
   constructor(props: ExternalAuthFormProps) {
     super(props);
 
-    this.extrenalAuthStore = new ExternalAuthStore(props.googleToken);
+    this.extrenalAuthStore = new ExternalAuthStore(props.authData);
   }
 
   onSubmit = async (e: FormEvent) => {
@@ -37,9 +38,9 @@ class ExternalAuthForm extends Component<ExternalAuthFormProps> {
 
     if (!this.extrenalAuthStore.isSubmitted) return;
 
-    const {googleToken, signIn} = this.props;
+    const {authData, signIn} = this.props;
 
-    await signIn(googleToken);
+    await signIn(authData);
 
     const {isSignedIn, history} = this.props;
 

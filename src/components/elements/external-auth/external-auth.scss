@@ -1,4 +1,9 @@
 .wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.auth-item {
+  margin-bottom: 10px;
 }

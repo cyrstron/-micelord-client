@@ -13,7 +13,15 @@ export const getCurrentUserRequest = (getState: () => AppState) => getApiRequest
     getState
 );
 
-export const getUserByGoogleToken = (googleToken: string) => getRequest<User | null>({
-    url: '/api/users/by-google-token',
+export const getUserByGoogle = (googleToken: string) => getRequest<User | null>({
+    url: '/api/users/by-google',
     params: {googleToken}
+});
+
+export const getUserByFacebook = (
+    email: string, 
+    facebookToken: string
+) => getRequest<User | null>({
+    url: '/api/users/by-facebook',
+    params: {email, facebookToken}
 });

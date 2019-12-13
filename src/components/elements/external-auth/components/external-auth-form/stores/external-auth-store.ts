@@ -2,23 +2,24 @@ import {action, observable, computed} from 'mobx';
 import {InputStore} from '@stores/input-store';
 import { InputsStore } from '@stores/inputs-store';
 import { 
-  validateNameRequest, signUpRequest,
+  validateNameRequest, 
+  signUpRequest,
+  ExternalAuthData,
 } from '@state/actions/auth-request/actions';
-import { SignInPayload } from '@state/reducers/auth/auth-operations';
 
 export class ExternalAuthStore {
   @observable isPending: boolean = false;
   @observable error?: Error;
 
-  googleToken: string;
+  authData: ExternalAuthData;
 
   isSubmitted: boolean = false;
 
   name: InputStore<string>;
   inputs: InputsStore;
 
-  constructor(googleToken: string) {
-    this.googleToken = googleToken;
+  constructor(authData: ExternalAuthData) {
+    this.authData = authData;
 
     this.name = new InputStore({
       value: '',
@@ -44,11 +45,10 @@ export class ExternalAuthStore {
   @computed
   get values(): {
     name: string,
-    googleToken: string,
-  } {
+  } & ExternalAuthData {
     return {
       name: this.name.value,
-      googleToken: this.googleToken,
+      ...this.authData,
     }
   }
 
