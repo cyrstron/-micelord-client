@@ -1,0 +1,19 @@
+.game-container {
+  position: relative;
+}
+
+.game-menu {
+  position: absolute;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 5px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background-color: #fff;
+}
+
+.game-map {
+  height: 100%;
+}

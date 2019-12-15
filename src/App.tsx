@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
-import {Route} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 
 import { AuthRoute } from '@components/auth-route';
 import { Header } from '@components/header';
@@ -19,10 +19,17 @@ class App extends Component<{}, {string: string}> {
       <div className={cx('App')}>
         <Header className={cx('App-header')} />
         <main className={cx('App-main')}>
-          <Route path='/sign-up' component={SignUp} />
-          <Route path='/sign-in' component={SignIn} />
-          <AuthRoute path='/games' component={Games} />
-          <AuthRoute path='/' component={Home} exact />
+          <Switch>
+            <Route path='/sign-up' component={SignUp} />
+            <Route path='/sign-in' component={SignIn} />
+            <AuthRoute 
+              path='/games' 
+              render={() => (
+                <Games className={cx('games')} />
+              )}
+            />
+            <AuthRoute path='/' component={Home} exact />
+          </Switch>
         </main>
       </div>
     );

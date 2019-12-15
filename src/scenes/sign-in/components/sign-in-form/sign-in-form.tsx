@@ -3,10 +3,10 @@ import { RouteComponentProps } from "react-router";
 import classnames from 'classnames/bind';
 import { observer } from "mobx-react";
 import { SignInStore } from "./stores/sign-in-store";
-import { Input } from "@components/elements/input/input";
+import { Input } from "@components/inputs";
 import { SignInPayload } from "@state/reducers/auth/auth-operations";
-import { SubmitBtn } from "@components/elements/buttons/submit-btn/submit-btn";
-import { CancelBtn } from "@components/elements/buttons/cancel-btn/cancel-btn";
+import { SubmitBtn } from "@components/buttons/submit-btn/submit-btn";
+import { CancelBtn } from "@components/buttons/cancel-btn/cancel-btn";
 
 import styles from './sign-in-form.scss';
 

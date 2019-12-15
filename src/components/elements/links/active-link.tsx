@@ -9,19 +9,19 @@ import {
 } from 'react-router-dom';
 
 export interface ActiveLinkProps extends LinkProps {
-  exact?: boolean;
   activeClassName?: string;
   main?: boolean;
+  exact?: boolean;
 }
 
 const ActiveLinkComponent = ({
   className,
   activeClassName,
   location,
-  exact,
   to,
   children,
   main,
+  exact,
 }: ActiveLinkProps & RouteComponentProps) => {
   const path = typeof to === 'string' ? to : to.pathname;
   const isActive = !!matchPath(location.pathname, {
@@ -29,11 +29,18 @@ const ActiveLinkComponent = ({
     exact,
   });
 
-  if (!isActive) {
+  const isDisabled = !!matchPath(location.pathname, {
+    path,
+    exact: true,
+  });
+
+  if (!isDisabled) {
     return (
       <Link 
         to={to} 
-        className={className}
+        className={cx(className, activeClassName && {
+          [activeClassName]: isActive
+        })}
       >
         {children}
       </Link>

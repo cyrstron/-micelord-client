@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import styles from './input.scss';
 import { InputStore } from '@stores/input-store';
 import { observer } from 'mobx-react';
+import { InputError } from '../input-error/input-error';
 
 const cx = classNames.bind(styles);
 
@@ -63,13 +64,10 @@ export class Input extends Component<InputProps, {}> {
             className={cx('input')}
           />
         </span>
-        {error && (
-          <span 
-            className={cx('error')}
-          >
-            {error.message}
-          </span>
-        )}
+        <InputError 
+          className={cx('error')}
+          error={error} 
+        />
       </div>
     )
   }

@@ -2,47 +2,30 @@ import classNames from 'classnames/bind';
 import {inject, observer} from 'mobx-react';
 import React, {Component, ReactNode} from 'react';
 import {GeolocationStore} from '@stores/geolocation';
-import {PositionMarker} from '../position-marker';
+import {PositionMarker} from '@components/maps';
 import {
   DumbMap,
   withSmartMapCtx,
   MapService,
 } from 'react-google-maps-ts';
-import {
-  GeoPoint, 
-  Cell, 
-  GridParams, 
-} from '@micelord/grider';
+import styles from './game-map.scss';
 
-import styles from './position-map.scss';
-import { observable } from 'mobx';
 const cx = classNames.bind(styles);
 
-interface PositionMapProps {
+interface GameMapProps {
+  className?: string;
   geolocationStore?: GeolocationStore;
   children?: ReactNode;
 }
 
-type Props = PositionMapProps & {
+type Props = GameMapProps & {
   mapService?: MapService,
 }
 
 @inject('geolocationStore')
 @observer
-export class PositionMapWrapped extends Component<Props> {
+export class DumbGameMap extends Component<Props> {
   geolocationStore: GeolocationStore;
-  params = GridParams.fromConfig({
-    type: 'hex',
-    correction: 'merc',
-    cellSize: 10000,
-  });
-
-  @observable bounds = {
-    north: 40,
-    south: 30,
-    west: 30,
-    east: 40
-  }
 
   constructor(props: Props) {
     super(props);
@@ -58,31 +41,15 @@ export class PositionMapWrapped extends Component<Props> {
     this.geolocationStore.unwatchPosition();
   }
 
-  onCenterClick = (): void => {
-    const {mapService} = this.props;
-    const {position} = this.geolocationStore;
-
-    if (!position || !mapService) return;
-
-    mapService.panTo(position);
-  }
-
-  onClick = (e: google.maps.MouseEvent) => {
-    const point = new GeoPoint(
-      e.latLng.lat(),
-      e.latLng.lng(),
-    )
-  }
-
   render() {
+    const {className} = this.props;
     const {position} = this.geolocationStore;
 
     if (position === undefined) return null;
 
     return (
-      <>
         <DumbMap
-          className={cx('fullscreen-map')}
+          className={cx('game-map', className)}
           defaultCenter={position}
           zoom={8}
           clickableIcons={false}
@@ -92,14 +59,13 @@ export class PositionMapWrapped extends Component<Props> {
           streetViewControl={false}
           zoomControl={false}
           fullscreenControl={false}
-          onClick={this.onClick}          
+          // onClick={this.onClick}          
         >
           {this.props.children}
           <PositionMarker />
         </DumbMap>
-      </>
     );
   }
 }
 
-export const PositionMap = withSmartMapCtx<PositionMapProps>(PositionMapWrapped);
+export const GameMap = withSmartMapCtx<GameMapProps>(DumbGameMap);
