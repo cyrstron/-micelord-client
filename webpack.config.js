@@ -85,8 +85,12 @@ module.exports = {
       '/auth': {
         target: 'http://localhost:3001',
         secure: false
+      },
+      '/static': {
+        target: 'http://localhost:3001',
+        secure: false
       }
     }
   },
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
 }

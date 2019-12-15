@@ -1,8 +1,9 @@
 @import '@styles/mixins/resets.scss';
 
-.auth-nav-list {
+.nav-list {
   @include ul-reset;
 
-  display: flex;
   height: 100%;
+  display: flex;
+  align-items: stretch;
 }

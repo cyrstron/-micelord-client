@@ -1,0 +1,16 @@
+.app-logo {
+  padding: 5px 10px;
+}
+
+.logo-link {
+  font-weight: 800;
+  color: #ddd;
+  text-decoration: none;
+  letter-spacing: -1px;  
+  margin: 0;
+  font-size: 28px;
+
+  &.is-active {
+    cursor: default;
+  }
+}

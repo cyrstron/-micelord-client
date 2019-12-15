@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import { AuthNavComponent } from './auth-nav';
+import { AuthNav as AuthNavComponent } from './auth-nav';
 import { AppState } from '@state/index';
 import { 
   selectIsAuthenticated, 

@@ -23,7 +23,9 @@
       "@stores/*": ["stores/*"],
       "@services/*": ["services/*"],
       "@components/*": ["components/*"],
-      "@state/*": ["state/*"]
+      "@scenes/*": ["scenes/*"],
+      "@state/*": ["state/*"],
+      "@styles/*": ["styles/*"]
     }, 
     "allowSyntheticDefaultImports": true, 
     "esModuleInterop": true,

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
-import { axios } from '@services/axios';
+import classnames from 'classnames/bind';
 import { User } from '@state/actions/users-requests/actions';
+import { CancelBtn } from '@components/elements/buttons';
+
+import styles from './user-info.scss';
+
+const cx = classnames.bind(styles);
 
 export interface UserInfoProps {
   signOut: () => void;
@@ -42,9 +47,22 @@ export class UserInfoComponent extends Component<UserInfoProps> {
     if (!currentUser) return null;
 
     return (
-      <div>
-        Hello, {currentUser.name}!
-        <button onClick={this.onSignOut}>Sign Out</button>
+      <div className={cx('user-container')}>
+        <div className={cx('user-info')}>
+          <div className={cx('user-desc')}>
+            Hello, {currentUser.name}!
+          </div>
+          <CancelBtn 
+            className={cx('sign-out-btn')}
+            onClick={this.onSignOut}
+          >
+            Sign Out
+          </CancelBtn>
+        </div>
+        <img 
+          className={cx('user-icon')}
+          src="/static/user.svg"
+        />
       </div>
     )
   }

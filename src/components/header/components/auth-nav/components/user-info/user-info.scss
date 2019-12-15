@@ -1,0 +1,31 @@
+@import '@styles/consts.scss';
+
+$icon-padding: 5px;
+$icon-size: $header-height - ($icon-padding * 2);
+
+.user-container {
+  display: flex;
+  align-items: stretch;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.user-desc {
+  font-size: 14px;
+}
+
+.user-icon {
+  display: block;
+  height: $icon-size;
+  width: $icon-size;
+  padding: $icon-padding;
+}
+
+.sign-out-btn {
+  padding: 2px 3px;
+  font-size: 10px;
+}

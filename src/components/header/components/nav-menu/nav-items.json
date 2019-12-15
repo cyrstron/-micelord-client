@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Home",
+    "to": "/",
+    "exact": true
+  }, {
+    "title": "Games",
+    "to": "/games"
+  }
+]

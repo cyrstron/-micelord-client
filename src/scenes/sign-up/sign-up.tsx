@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import classnames from 'classnames/bind';
 
-import {ExternalAuth} from '../elements/external-auth';
+import {ExternalAuth} from '@components/elements/external-auth';
 import { SignUpForm } from "./components/sign-up-form";
 
 import styles from './sign-up.scss';
