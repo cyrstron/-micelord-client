@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames/bind';
 import { User } from '@state/actions/users-requests/actions';
-import { CancelBtn } from '@components/elements/buttons';
+import { CancelBtn } from '@components/buttons';
 
 import styles from './user-info.scss';
 

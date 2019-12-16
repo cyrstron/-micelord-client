@@ -2,11 +2,11 @@ import React, {Component, FormEvent} from "react";
 import { RouteComponentProps } from "react-router";
 import classnames from 'classnames/bind';
 import { observer } from "mobx-react";
-import { Input } from "@components/elements/input/input";
+import { Input } from "@components/inputs/components/input/input";
 
 import { ExternalAuthStore } from "./stores/external-auth-store";
-import { SubmitBtn } from "@components/elements/buttons/submit-btn/submit-btn";
-import { CancelBtn } from "@components/elements/buttons/cancel-btn/cancel-btn";
+import { SubmitBtn } from "@components/buttons/submit-btn/submit-btn";
+import { CancelBtn } from "@components/buttons/cancel-btn/cancel-btn";
 
 import styles from './external-auth-form.scss';
 import { ExternalAuthData } from "@state/actions/auth-request/actions";
