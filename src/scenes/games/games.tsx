@@ -4,9 +4,10 @@ import classnames from 'classnames/bind';
 import { NewGame } from './scenes/new-game';
 import { Game } from './scenes/game';
 import { GamesList } from './scenes/games-list';
-import { GameMap } from './scenes/game-map';
+import { GamesMap } from './scenes/games-map';
 
 import styles from './games.scss';
+import { NewGameMap } from './scenes/new-game-map';
 
 const cx = classnames.bind(styles);
 
@@ -41,7 +42,27 @@ export class Games extends Component<GamesProps> {
             )}
           />
         </Switch>
-        <GameMap className={cx('game-map')} />
+        <GamesMap className={cx('game-map')} >          
+          <Switch>
+            <Route 
+              path='/games'
+              exact
+              render={() => (
+                <GamesList className={cx('game-menu')}/>
+              )}
+            />        
+            <Route 
+              path='/games/new'
+              render={NewGameMap}
+            />
+            <Route 
+              path='/games/:id'
+              render={() => (
+                <Game className={cx('game-menu')}/>
+              )}
+            />
+          </Switch>
+        </GamesMap>
       </div>
     )
   }

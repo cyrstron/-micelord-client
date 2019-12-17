@@ -2,9 +2,9 @@ import { InputStore } from "./input-store";
 import { observable, computed } from "mobx";
 
 export class InputsStore {
-  @observable inputs: InputStore[] = [];
+  @observable inputs: InputStore<any>[] = [];
 
-  constructor(inputs: InputStore[]) {
+  constructor(inputs: InputStore<any>[]) {
     this.inputs = inputs;
   }
 

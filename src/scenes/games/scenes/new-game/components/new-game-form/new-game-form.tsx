@@ -1,7 +1,7 @@
 import React, { Component, FormEvent } from 'react';
 import { RouteComponentProps } from 'react-router';
 import classnames from 'classnames/bind';
-import { Input, Textarea } from '@components/inputs';
+import { Input, Textarea, Select, Checkbox } from '@components/inputs';
 import { NewGameStore } from './stores/new-game-store';
 
 import styles from './new-game-form.scss';
@@ -46,6 +46,9 @@ export class NewGameForm extends Component<NewGameFormProps> {
     const {
       name,
       desc,
+      correction,
+      gridType,
+      isHorizontal,
     } = this.newGameStore;
 
     return (
@@ -54,17 +57,47 @@ export class NewGameForm extends Component<NewGameFormProps> {
         onReset={this.onReset}
       >
         <h3>Choose proper name and description for your game</h3>
-        <Input 
-          className={cx('input')}
-          title='Game name:'
-          inputStore={name} 
-        />
-        <Textarea 
-          className={cx('input')}
-          title='Game description:'
-          inputStore={desc} 
-          rows={3}
-        />
+        <div>
+          <Input 
+            className={cx('input')}
+            id='name'
+            title='Game name:'
+            inputStore={name} 
+          />
+          <Textarea 
+            id='description'
+            className={cx('input')}
+            title='Game description:'
+            inputStore={desc} 
+            rows={3}
+          />
+        </div>
+        <div>
+          <Select 
+            id='correction'
+            className={cx('input')}
+            title='Correction:'
+            inputStore={correction} 
+          >
+            <option value='merc'>Mercator</option>
+            <option value='none'>None</option>
+          </Select>
+          <Select 
+            id='grid-type'
+            className={cx('input')}
+            title='Grid type:'
+            inputStore={gridType} 
+          >
+            <option value='hex'>Hexagonal</option>
+            <option value='rect'>Rectangular</option>
+          </Select>
+          <Checkbox 
+            id='orientation'
+            className={cx('input')}
+            title='Horizontal'
+            inputStore={isHorizontal}
+          />
+        </div>
         <div className={cx('btns-wrapper')}>
           <CancelBtn type='reset'>
             {'<<'} Cancel

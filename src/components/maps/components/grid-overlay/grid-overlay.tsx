@@ -12,7 +12,7 @@ import { CacheService } from '@services/cache-service';
 
 interface Props {
   params: GridParams;
-  borderline: IndexatedFigure,
+  borderline?: IndexatedFigure,
 }
 
 interface TileData {
@@ -62,7 +62,12 @@ export class GridOverlay extends Component<Props> {
 
     try {
       const mapTile = await MapGridTile.fromTilePoint(tilePoint, params);
-      const border = await borderline.tilePoints(tilePoint);
+
+      let border: Point[] = [];
+
+      if (borderline) {
+        border = await borderline.tilePoints(tilePoint);
+      }
 
       const result = {mapTile, border};
 

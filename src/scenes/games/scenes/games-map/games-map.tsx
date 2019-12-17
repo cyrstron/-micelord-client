@@ -5,26 +5,25 @@ import {GeolocationStore} from '@stores/geolocation';
 import {PositionMarker} from '@components/maps';
 import {
   DumbMap,
-  withSmartMapCtx,
   MapService,
 } from 'react-google-maps-ts';
-import styles from './game-map.scss';
+import styles from './games-map.scss';
 
 const cx = classNames.bind(styles);
 
-interface GameMapProps {
+interface GamesMapProps {
   className?: string;
   geolocationStore?: GeolocationStore;
   children?: ReactNode;
 }
 
-type Props = GameMapProps & {
+type Props = GamesMapProps & {
   mapService?: MapService,
 }
 
 @inject('geolocationStore')
 @observer
-export class DumbGameMap extends Component<Props> {
+export class GamesMap extends Component<Props> {
   geolocationStore: GeolocationStore;
 
   constructor(props: Props) {
@@ -58,8 +57,7 @@ export class DumbGameMap extends Component<Props> {
           mapTypeControl={false}
           streetViewControl={false}
           zoomControl={false}
-          fullscreenControl={false}
-          // onClick={this.onClick}          
+          fullscreenControl={false}       
         >
           {this.props.children}
           <PositionMarker />
@@ -68,4 +66,3 @@ export class DumbGameMap extends Component<Props> {
   }
 }
 
-export const GameMap = withSmartMapCtx<GameMapProps>(DumbGameMap);

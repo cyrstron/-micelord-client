@@ -9,6 +9,10 @@ interface NewGameStoreProps {
 export class NewGameStore {
   name: InputStore;
   desc: InputStore;
+  correction: InputStore<'merc' | 'none'>;
+  isHorizontal: InputStore<boolean>;
+  gridType: InputStore<'hex' | 'rect'>;
+  cellSize: InputStore<number>;
 
   inputs: InputsStore;
 
@@ -33,10 +37,30 @@ export class NewGameStore {
       value: desc,
       validate: this.validateDesc
     });
+    this.correction = new InputStore<'merc' | 'none'>({
+      value: 'merc',
+      defaultValue: 'merc',
+    });
+    this.isHorizontal = new InputStore<boolean>({
+      value: false,
+      defaultValue: false,
+    });
+    this.gridType = new InputStore<'hex' | 'rect'>({
+      value: 'hex',
+      defaultValue: 'hex',
+    });
+    this.cellSize = new InputStore<number>({
+      value: 1000,
+      defaultValue: 1000,
+    });
 
     this.inputs = new InputsStore([
       this.name,
-      this.desc
+      this.desc,
+      this.correction,
+      this.isHorizontal,
+      this.gridType,
+      this.cellSize,
     ]);
   }
 }
