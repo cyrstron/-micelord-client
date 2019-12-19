@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 
 export interface SelectProps extends Omit<
   SelectHTMLAttributes<HTMLSelectElement>, 
-  'value' | 'onChange' | 'title'
+  'value' | 'title'
 > {
   title: ReactNode;
   className?: string;
@@ -22,9 +22,11 @@ export interface SelectProps extends Omit<
 export class Select extends Component<SelectProps, {}> {
   onChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const {value} = e.target;
-    const {inputStore} = this.props;
+    const {inputStore, onChange} = this.props;
 
     inputStore.setValue(value);
+
+    onChange && onChange(e);
   }
 
   render() {

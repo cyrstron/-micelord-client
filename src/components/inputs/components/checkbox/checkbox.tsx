@@ -11,7 +11,7 @@ const cx = classNames.bind(styles);
 
 export interface InputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>, 
-  'value' | 'onChange' | 'title' | 'checkbox'
+  'value' | 'title' | 'type'
 > {
   title: ReactNode;
   className?: string;
@@ -22,9 +22,11 @@ export interface InputProps extends Omit<
 export class Checkbox extends Component<InputProps, {}> {
   onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const {checked} = e.target;
-    const {inputStore} = this.props;
+    const {inputStore, onChange} = this.props;
 
     inputStore.setValue(checked);
+
+    onChange && onChange(e);
   }
 
   render() {

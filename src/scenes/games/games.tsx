@@ -8,6 +8,8 @@ import { GamesMap } from './scenes/games-map';
 
 import styles from './games.scss';
 import { NewGameMap } from './scenes/new-game-map';
+import { NewGameStore } from './stores/new-game-store';
+import { Provider } from 'mobx-react';
 
 const cx = classnames.bind(styles);
 
@@ -16,33 +18,22 @@ export interface GamesProps {
 }
 
 export class Games extends Component<GamesProps> {
+  newGameStore: NewGameStore;
+
+  constructor(props: GamesProps) {
+    super(props);
+
+    this.newGameStore = new NewGameStore();
+
+  }
   render() {
     const {className} = this.props;
 
     return (
-      <div className={cx('game-container', className)}>
-        <Switch>
-          <Route 
-            path='/games'
-            exact
-            render={() => (
-              <GamesList className={cx('game-menu')}/>
-            )}
-          />        
-          <Route 
-            path='/games/new'
-            render={() => (
-              <NewGame className={cx('game-menu')}/>
-            )}
-          />
-          <Route 
-            path='/games/:id'
-            render={() => (
-              <Game className={cx('game-menu')}/>
-            )}
-          />
-        </Switch>
-        <GamesMap className={cx('game-map')} >          
+      <Provider 
+        newGameStore={this.newGameStore}
+      >
+        <div className={cx('game-container', className)}>
           <Switch>
             <Route 
               path='/games'
@@ -53,7 +44,9 @@ export class Games extends Component<GamesProps> {
             />        
             <Route 
               path='/games/new'
-              render={NewGameMap}
+              render={() => (
+                <NewGame className={cx('game-menu')}/>
+              )}
             />
             <Route 
               path='/games/:id'
@@ -62,8 +55,29 @@ export class Games extends Component<GamesProps> {
               )}
             />
           </Switch>
-        </GamesMap>
-      </div>
+          <GamesMap className={cx('game-map')} >          
+            <Switch>
+              <Route 
+                path='/games'
+                exact
+                render={() => (
+                  <GamesList className={cx('game-menu')}/>
+                )}
+              />        
+              <Route 
+                path='/games/new'
+                component={NewGameMap}
+              />
+              <Route 
+                path='/games/:id'
+                render={() => (
+                  <Game className={cx('game-menu')}/>
+                )}
+              />
+            </Switch>
+          </GamesMap>
+        </div>
+      </Provider>
     )
   }
 }

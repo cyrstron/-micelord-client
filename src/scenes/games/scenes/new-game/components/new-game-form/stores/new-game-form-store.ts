@@ -1,18 +1,19 @@
 import { InputStore } from "@stores/input-store";
 import { InputsStore } from "@stores/inputs-store";
+import { computed } from "mobx";
 
-interface NewGameStoreProps {
+interface NewGameFormStoreProps {
   name?: string;
   desc?: string;
 }
 
-export class NewGameStore {
+export class NewGameFormStore {
   name: InputStore;
   desc: InputStore;
   correction: InputStore<'merc' | 'none'>;
   isHorizontal: InputStore<boolean>;
   gridType: InputStore<'hex' | 'rect'>;
-  cellSize: InputStore<number>;
+  cellSize: InputStore<string>;
 
   inputs: InputsStore;
 
@@ -25,10 +26,39 @@ export class NewGameStore {
     if (value.length > 200) throw new Error('Game description shouldn\'t be bigger than 200 characters');
   }
 
+  validateCellSize = (value: string) => {
+    const valueNumber = +value;
+
+    if (isNaN(valueNumber)) throw new Error('Invalid cell size');
+
+    if (valueNumber < 5) throw new Error('Cell size shouldn\'t be less than  5');
+    
+    if (valueNumber > 10000000) throw new Error('Cell size shouldn\'t be more than 10000000');
+  }
+
+  @computed
+  get values(): {
+    name: string;
+    desc: string;
+    correction: 'merc' | 'none';
+    isHorizontal: boolean;
+    gridType: 'hex' | 'rect';
+    cellSize: number;
+  } {
+    return {
+      name: this.name.value,
+      desc: this.desc.value,
+      correction: this.correction.value,
+      isHorizontal: this.isHorizontal.value,
+      gridType: this.gridType.value,
+      cellSize: +this.cellSize.value,
+    };
+  }
+
   constructor({
     name = '',
     desc = '',
-  }: NewGameStoreProps = {}) {
+  }: NewGameFormStoreProps = {}) {
     this.name = new InputStore({
       value: name,
       validate: this.validateName,
@@ -49,9 +79,9 @@ export class NewGameStore {
       value: 'hex',
       defaultValue: 'hex',
     });
-    this.cellSize = new InputStore<number>({
-      value: 1000,
-      defaultValue: 1000,
+    this.cellSize = new InputStore({
+      value: '1000',
+      defaultValue: '1000',
     });
 
     this.inputs = new InputsStore([

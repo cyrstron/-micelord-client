@@ -16,7 +16,7 @@ const cx = classNames.bind(styles);
 
 export interface TextareaProps extends Omit<
 TextareaHTMLAttributes<HTMLTextAreaElement>, 
-  'value' | 'onChange' | 'title'
+  'value' | 'title'
 > {
   title: ReactNode;
   className?: string;
@@ -27,9 +27,11 @@ TextareaHTMLAttributes<HTMLTextAreaElement>,
 export class Textarea extends Component<TextareaProps, {}> {
   onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const {value} = e.target;
-    const {inputStore} = this.props;
+    const {inputStore, onChange} = this.props;
 
     inputStore.setValue(value);
+
+    onChange && onChange(e);
   }
 
   render() {

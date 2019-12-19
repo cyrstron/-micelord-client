@@ -1,6 +1,12 @@
+.control {
+  display: flex;
+  flex-direction: column;
+}
+
 .textarea-wrapper {
   position: relative;
   display: block;
+  flex-grow: 1;
 
   &::before {
     position: absolute;
@@ -18,6 +24,7 @@
 
 .textarea {
   width: 100%;
+  height: 100%;
   display: block;
   border: 1px solid #ccc;
   padding: 5px;

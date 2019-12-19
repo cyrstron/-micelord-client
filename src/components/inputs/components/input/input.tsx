@@ -10,20 +10,22 @@ const cx = classNames.bind(styles);
 
 export interface InputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>, 
-  'value' | 'onChange' | 'title'
+  'value' | 'title'
 > {
   title: ReactNode;
   className?: string;
-  inputStore: InputStore;
+  inputStore: InputStore<any>;
 }
 
 @observer
 export class Input extends Component<InputProps, {}> {
   onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const {value} = e.target;
-    const {inputStore} = this.props;
+    const {inputStore, onChange} = this.props;
 
     inputStore.setValue(value);
+
+    onChange && onChange(e);
   }
 
   render() {

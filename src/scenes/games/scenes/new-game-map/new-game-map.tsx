@@ -1,19 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { inject, observer } from 'mobx-react';
 import { GridOverlay } from '@components/maps/components/grid-overlay/grid-overlay';
-import { GridParams } from '@micelord/grider';
+import { NewGameStore } from '@scenes/games/stores/new-game-store';
 
-export const NewGameMap = () => {
-  const gridParams = GridParams.fromConfig({
-    type: 'hex',
-    correction: 'merc',
-    cellSize: 10000,
-  });
+interface NewGameMapProps {
+  newGameStore?: NewGameStore
+}
 
-  return (
-    <>
-      <GridOverlay 
-        params={gridParams}
-      />
-    </>
-  )
+@inject('newGameStore')
+@observer
+export class NewGameMap extends Component<NewGameMapProps> {
+  render() {
+    const {gridParams} = this.props.newGameStore!
+
+    return (
+      <>
+        {gridParams && (
+          <GridOverlay 
+            params={gridParams}
+          />
+        )}
+      </>
+    );
+  }
 }

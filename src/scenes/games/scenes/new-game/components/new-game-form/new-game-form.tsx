@@ -2,36 +2,69 @@ import React, { Component, FormEvent } from 'react';
 import { RouteComponentProps } from 'react-router';
 import classnames from 'classnames/bind';
 import { Input, Textarea, Select, Checkbox } from '@components/inputs';
-import { NewGameStore } from './stores/new-game-store';
+import { NewGameFormStore } from './stores/new-game-form-store';
 
 import styles from './new-game-form.scss';
 import { CancelBtn, SubmitBtn } from '@components/buttons';
+import { inject, observer } from 'mobx-react';
+import { observable } from 'mobx';
+import { NewGameStore } from '@scenes/games/stores/new-game-store';
 
 const cx = classnames.bind(styles);
 
 interface NewGameFormProps extends RouteComponentProps {
-
+  newGameStore?: NewGameStore;
 }
 
+@inject('newGameStore')
+@observer
 export class NewGameForm extends Component<NewGameFormProps> {
-  newGameStore: NewGameStore;
+  @observable isApplied: boolean = false;
+
+  newGameFormStore: NewGameFormStore;
 
   constructor(props: NewGameFormProps) {
     super(props);
 
-    this.newGameStore = new NewGameStore();
+    this.newGameFormStore = new NewGameFormStore();
   }
 
   onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    await this.newGameStore.inputs.validate();
-
-    if (!this.newGameStore.inputs.isValid) return;
-
     const {history} = this.props;
 
-    history.push('/games/new/grid');
+    history.push('/games/new/border');
+  }
+
+  onApply = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+
+    await this.newGameFormStore.inputs.validate();
+
+    if (!this.newGameFormStore.inputs.isValid) return;
+
+    const {
+      name,
+      desc,
+      gridType,
+      correction,
+      cellSize,
+      isHorizontal,
+    } = this.newGameFormStore.values;
+
+    const {newGameStore} = this.props;
+
+    newGameStore!.setName(name);
+    newGameStore!.setDesc(desc);
+    newGameStore!.setGridConfig({
+      type: gridType,
+      correction,
+      cellSize,
+      isHorizontal,
+    });
+
+    this.isApplied = true;
   }
 
   onReset = (e: FormEvent) => {
@@ -42,6 +75,10 @@ export class NewGameForm extends Component<NewGameFormProps> {
     history.push('/games');
   }
 
+  onChange = () => {
+    this.isApplied = false;
+  }
+
   render() {
     const {
       name,
@@ -49,16 +86,21 @@ export class NewGameForm extends Component<NewGameFormProps> {
       correction,
       gridType,
       isHorizontal,
-    } = this.newGameStore;
+      cellSize,
+    } = this.newGameFormStore;
 
     return (
       <form
+        className={cx('new-game-form')}
         onSubmit={this.onSubmit}
         onReset={this.onReset}
       >
-        <h3>Choose proper name and description for your game</h3>
-        <div>
+        <h3 className={cx('form-title')}>
+          Choose proper name and description for your game
+        </h3>
+        <div className={cx('game-settings')}>
           <Input 
+            onChange={this.onChange}
             className={cx('input')}
             id='name'
             title='Game name:'
@@ -66,16 +108,17 @@ export class NewGameForm extends Component<NewGameFormProps> {
           />
           <Textarea 
             id='description'
-            className={cx('input')}
+            onChange={this.onChange}
+            className={cx('input', 'description-input')}
             title='Game description:'
-            inputStore={desc} 
-            rows={3}
+            inputStore={desc}
           />
         </div>
-        <div>
+        <div className={cx('grid-settings')}>
           <Select 
+            onChange={this.onChange}
             id='correction'
-            className={cx('input')}
+            className={cx('input', 'grid-select')}
             title='Correction:'
             inputStore={correction} 
           >
@@ -83,28 +126,53 @@ export class NewGameForm extends Component<NewGameFormProps> {
             <option value='none'>None</option>
           </Select>
           <Select 
+            onChange={this.onChange}
             id='grid-type'
-            className={cx('input')}
+            className={cx('input', 'grid-select')}
             title='Grid type:'
             inputStore={gridType} 
           >
             <option value='hex'>Hexagonal</option>
             <option value='rect'>Rectangular</option>
           </Select>
+          <Input 
+            onChange={this.onChange}
+            className={cx('input', 'cell-size-input')}
+            id='name'
+            title='Cell size:'
+            type='number'
+            inputStore={cellSize} 
+          />
           <Checkbox 
+            onChange={this.onChange}
             id='orientation'
-            className={cx('input')}
+            className={cx('input', 'horizontal-input')}
             title='Horizontal'
             inputStore={isHorizontal}
           />
         </div>
         <div className={cx('btns-wrapper')}>
-          <CancelBtn type='reset'>
-            {'<<'} Cancel
-          </CancelBtn>
-          <SubmitBtn type='submit'>
-            Next {'>>'}
-          </SubmitBtn>
+          <div className={cx('left-btn-wrapper')}>
+            <CancelBtn
+              type='reset'
+            >
+              {'<<'} Cancel
+            </CancelBtn>
+          </div>
+          <div className={cx('right-btn-wrapper')}>
+            {!this.isApplied && (
+              <SubmitBtn 
+                onClick={this.onApply}
+              >
+                Apply
+              </SubmitBtn>
+            )}
+            {this.isApplied && (
+              <SubmitBtn type='submit'>
+                Next {'>>'}
+              </SubmitBtn>
+            )}
+          </div>
         </div>
       </form>
     )

@@ -14,21 +14,21 @@ interface Props {
 }
 
 export class GridTile extends Component<Props, {}> {
-  shouldComponentUpdate(nextProps: Props) {
-    const {
-      params,
-      tilePoint,
-      mapTile,
-      border
-    } = this.props;
+  // shouldComponentUpdate(nextProps: Props) {
+  //   const {
+  //     params,
+  //     tilePoint,
+  //     mapTile,
+  //     border
+  //   } = this.props;
 
-    return (
-      !tilePoint.isEqual(nextProps.tilePoint) ||
-      params !== nextProps.params ||
-      border !== nextProps.border ||
-      mapTile !== nextProps.mapTile
-    );
-  }
+  //   return (
+  //     !tilePoint.isEqual(nextProps.tilePoint) ||
+  //     params !== nextProps.params ||
+  //     border !== nextProps.border ||
+  //     mapTile !== nextProps.mapTile
+  //   );
+  // }
 
   render() {
     const {
@@ -54,20 +54,7 @@ export class GridTile extends Component<Props, {}> {
     } = tilePoint;
 
     return (
-      <>    
-        <span
-          style={{
-            top: 0,
-            width: '100%',
-            position: "absolute",
-            textAlign: 'center',
-            fontSize: '16px',
-            padding: '5px',
-            fontWeight: 'bold'
-          }}
-        >
-          {tilePoint.tileX} : {tilePoint.tileY}
-        </span>
+      <>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           width='100%'
@@ -75,7 +62,6 @@ export class GridTile extends Component<Props, {}> {
           viewBox={`0 0 ${tilePoint.tileWidth} ${tilePoint.tileHeight}`}
           aria-labelledby='title' 
           fill="transparent" 
-          style={{border: '1px dashed green'}}
         >
         {mapTile && mapTile.patterns.map(({start, end, tile}, index) => {
           const patternId = `pattern-${tileX}-${tileY}-${index}`;
