@@ -138,7 +138,7 @@ export class NewGameForm extends Component<NewGameFormProps> {
           <Input 
             onChange={this.onChange}
             className={cx('input', 'cell-size-input')}
-            id='name'
+            id='cell-size'
             title='Cell size:'
             type='number'
             inputStore={cellSize} 

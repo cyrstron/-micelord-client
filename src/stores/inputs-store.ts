@@ -1,16 +1,35 @@
-import { InputStore } from "./input-store";
 import { observable, computed } from "mobx";
 
-export class InputsStore {
-  @observable inputs: InputStore<any>[] = [];
+export interface FormField<Value = any> {
+  validate: () => Promise<void>;
+  value: Value;
+  isValid?: boolean;
+  isPending: boolean;
+  debouncePromise?: Promise<void>;
+  reset: () => void;
+}
 
-  constructor(inputs: InputStore<any>[]) {
+interface InputsStoreProps {
+  inputs: FormField[];
+  validate?: (inputs: FormField[]) => void | Promise<void>;
+}
+
+export class InputsStore {
+  @observable inputs: FormField[] = [];
+
+  validateInputs?: (inputs: FormField[]) => void | Promise<void>;
+
+  constructor({
+    inputs,
+    validate
+  }: InputsStoreProps) {
     this.inputs = inputs;
+    this.validateInputs = validate;
   }
 
   @computed 
   get isValid() {
-    return this.inputs.reduce(
+    return !this.inputs.reduce(
       (isValid, input) => isValid && input.isValid !== false && !input.isPending, 
       true
     );
@@ -22,6 +41,14 @@ export class InputsStore {
         .filter(({isValid, debouncePromise}) => isValid === undefined || !!debouncePromise)
         .map((input) => input.debouncePromise || input.validate())
     );
+
+    if (!this.validateInputs) return;
+
+    const validationPromise = this.validateInputs(this.inputs);
+
+    if (!(validationPromise instanceof Promise)) return;
+
+    await validationPromise;
   }
 
   reset() {

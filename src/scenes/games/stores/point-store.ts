@@ -1,17 +1,31 @@
 import { InputStore } from "@stores/input-store";
-import { InputsStore } from "@stores/inputs-store";
-import { computed } from "mobx";
+import { InputsStore, FormField } from "@stores/inputs-store";
+import { computed, observable } from "mobx";
 
 interface GeoPointStoreProps {
   lat?: number;
   lng?: number;
 }
 
-export class GeoPointStore {
+export class GeoPointStore implements FormField {
+  @observable isPending: boolean = false;
+
   lat: InputStore;
   lng: InputStore;
 
   inputs: InputsStore;
+
+  get isValid() {
+    return this.inputs.isValid;
+  }
+
+  async validate() {
+    await this.inputs.validate();
+  }
+
+  reset() {
+    this.inputs.reset();
+  }
 
   validateLng = (value: string) => {
     const valueNumber = +value;
@@ -34,7 +48,7 @@ export class GeoPointStore {
   }
 
   @computed
-  get values(): {
+  get value(): {
     lat: number;
     lng: number;
   } {
@@ -57,9 +71,8 @@ export class GeoPointStore {
       validate: this.validateLat,
     });     
 
-    this.inputs = new InputsStore([
-      this.lat,
-      this.lng,
-    ]);
+    this.inputs = new InputsStore({
+      inputs: [this.lat, this.lng]
+    });
   }
 }
