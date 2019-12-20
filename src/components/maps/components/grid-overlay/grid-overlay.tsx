@@ -11,7 +11,7 @@ import {
 import { CacheService } from '@services/cache-service';
 
 interface Props {
-  params: GridParams;
+  params?: GridParams;
   borderline?: IndexatedFigure,
 }
 
@@ -50,8 +50,11 @@ export class GridOverlay extends Component<Props> {
     width,
     height,
   }: GridTilePayload): Promise<any> => {
-    const cacheKey = `${x}-${y}-${zoom}-${width}-${height}`;
     const {params, borderline} = this.props;    
+
+    if (!params) return;
+
+    const cacheKey = `${x}-${y}-${zoom}-${width}-${height}`;
     const tilePoint = TileMercPoint.fromTile(x, y, width, height, zoom);
 
     const cached = this.tilesCache.get(cacheKey);
@@ -92,7 +95,7 @@ export class GridOverlay extends Component<Props> {
         watchProps={[params]}
       >
         {({tileCoord: {x, y}, zoom, width, height, data}) => {
-          if (!data) return null;
+          if (!data || !params) return null;
 
           const tilePoint = TileMercPoint.fromTile(x, y, width, height, zoom);
           const {mapTile, border} = data as TileData;

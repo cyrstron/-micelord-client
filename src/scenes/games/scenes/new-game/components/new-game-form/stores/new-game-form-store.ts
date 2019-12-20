@@ -80,8 +80,8 @@ export class NewGameFormStore {
       defaultValue: 'hex',
     });
     this.cellSize = new InputStore({
-      value: '1000',
-      defaultValue: '1000',
+      value: '100',
+      defaultValue: '100',
     });
 
     this.inputs = new InputsStore([

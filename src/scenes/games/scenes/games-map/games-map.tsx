@@ -50,7 +50,7 @@ export class GamesMap extends Component<Props> {
         <DumbMap
           className={cx('game-map', className)}
           defaultCenter={position}
-          zoom={8}
+          zoom={16}
           clickableIcons={false}
           disableDefaultUI={false}
           gestureHandling='greedy'

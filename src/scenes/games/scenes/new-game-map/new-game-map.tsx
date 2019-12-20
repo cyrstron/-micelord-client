@@ -15,11 +15,9 @@ export class NewGameMap extends Component<NewGameMapProps> {
 
     return (
       <>
-        {gridParams && (
-          <GridOverlay 
-            params={gridParams}
-          />
-        )}
+        <GridOverlay 
+          params={gridParams}
+        />
       </>
     );
   }
