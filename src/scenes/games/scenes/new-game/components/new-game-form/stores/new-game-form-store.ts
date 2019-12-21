@@ -84,13 +84,15 @@ export class NewGameFormStore {
       defaultValue: '100',
     });
 
-    this.inputs = new InputsStore([
-      this.name,
-      this.desc,
-      this.correction,
-      this.isHorizontal,
-      this.gridType,
-      this.cellSize,
-    ]);
+    this.inputs = new InputsStore({
+      inputs: [
+        this.name,
+        this.desc,
+        this.correction,
+        this.isHorizontal,
+        this.gridType,
+        this.cellSize,
+      ],
+    });
   }
 }

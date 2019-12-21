@@ -23,10 +23,12 @@ export class SignInStore {
       validate: this.validatePassword
     });
 
-    this.inputs = new InputsStore([
-      this.email,
-      this.password,
-    ]);
+    this.inputs = new InputsStore({
+      inputs: [
+        this.email,
+        this.password,
+      ],
+    });
   }
 
   validateEmail = async (value: string) => {

@@ -14,21 +14,19 @@ interface Props {
 }
 
 export class GridTile extends Component<Props, {}> {
-  // shouldComponentUpdate(nextProps: Props) {
-  //   const {
-  //     params,
-  //     tilePoint,
-  //     mapTile,
-  //     border
-  //   } = this.props;
+  shouldComponentUpdate(nextProps: Props) {
+    const {
+      params,
+      tilePoint,
+      border
+    } = this.props;
 
-  //   return (
-  //     !tilePoint.isEqual(nextProps.tilePoint) ||
-  //     params !== nextProps.params ||
-  //     border !== nextProps.border ||
-  //     mapTile !== nextProps.mapTile
-  //   );
-  // }
+    return (
+      !tilePoint.isEqual(nextProps.tilePoint) ||
+      params !== nextProps.params ||
+      border !== nextProps.border
+    );
+  }
 
   render() {
     const {

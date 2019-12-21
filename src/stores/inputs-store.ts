@@ -29,7 +29,7 @@ export class InputsStore {
 
   @computed 
   get isValid() {
-    return !this.inputs.reduce(
+    return this.inputs.reduce(
       (isValid, input) => isValid && input.isValid !== false && !input.isPending, 
       true
     );

@@ -26,9 +26,9 @@ export class ExternalAuthStore {
       validate: this.validateName
     });
 
-    this.inputs = new InputsStore([
-      this.name,
-    ]);
+    this.inputs = new InputsStore({
+      inputs: [this.name],
+    });
   }
 
   validateName = async (value: string) => {

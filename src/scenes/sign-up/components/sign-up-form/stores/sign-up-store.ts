@@ -45,12 +45,14 @@ export class SignUpStore {
       ]
     });
 
-    this.inputs = new InputsStore([
-      this.email,
-      this.name,
-      this.password,
-      this.passwordConfirm,
-    ]);
+    this.inputs = new InputsStore({
+      inputs: [
+        this.email,
+        this.name,
+        this.password,
+        this.passwordConfirm,
+      ],
+    });
   }
 
   validateEmail = async (value: string) => {
