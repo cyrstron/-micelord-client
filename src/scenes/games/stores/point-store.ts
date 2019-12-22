@@ -1,6 +1,6 @@
 import { InputStore } from "@stores/input-store";
 import { InputsStore, FormField } from "@stores/inputs-store";
-import { computed, observable } from "mobx";
+import { computed, observable, action } from "mobx";
 
 interface GeoPointStoreProps {
   lat?: number;
@@ -53,9 +53,15 @@ export class GeoPointStore implements FormField {
     lng: number;
   } {
     return {
-      lat: +this.lng.value,
-      lng: +this.lat.value,
+      lat: +this.lat.value,
+      lng: +this.lng.value,
     };
+  }
+
+  @action
+  setPoint({lat, lng}: grider.GeoPoint) {
+    this.lat.setValue(`${lat}`);
+    this.lng.setValue(`${lng}`);
   }
 
   constructor({

@@ -19,7 +19,10 @@ export class NewGameFormStore {
 
   validateName = (value: string) => {
     if (!value) throw new Error('Game name is required field');
+
     if (value.length > 50) throw new Error('Game name shouldn\'t be bigger than 50 characters');
+    
+    if (value.length < 3) throw new Error('Game name shouldn\'t be less than 3 characters');
   }
 
   validateDesc = (value: string) => {

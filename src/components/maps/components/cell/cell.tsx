@@ -3,7 +3,7 @@ import {SvgOverlay} from '../svg-overlay/svg-overlay';
 import {Polygon} from 'react-google-maps-ts';
 import { Cell } from '@micelord/grider';
 
-export const CellPoly = ({
+const CellPoly = ({
   onClick,
   cell: {
     center: {i, j, k},
@@ -43,4 +43,6 @@ export const CellPoly = ({
       onClick={onClick}
     />
   </>
-)
+);
+
+export {CellPoly};

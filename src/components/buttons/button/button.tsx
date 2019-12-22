@@ -9,7 +9,7 @@ export interface BtnProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
-export const Button = ({
+const Button = ({
   className,
   ...props
 }: BtnProps) => (
@@ -18,3 +18,5 @@ export const Button = ({
     {...props}
   />
 );
+
+export {Button};

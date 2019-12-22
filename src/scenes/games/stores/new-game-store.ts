@@ -1,5 +1,6 @@
-import { observable, computed } from "mobx";
-import { GridParams } from "@micelord/grider";
+import { observable, computed, action } from "mobx";
+import { GridParams, IndexatedFigure, GeoPolygon } from "@micelord/grider";
+import { NewBorderStore } from "./new-border-store";
 
 export interface NewGameStoreProps {
   name?: string;
@@ -11,6 +12,9 @@ export class NewGameStore {
   @observable name?: string;
   @observable desc?: string;
   @observable gridConfig?: grider.GridConfig;
+  @observable borderFigure?: IndexatedFigure;
+
+  newBorderStore: NewBorderStore;
 
   constructor({
     name,
@@ -20,18 +24,39 @@ export class NewGameStore {
     this.name = name;
     this.desc = desc;
     this.gridConfig = gridConfig;
+
+    this.newBorderStore = new NewBorderStore(this, []);
   }
 
+  @action
   setName(name: string) {
     this.name = name;
   }
 
+  @action
   setDesc(desc: string) {
     this.desc = desc;
   }
 
+  @action
   setGridConfig(config: grider.GridConfig) {
     this.gridConfig = config;
+  }
+
+  @action
+  reset() {
+    this.name = undefined;
+    this.desc = undefined;
+    this.gridConfig = undefined;
+    this.borderFigure = undefined;
+  }
+
+  async setBorderFigure(plainPoints: grider.GeoPoint[]) {
+    if (!this.gridParams) return;
+
+    const geoPoly = GeoPolygon.fromPlain(plainPoints);
+
+    this.borderFigure = await IndexatedFigure.fromShape(geoPoly, this.gridParams)
   }
 
   @computed

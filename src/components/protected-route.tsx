@@ -6,7 +6,7 @@ interface ProtectedRouteProps extends RouteProps {
   redirectTo: string;
 };
 
-export const ProtectedRoute = ({
+const ProtectedRoute = ({
   isAllowed,
   redirectTo,
   component,
@@ -26,3 +26,6 @@ export const ProtectedRoute = ({
     }
   />
 );
+
+export {ProtectedRoute};
+

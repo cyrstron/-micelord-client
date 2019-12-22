@@ -23,11 +23,9 @@ ReactDOM.render((
       <MobxProvider
         {...stores}
       >
-        {/* <GoogleAuthProvider clientId={process.env.GAPI_KEY}> */}
-          <GoogleApiProvider apiKey={process.env.GOOGLE_MAPS_KEY}>
-            <App />
-          </GoogleApiProvider>
-        {/* </GoogleAuthProvider> */}
+        <GoogleApiProvider apiKey={process.env.GOOGLE_MAPS_KEY}>
+          <App />
+        </GoogleApiProvider>
       </MobxProvider>
     </ReduxProvider>
   </Router>

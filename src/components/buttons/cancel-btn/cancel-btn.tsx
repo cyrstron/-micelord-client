@@ -10,7 +10,7 @@ export interface BtnProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
-export const CancelBtn = ({
+const CancelBtn = ({
   className,
   ...props
 }: BtnProps) => (
@@ -19,3 +19,5 @@ export const CancelBtn = ({
     {...props}
   />
 );
+
+export {CancelBtn};

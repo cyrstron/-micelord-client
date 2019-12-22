@@ -10,7 +10,7 @@ export interface AppLogoProps {
   className?: string;
 }
 
-export const AppLogo = ({className}: AppLogoProps) => (
+const AppLogo = ({className}: AppLogoProps) => (
   <div className={cx('app-logo', className)}>
     <ActiveLink 
       className={cx('logo-link')}
@@ -22,4 +22,6 @@ export const AppLogo = ({className}: AppLogoProps) => (
       MouseLord
     </ActiveLink>
   </div>
-)
+);
+
+export {AppLogo};

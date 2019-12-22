@@ -85,6 +85,7 @@ export class GridOverlay extends Component<Props> {
   render() {
     const {
       params,
+      borderline,
     } = this.props;
 
     return (
@@ -92,7 +93,7 @@ export class GridOverlay extends Component<Props> {
         width={512}
         extendPayload={this.extendPayload}
         index={1}
-        watchProps={[params]}
+        watchProps={[params, borderline]}
       >
         {({tileCoord: {x, y}, zoom, width, height, data}) => {
           if (!data || !params) return null;

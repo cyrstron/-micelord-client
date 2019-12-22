@@ -13,7 +13,7 @@ export interface HeaderProps {
   isSignedIn: boolean;
 }
 
-export const Header = ({isSignedIn ,className}: HeaderProps) => (
+const Header = ({isSignedIn ,className}: HeaderProps) => (
   <header className={cx('header', className)}>
     <AppLogo className={cx('app-logo', 'header-item')} />
     {isSignedIn && (
@@ -21,4 +21,6 @@ export const Header = ({isSignedIn ,className}: HeaderProps) => (
     )}
     <AuthNav className={cx('auth-nav', 'header-item')}  />
   </header>
-)
+);
+
+export {Header};

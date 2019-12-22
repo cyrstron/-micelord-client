@@ -12,10 +12,12 @@ interface NavLinkProps extends LinkProps {
   exact?: boolean;
 }
 
-export const NavLink = ({className, ...props}: NavLinkProps) => (
+const NavLink = ({className, ...props}: NavLinkProps) => (
   <ActiveLink
     className={cx(className, 'nav-link')}
     activeClassName={cx('is-active')}
     {...props}
   />
 );
+
+export {NavLink};

@@ -9,7 +9,7 @@ import { GamesMap } from './scenes/games-map';
 import styles from './games.scss';
 import { NewGameMap } from './scenes/new-game-map';
 import { NewGameStore } from './stores/new-game-store';
-import { Provider } from 'mobx-react';
+import { Provider, inject } from 'mobx-react';
 
 const cx = classnames.bind(styles);
 
@@ -24,8 +24,8 @@ export class Games extends Component<GamesProps> {
     super(props);
 
     this.newGameStore = new NewGameStore();
-
   }
+
   render() {
     const {className} = this.props;
 

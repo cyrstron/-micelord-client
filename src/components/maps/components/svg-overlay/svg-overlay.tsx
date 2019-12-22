@@ -8,7 +8,7 @@ interface Props {
   bounds: google.maps.LatLngBoundsLiteral,
 }
 
-export const SvgOverlay = ({bounds, children, fill}: Props) => {
+const SvgOverlay = ({bounds, children, fill}: Props) => {
   let {
     east,
     west,
@@ -47,3 +47,5 @@ export const SvgOverlay = ({bounds, children, fill}: Props) => {
     </DomOverlay>
   );
 };
+
+export {SvgOverlay};

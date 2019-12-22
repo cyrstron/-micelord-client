@@ -24,4 +24,6 @@ const mapStateToProps = (state: AppState) => ({
   isAuthorized: !!selectAuthToken(state),
 });
 
-export const AuthRoute = connect(mapStateToProps)(AuthRouteComponent);
+const AuthRoute = connect(mapStateToProps)(AuthRouteComponent);
+
+export {AuthRoute};

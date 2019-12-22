@@ -1,4 +1,4 @@
-import { observable, computed } from "mobx";
+import { observable, computed, action } from "mobx";
 
 export interface FormField<Value = any> {
   validate: () => Promise<void>;
@@ -15,7 +15,10 @@ interface InputsStoreProps {
 }
 
 export class InputsStore {
-  @observable inputs: FormField[] = [];
+  inputs: FormField[] = [];
+
+  @observable error?: Error;
+  @observable isPending: boolean = false;
 
   validateInputs?: (inputs: FormField[]) => void | Promise<void>;
 
@@ -29,13 +32,20 @@ export class InputsStore {
 
   @computed 
   get isValid() {
-    return this.inputs.reduce(
+    return !this.error && this.inputs.reduce(
       (isValid, input) => isValid && input.isValid !== false && !input.isPending, 
       true
     );
   }
 
+  setInputs(inputs: FormField[]) {
+    this.inputs = inputs;
+  }
+
+  @action
   async validate() {
+    let error: Error | undefined;
+
     await Promise.all(
       this.inputs
         .filter(({isValid, debouncePromise}) => isValid === undefined || !!debouncePromise)
@@ -44,11 +54,23 @@ export class InputsStore {
 
     if (!this.validateInputs) return;
 
-    const validationPromise = this.validateInputs(this.inputs);
+    try {
+      const validationPromise = this.validateInputs(this.inputs);
 
-    if (!(validationPromise instanceof Promise)) return;
+      if (!(validationPromise instanceof Promise)) return;
 
-    await validationPromise;
+      this.isPending = true;
+  
+      await validationPromise;
+    } catch (err) {
+      error = err;
+    } finally {
+      if (this.isPending) {
+        this.isPending = false;
+      }
+
+      this.error = error;
+    }
   }
 
   reset() {

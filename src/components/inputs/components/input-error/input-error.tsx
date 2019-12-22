@@ -10,7 +10,7 @@ export interface InputErrorProps {
   error?: Error;
 }
 
-export const InputError = ({
+const InputError = ({
   error,
   className
 }: InputErrorProps) => !error ? null : (
@@ -20,3 +20,5 @@ export const InputError = ({
     {error.message}
   </span>
 );
+
+export {InputError};
