@@ -46,8 +46,7 @@ export class NewGame extends Component<NewGameProps> {
             path='/games/new/border' 
             component={BorderForm}
             redirectTo='/games/new'
-            isAllowed={true}
-            // isAllowed={!!gridParams}
+            isAllowed={!!gridParams}
           />
           <ProtectedRoute 
             path='/games/new/submit' 

@@ -25,8 +25,6 @@ type Props = BorderFormProps & {
 @inject('newGameStore')
 @observer
 export class BorderForm extends Component<Props> {
-  @observable isApplied: boolean = false;
-
   componentDidMount() {
     const {
       newGameStore,
@@ -37,6 +35,7 @@ export class BorderForm extends Component<Props> {
     if (newBorderStore.points.length > 0) return;
 
     this.addDefaultPoint();
+    newBorderStore.selectPoint(0);
   }
 
   addDefaultPoint = () => {
@@ -59,7 +58,7 @@ export class BorderForm extends Component<Props> {
       newBorderStore
     } = newGameStore!;
 
-    newBorderStore.editPoint(pointIndex);
+    newBorderStore.selectPoint(pointIndex);
   }
 
   applyPoint = () => {
@@ -69,7 +68,7 @@ export class BorderForm extends Component<Props> {
       newBorderStore
     } = newGameStore!;
 
-    newBorderStore.resetEditing();
+    newBorderStore.resetSelection();
   }
 
   onSubmit = async (e: FormEvent) => {
@@ -83,26 +82,23 @@ export class BorderForm extends Component<Props> {
   onApply = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    const {newGameStore} = this.props;
-    const {newBorderStore} = newGameStore!;
+    const {newBorderStore} = this.props.newGameStore!;
 
     await newBorderStore.onApply();
-
-    if (!newBorderStore.isValid) return;
-
-    this.isApplied = true;
   }
 
   onReset = (e: FormEvent) => {
     e.preventDefault();
     
-    const {history} = this.props;
+    const {history, newGameStore} = this.props;
 
     history.push('/games/new');
   }
 
   onChange = () => {
-    this.isApplied = false;
+    const {newBorderStore} = this.props.newGameStore!;
+
+    newBorderStore.onReset();
   }
 
   render() {
@@ -110,7 +106,9 @@ export class BorderForm extends Component<Props> {
 
     const {
       points, 
-      editedPointIndex
+      selectedPointIndex,
+      isApplied,
+      isPending,
     } = newGameStore!.newBorderStore;
 
     return (
@@ -129,7 +127,7 @@ export class BorderForm extends Component<Props> {
               onChange={this.onChange}
               onEdit={this.editPoint}
               onApply={this.applyPoint}
-              isEditing={editedPointIndex === index}
+              isEditing={selectedPointIndex === index}
               key={index}
               inputStore={pointStore}
               index={index}
@@ -155,20 +153,25 @@ export class BorderForm extends Component<Props> {
           <div className={cx('left-btn-wrapper')}>
             <CancelBtn
               type='reset'
+              disabled={isPending}
             >
               {'<<'} Cancel
             </CancelBtn>
           </div>
           <div className={cx('right-btn-wrapper')}>
-            {!this.isApplied && (
+            {!isApplied && (
               <SubmitBtn 
                 onClick={this.onApply}
+                disabled={isPending}
               >
                 Apply
               </SubmitBtn>
             )}
-            {this.isApplied && (
-              <SubmitBtn type='submit'>
+            {isApplied && (
+              <SubmitBtn 
+                type='submit'
+                disabled={isPending}
+              >
                 Next {'>>'}
               </SubmitBtn>
             )}

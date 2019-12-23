@@ -1,18 +1,20 @@
 import { GeoPointStore } from "./point-store";
-import { GeoPoint, Cell, Polygon, GeoPolygon, Figure, GridParams } from "@micelord/grider";
+import { GeoPoint, Cell, Polygon, GeoPolygon, Figure, GridParams, IndexatedFigure } from "@micelord/grider";
 import { observable, computed, action } from "mobx";
 import { InputsStore, FormField } from "@stores/inputs-store";
 import { NewGameStore } from "./new-game-store";
 
 export class NewBorderStore {
+  @observable isApplied: boolean = false;
+  @observable isPending: boolean = false;
+
   @observable points: GeoPointStore[];
-  @observable editedPointIndex?: number;
-
-  inputs: InputsStore;
-
+  @observable selectedPointIndex?: number;
   @observable selfIntersections: GeoPoint[] = [];
   @observable invalidCells: Cell[] = [];
   
+  inputs: InputsStore;
+
   constructor(
     public newGameStore: NewGameStore,
     points: grider.GeoPoint[] = [],
@@ -26,42 +28,99 @@ export class NewBorderStore {
   }
 
   @action
-  editPoint(pointIndex: number) {
-    this.editedPointIndex = pointIndex;
+  selectPoint(pointIndex: number) {
+    this.selectedPointIndex = pointIndex;
   }
 
   @action
-  resetEditing() {
-    this.editedPointIndex = undefined;
+  resetSelection() {
+    this.selectedPointIndex = undefined;
   }
 
   @action
   addPoint(geoPoint: grider.GeoPoint) {
-    this.points = [
+    this.setPoints([
       new GeoPointStore(geoPoint),
       ...this.points,
-    ];
+    ]);
+  }
+
+  @action
+  insertPoint(index: number, geoPoint: grider.GeoPoint) {
+    this.setPoints([
+      ...this.points.slice(0, index),
+      new GeoPointStore(geoPoint),
+      ...this.points.slice(index),
+    ]);
+
+    if (this.selectedPointIndex === undefined ) return;
+
+    if (this.selectedPointIndex >= index) {
+      this.selectPoint(this.selectedPointIndex + 1);
+    }
+  }
+
+  @action
+  setPoints(point: GeoPointStore[]) {    
+    this.points = point;
 
     this.inputs.setInputs(this.points);
+
+    this.onReset();
+  }
+
+  
+  @action
+  insertNearSelected(geoPoint: grider.GeoPoint) {    
+    if (this.selectedPointIndex === undefined) {
+      this.addPoint(geoPoint);
+
+      return;
+    } 
+
+    const {values, selectedPointIndex} = this;
+
+    const point = GeoPoint.fromPlain(geoPoint);
+    const prevPoint = GeoPoint.fromPlain(
+      values[selectedPointIndex - 1] || values[values.length - 1]
+    );
+    const nextPoint = GeoPoint.fromPlain(
+      values[selectedPointIndex + 1] || values[0]
+    );
+    
+    const isPrevCloser = point.calcMercDistance(prevPoint) < 
+      point.calcMercDistance(nextPoint);
+
+    const index = isPrevCloser ? selectedPointIndex : selectedPointIndex + 1;
+
+    this.insertPoint(index, geoPoint);
   }
 
   @action
   deletePoint(index: number) {
-    this.points = [
+    if (this.points.length === 1) return;
+
+    this.setPoints([
       ...this.points.slice(0, index),
       ...this.points.slice(index + 1),
-    ];
+    ]);
 
-    this.inputs.setInputs(this.points);
+    if (this.selectedPointIndex === undefined) return;
+
+    if (index === this.selectedPointIndex) {
+      this.resetSelection();
+    } else if (index < this.selectedPointIndex) {
+      this.selectPoint(this.selectedPointIndex - 1);
+    }
   }
 
   @action
   updateSelectedPoint(point: grider.GeoPoint) {
-    const {editedPointIndex} = this;
+    const {selectedPointIndex} = this;
 
-    if (editedPointIndex === undefined) return;
+    if (selectedPointIndex === undefined) return;
 
-    this.updatePoint(editedPointIndex, point);
+    this.updatePoint(selectedPointIndex, point);
   }
 
   @action
@@ -71,13 +130,13 @@ export class NewBorderStore {
     if (!pointStore) return;
 
     pointStore.setPoint(point);
+
+    this.onReset();
   }
 
   @action
   reset() {
-    this.points = [];
-
-    this.inputs.setInputs([]);
+    this.setPoints([]);
   }
 
   validateFigure = async (inputs: FormField<grider.GeoPoint>[]) => {
@@ -116,13 +175,8 @@ export class NewBorderStore {
     return [...values, values[0]];
   }
 
-  @computed
-  get isPending() {
-    return this.inputs.isPending;
-  }
-
   get isValid() {
-    return this,this.inputs.isValid;
+    return this.inputs.isValid;
   }
   
   @computed
@@ -132,10 +186,29 @@ export class NewBorderStore {
 
   @action
   async onApply() {
+    this.isPending = true;
+
     await this.inputs.validate();
 
-    if (!this.inputs.isValid) return;
+    const {gridParams} = this.newGameStore;
 
-    this.newGameStore.setBorderFigure(this.values);
+    if (this.inputs.isValid && gridParams) {
+      const borderShape = GeoPolygon.fromPlain(this.values);
+
+      const borderFigure = await IndexatedFigure.fromShape(borderShape, gridParams)
+  
+      this.newGameStore.setBorderFigure(borderFigure);
+
+      this.isApplied = true;
+      this.selectedPointIndex = undefined;
+    };
+
+    this.isPending = false;
+  }
+
+  @action
+  onReset() {
+    this.isApplied = false;
+    this.newGameStore.resetBorderFigure();
   }
 }

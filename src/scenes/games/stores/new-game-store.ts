@@ -51,12 +51,12 @@ export class NewGameStore {
     this.borderFigure = undefined;
   }
 
-  async setBorderFigure(plainPoints: grider.GeoPoint[]) {
-    if (!this.gridParams) return;
+  setBorderFigure(borderFigure: IndexatedFigure) {
+    this.borderFigure = borderFigure;
+  }
 
-    const geoPoly = GeoPolygon.fromPlain(plainPoints);
-
-    this.borderFigure = await IndexatedFigure.fromShape(geoPoly, this.gridParams)
+  resetBorderFigure() {
+    this.borderFigure = undefined;
   }
 
   @computed

@@ -4,6 +4,7 @@ import { GridOverlay } from '@components/maps/components/grid-overlay/grid-overl
 import { NewGameStore } from '@scenes/games/stores/new-game-store';
 import { Switch, Route } from 'react-router';
 import { BorderlineSetter } from './components/borderline-setter/borderline-setter';
+import { Polyline } from 'react-google-maps-ts';
 
 interface NewGameMapProps {
   newGameStore?: NewGameStore
@@ -13,7 +14,7 @@ interface NewGameMapProps {
 @observer
 export class NewGameMap extends Component<NewGameMapProps> {
   render() {
-    const {gridParams} = this.props.newGameStore!
+    const {gridParams, borderFigure} = this.props.newGameStore!
 
     return (
       <>
@@ -25,7 +26,14 @@ export class NewGameMap extends Component<NewGameMapProps> {
         </Switch>
         {gridParams && (
           <GridOverlay 
+            borderline={borderFigure}
             params={gridParams}
+          />
+        )}
+        {gridParams && borderFigure && (
+          <Polyline
+            path={borderFigure.fullPoints.points}
+            strokeColor='#0f0'
           />
         )}
       </>

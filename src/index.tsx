@@ -5,10 +5,9 @@ import {Provider as ReduxProvider} from 'react-redux';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {GoogleApiProvider} from 'react-google-maps-ts';
 
-import App from './app';
 import {configureStore} from './state';
 import {GeolocationStore} from './stores';
-// import { GoogleAuthProvider } from '@components/google-auth-provider';
+import App from './app';
 
 import './index.scss';
 

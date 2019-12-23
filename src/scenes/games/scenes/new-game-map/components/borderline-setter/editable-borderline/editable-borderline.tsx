@@ -14,20 +14,37 @@ class EditableBorderline extends Component<EditableBorderlineProps> {
   selectPoint = (index: number) => {
     const {newGameStore} = this.props;
 
-    newGameStore!.newBorderStore.editPoint(index);
+    newGameStore!.newBorderStore.selectPoint(index);
+  }
+
+  deletePoint = (index: number) => {
+    const {newGameStore} = this.props;
+
+    newGameStore!.newBorderStore.deletePoint(index);
+  }
+
+  resetBorder = () => {
+    const {newGameStore} = this.props;
+
+    newGameStore!.newBorderStore.onReset();
   }
 
   render() {
     const {newGameStore} = this.props;
 
-    const {points, editedPointIndex} = newGameStore!.newBorderStore;
+    const {
+      points, 
+      selectedPointIndex
+    } = newGameStore!.newBorderStore;
 
     return (
       <>
         {points.map((pointStore, index) => (
           <PointSetter 
             selectPoint={this.selectPoint}
-            isSelected={editedPointIndex === index}
+            deletePoint={this.deletePoint}
+            resetBorder={this.resetBorder}
+            isSelected={selectedPointIndex === index}
             key={index}
             index={index}
             pointStore={pointStore}
