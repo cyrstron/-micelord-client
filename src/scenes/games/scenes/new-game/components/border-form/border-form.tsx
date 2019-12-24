@@ -2,12 +2,10 @@ import React, { Component, FormEvent } from 'react';
 import { RouteComponentProps } from 'react-router';
 import classnames from 'classnames/bind';
 import { inject, observer } from 'mobx-react';
-import { observable } from 'mobx';
 
-import { GeolocationStore } from '@stores/index';
 import { CancelBtn, SubmitBtn } from '@components/buttons';
 import { NewGameStore } from '@scenes/games/stores/new-game-store';
-import { GeoPointControl } from './components/geo-point-control';
+import { GeoPointSetter } from './components/geo-point-setter';
 import { MapService } from 'react-google-maps-ts';
 
 import styles from './border-form.scss';
@@ -122,7 +120,7 @@ export class BorderForm extends Component<Props> {
         </h3>
         <div className={cx('points-list')}>
           {points.map((pointStore, index) => (
-            <GeoPointControl 
+            <GeoPointSetter 
               className={cx('point-control')}
               onChange={this.onChange}
               onEdit={this.editPoint}

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import classnames from 'classnames/bind';
+import { observer } from 'mobx-react';
 import { GeoPointStore } from '@scenes/games/stores/point-store';
-
-import styles from './geo-point-control.scss';
 import { Input } from '@components/inputs';
 import { Button } from '@components/buttons';
-import { observer } from 'mobx-react';
+
+import styles from './geo-point-setter.scss';
 
 const cx = classnames.bind(styles);
 
-export interface GeoPointControlProps {
+export interface GeoPointSetterProps {
   inputStore: GeoPointStore;
   className?: string;
   onEdit: (pointIndex: number) => void;
@@ -20,7 +20,7 @@ export interface GeoPointControlProps {
 }
 
 @observer
-class GeoPointControl extends Component<GeoPointControlProps> {
+class GeoPointSetter extends Component<GeoPointSetterProps> {
   onEdit = () => {
     const {onEdit, index} = this.props;
 
@@ -82,4 +82,4 @@ class GeoPointControl extends Component<GeoPointControlProps> {
   }
 }
 
-export {GeoPointControl};
+export {GeoPointSetter};
