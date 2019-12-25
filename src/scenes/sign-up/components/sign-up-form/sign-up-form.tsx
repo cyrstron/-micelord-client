@@ -5,8 +5,7 @@ import { observer } from "mobx-react";
 import { SignUpStore } from "./stores/sign-up-store";
 import { Input } from "@components/inputs";
 
-import { SubmitBtn } from "@components/buttons/submit-btn/submit-btn";
-import { CancelBtn } from "@components/buttons/cancel-btn/cancel-btn";
+import { SubmitBtn, CancelBtn } from "@components/buttons";
 
 import styles from './sign-up-form.scss';
 

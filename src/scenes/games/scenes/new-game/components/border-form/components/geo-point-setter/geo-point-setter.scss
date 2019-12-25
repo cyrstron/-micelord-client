@@ -1,0 +1,15 @@
+.geo-point-control {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.panel {
+  margin-left: 5px;
+  width: 55px;
+}
+
+.point {
+  flex-grow: 1;
+}

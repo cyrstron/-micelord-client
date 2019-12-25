@@ -12,23 +12,15 @@ const cx = classnames.bind(styles);
 export interface GeoPointControlProps {
   inputStore: GeoPointStore;
   className?: string;
-  onEdit: (pointIndex: number) => void;
   onApply: () => void;
   onChange?: () => void;
-  isEditing: boolean;
   index: number;
 }
 
 @observer
 class GeoPointControl extends Component<GeoPointControlProps> {
-  onEdit = () => {
-    const {onEdit, index} = this.props;
-
-    onEdit(index);
-  }
-
   onApply = () => {
-    const {onApply, index} = this.props;
+    const {onApply} = this.props;
 
     onApply();
   }
@@ -61,9 +53,6 @@ class GeoPointControl extends Component<GeoPointControlProps> {
           id={`longitude-${index}`}
           onChange={onChange}
         />
-        <Button onClick={this.onApply}>
-          apply
-        </Button>
       </div>
     )
   }

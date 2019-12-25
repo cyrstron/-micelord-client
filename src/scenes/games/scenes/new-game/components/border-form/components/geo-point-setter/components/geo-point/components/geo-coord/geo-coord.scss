@@ -1,0 +1,17 @@
+.geo-coord {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.coord-wrapper {
+  display: inline-block;
+  margin-left: 0.4em;
+}
+
+.deg,
+.min,
+.sec {
+  margin-right: 0.4em;
+}

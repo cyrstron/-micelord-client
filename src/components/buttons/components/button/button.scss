@@ -1,0 +1,11 @@
+@import '../../styles/mixins/button.scss';
+@import '../../styles/consts.scss';
+
+.btn {  
+  @include button($default-btn-color);
+  
+  padding: 5px 10px;
+  display: inline-block;
+  border: 1px solid #888;
+  border-radius: 5px;
+}

@@ -1,0 +1,8 @@
+@import '../../styles/mixins/button.scss';
+@import '../../styles/consts.scss';
+
+.btn {
+  @include button($warn-btn-color);
+
+  color: #fff;
+}

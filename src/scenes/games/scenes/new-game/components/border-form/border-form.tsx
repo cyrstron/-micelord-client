@@ -49,6 +49,16 @@ export class BorderForm extends Component<Props> {
     newBorderStore.addPoint(center);
   }
 
+  deletePoint = (pointIndex: number) => {
+    const {newGameStore} = this.props;
+
+    const {
+      newBorderStore
+    } = newGameStore!;
+
+    newBorderStore.deletePoint(pointIndex);
+  }
+
   editPoint = (pointIndex: number) => {
     const {newGameStore} = this.props;
 
@@ -125,6 +135,7 @@ export class BorderForm extends Component<Props> {
               onChange={this.onChange}
               onEdit={this.editPoint}
               onApply={this.applyPoint}
+              onDelete={this.deletePoint}
               isEditing={selectedPointIndex === index}
               key={index}
               inputStore={pointStore}
