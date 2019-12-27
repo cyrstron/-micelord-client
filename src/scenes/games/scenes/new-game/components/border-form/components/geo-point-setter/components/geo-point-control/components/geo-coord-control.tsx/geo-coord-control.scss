@@ -4,7 +4,6 @@
   display: flex;
   font-size: 12px;
   align-items: center;
-  margin-bottom: 15px;
   position: relative;
 }
 
@@ -47,9 +46,9 @@
 
 .error {
   position: absolute;
-  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   left: 0;
-  bottom: 0;
+  top: 100%;
 }

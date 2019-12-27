@@ -47,8 +47,6 @@ class GeoCoordControl extends Component<GeoCoordProps> {
       this.validateMin(min);
       this.validateSec(sec);
     } catch (err) {
-      this.error = err;
-
       return;
     }
 

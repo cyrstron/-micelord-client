@@ -4,6 +4,10 @@
   margin: 0 auto;
   margin-bottom: 10px;
   display: flex;
+
+  &.is-editing {
+    margin-bottom: 25px;
+  }
 }
 
 .panel {
