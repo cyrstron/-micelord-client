@@ -33,12 +33,12 @@ class GeoPoint extends Component<GeoPointProps> {
       <div className={cx('geo-point', className)}>
         <GeoCoord 
           value={lat} 
-          title='Lat:' 
+          title='lat:' 
           className={cx('coord')}
         />
         <GeoCoord 
           value={lng}
-          title='Lng:'
+          title='lng:'
           className={cx('coord')}
         />
       </div>

@@ -18,14 +18,19 @@ export const fromDec = (value: number): GeoCoordFormatted => {
 
   return {
     isPositive,
-    deg,
+    deg: Math.abs(deg),
     min,
     sec,
   };
 };
 
-export const toDec = ({deg, sec, min, isPositive}: GeoCoordFormatted) => {
-  const rest = (sec / 60) + (min / 60);
+export const toDec = ({
+  deg, 
+  min, 
+  sec, 
+  isPositive
+}: GeoCoordFormatted) => {
+  const value = deg + (min / 60) + (sec / 3600);
 
-  return isPositive ? deg + rest : deg - rest;
+  return isPositive ? value : -value;
 }

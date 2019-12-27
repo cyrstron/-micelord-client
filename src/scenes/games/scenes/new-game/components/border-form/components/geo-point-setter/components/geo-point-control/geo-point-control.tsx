@@ -6,6 +6,7 @@ import styles from './geo-point-control.scss';
 import { Input } from '@components/inputs';
 import { Button } from '@components/buttons';
 import { observer } from 'mobx-react';
+import { GeoCoordControl } from './components/geo-coord-control.tsx';
 
 const cx = classnames.bind(styles);
 
@@ -35,22 +36,17 @@ class GeoPointControl extends Component<GeoPointControlProps> {
 
     return (
       <div className={cx('point-control', className)}>
-        <Input 
+        <GeoCoordControl 
           className={cx('lat-control')}
-          name='latitude'
-          type='number'
           inputStore={lat}
-          title='Latitude:'
-          id={`latitude-${index}`}
+          title='lat:'
           onChange={onChange}
+          isLat
         />
-        <Input 
+        <GeoCoordControl 
           className={cx('lng-control')}
-          name='longitude'
-          type='number'
           inputStore={lng}
-          title='Longitude:'
-          id={`longitude-${index}`}
+          title='lng:'
           onChange={onChange}
         />
       </div>

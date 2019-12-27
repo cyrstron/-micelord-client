@@ -1,0 +1,55 @@
+@import '@styles/consts.scss';
+
+.geo-coord-control {
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.deg-input,
+.min-input,
+.sec-input {
+  font-size: 12px;
+  border: none;
+  border-bottom: 2px solid gray;
+  margin-left: 0.4em;
+}
+
+.is-invalid {  
+  .deg-input,
+  .min-input,
+  .sec-input {
+    border-color: $error-color;
+  }
+}
+
+.is-valid {  
+  .deg-input,
+  .min-input,
+  .sec-input {
+    border-color: $valid-color;
+  }
+}
+
+.deg-input {
+  width: 40px;
+}
+
+.min-input {
+  width: 30px;
+}
+
+.sec-input {
+  width: 60px;
+}
+
+.error {
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  left: 0;
+  bottom: 0;
+}

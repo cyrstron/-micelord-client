@@ -1,6 +1,6 @@
 @mixin button($buttonColor) {
   background-color: $buttonColor;
-  border-color: darken($buttonColor, 10%);
+  border: 1px solid darken($buttonColor, 10%);
   cursor: pointer;
 
   &:hover:not(:disabled) {

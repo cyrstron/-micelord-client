@@ -1,8 +1,8 @@
-.geo-point-control {
+.point-control {
   display: flex;
 }
 
 .lng-control,
 .lat-control {
-  flex-grow: 1;
+  width: 50%;
 }

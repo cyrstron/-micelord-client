@@ -37,7 +37,7 @@ class GeoPointSetter extends Component<GeoPointSetterProps> {
     const {value} = inputStore;
 
     return (
-      <div className={cx('geo-point-control', className)}>
+      <div className={cx('geo-point-setter', className)}>
         {isEditing && (
           <GeoPointControl 
             inputStore={inputStore}

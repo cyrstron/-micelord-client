@@ -3,15 +3,15 @@ import { InputsStore, FormField } from "@stores/inputs-store";
 import { computed, observable, action } from "mobx";
 
 interface GeoPointStoreProps {
-  lat?: number;
-  lng?: number;
+  lat: number;
+  lng: number;
 }
 
 export class GeoPointStore implements FormField {
   @observable isPending: boolean = false;
 
-  lat: InputStore;
-  lng: InputStore;
+  lat: InputStore<number>;
+  lng: InputStore<number>;
 
   inputs: InputsStore;
 
@@ -27,24 +27,20 @@ export class GeoPointStore implements FormField {
     this.inputs.reset();
   }
 
-  validateLng = (value: string) => {
-    const valueNumber = +value;
+  validateLng = (value: number) => {
+    if (isNaN(value)) throw new Error('Longitude is required field');
 
-    if (isNaN(valueNumber)) throw new Error('Longitude is required field');
+    if (value >= 180) throw new Error('Longitude should be less than 180 degrees');
 
-    if (valueNumber >= 180) throw new Error('Longitude should be less than 180 degrees');
-
-    if (valueNumber < -180) throw new Error('Longitude shouldn\'t be less than -180 degrees');
+    if (value < -180) throw new Error('Longitude shouldn\'t be less than -180 degrees');
   }
 
-  validateLat = (value: string) => {
-    const valueNumber = +value;
-    
-    if (isNaN(valueNumber)) throw new Error('Latitude is required field');
+  validateLat = (value: number) => {    
+    if (isNaN(value)) throw new Error('Latitude is required field');
 
-    if (valueNumber >= 180) throw new Error('Latitude shouldn\'t be more than 90 degrees');
+    if (value >= 180) throw new Error('Latitude shouldn\'t be more than 90 degrees');
 
-    if (valueNumber < -180) throw new Error('Latitude shouldn\'t be less than -90 degrees');
+    if (value < -180) throw new Error('Latitude shouldn\'t be less than -90 degrees');
   }
 
   @computed
@@ -60,20 +56,20 @@ export class GeoPointStore implements FormField {
 
   @action
   setPoint({lat, lng}: grider.GeoPoint) {
-    this.lat.setValue(`${lat}`);
-    this.lng.setValue(`${lng}`);
+    this.lat.setValue(lat);
+    this.lng.setValue(lng);
   }
 
   constructor({
     lat,
     lng,
   }: GeoPointStoreProps) {
-    this.lng = new InputStore({
-      value: `${lng}`,
+    this.lng = new InputStore<number>({
+      value: lng,
       validate: this.validateLng,
     });   
     this.lat = new InputStore({
-      value: `${lat}`,
+      value: lat,
       validate: this.validateLat,
     });     
 
