@@ -25,7 +25,9 @@ class SaveGameForm extends Component<SaveGameFormProps> {
   onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const {history} = this.props;
+    const {history, newGameStore} = this.props;
+
+    newGameStore!.reset();
 
     history.push('/games');
   }

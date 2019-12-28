@@ -3,15 +3,16 @@ import { RouteComponentProps } from 'react-router';
 import classnames from 'classnames/bind';
 import { inject, observer } from 'mobx-react';
 
-import { CancelBtn, SubmitBtn, IconButton } from '@components/buttons';
+import { CancelBtn, SubmitBtn, IconButton, SubmitIconBtn } from '@components/buttons';
 import { NewGameStore } from '@scenes/games/stores/new-game-store';
 import { GeoPointSetter } from './components/geo-point-setter';
 import { MapService } from 'react-google-maps-ts';
 
-import styles from './border-form.scss';
 import { InputError } from '@components/inputs/components/input-error/input-error';
 import { observable } from 'mobx';
 import { BorderInfoPopup } from './components/border-info-popup/border-info-popup';
+
+import styles from './border-form.scss';
 
 const cx = classnames.bind(styles);
 
@@ -42,7 +43,7 @@ export class BorderForm extends Component<Props> {
     newBorderStore.selectPoint(0);
   }
 
-  addDefaultPoint = () => {
+  addDefaultPoint() {
     const {
       newGameStore, 
       mapService,
@@ -115,6 +116,12 @@ export class BorderForm extends Component<Props> {
     newBorderStore.onReset();
   }
 
+  onAddPoint = (e: MouseEvent) => {
+    e.preventDefault();
+
+    this.addDefaultPoint();
+  }
+
   onToggleForm = (e: MouseEvent) => {
     e.preventDefault();
 
@@ -178,17 +185,17 @@ export class BorderForm extends Component<Props> {
               />
             ))}
             <div>
-              <button 
-                onClick={this.addDefaultPoint}
-                className={cx('add-point-btn')}
-                id='add-point-btn'
-              >
-                +
-              </button>
               <label 
                 htmlFor='add-point-btn'
                 className={cx('add-point-label')}
               >
+                <SubmitIconBtn 
+                  onClick={this.onAddPoint}
+                  className={cx('add-point-btn')}
+                  id='add-point-btn'
+                >
+                  +
+                </SubmitIconBtn>
                 Add point
               </label>
             </div>
