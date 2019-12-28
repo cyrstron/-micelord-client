@@ -22,6 +22,10 @@ export interface GeoPointSetterProps {
 }
 
 class GeoPointSetter extends Component<GeoPointSetterProps> {
+  shouldComponentUpdate({isEditing}: GeoPointSetterProps) {
+    return this.props.isEditing || isEditing;
+  }
+
   render() {
     const {
       inputStore,
@@ -34,7 +38,7 @@ class GeoPointSetter extends Component<GeoPointSetterProps> {
       isEditing,
     } = this.props;
 
-    const {value} = inputStore;
+    const {value, isValid} = inputStore;
 
     return (
       <div 
@@ -56,6 +60,7 @@ class GeoPointSetter extends Component<GeoPointSetterProps> {
             className={cx('point')}
             point={value}
             index={index}
+            isValid={isValid}
             onEdit={onEdit}
           />
         )}

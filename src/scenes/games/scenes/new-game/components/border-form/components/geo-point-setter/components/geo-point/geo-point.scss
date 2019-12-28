@@ -3,6 +3,11 @@
   border: 1px solid #aaa;
   border-radius: 5px;
   background-color: #ddd;
+
+  &.is-invalid {    
+    background-color: #b33;
+    color: #fff;
+  }
 }
 
 .coord {

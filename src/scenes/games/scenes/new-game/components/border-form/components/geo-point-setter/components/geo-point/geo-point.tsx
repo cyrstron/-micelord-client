@@ -11,6 +11,7 @@ const cx = classnames.bind(styles);
 export interface GeoPointProps {
   point: grider.GeoPoint;
   className?: string;
+  isValid: boolean;
   onEdit: (pointIndex: number) => void;
   index: number;
 }
@@ -27,10 +28,15 @@ class GeoPoint extends Component<GeoPointProps> {
     const {
       point: {lat, lng},
       className,
+      isValid,
     } = this.props;
 
     return (
-      <div className={cx('geo-point', className)}>
+      <div 
+        className={cx('geo-point', className, {
+          'is-invalid': !isValid,
+        })}
+      >
         <GeoCoord 
           value={lat} 
           title='lat:' 

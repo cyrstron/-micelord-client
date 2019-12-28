@@ -209,6 +209,10 @@ export class NewBorderStore {
   @action
   onReset() {
     this.isApplied = false;
+    this.selfIntersections = [];
+    this.invalidCells = [];
+    this.inputs.refresh(); 
+
     this.newGameStore.resetBorderFigure();
   }
 }

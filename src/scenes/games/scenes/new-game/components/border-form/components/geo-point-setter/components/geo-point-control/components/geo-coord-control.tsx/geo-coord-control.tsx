@@ -47,7 +47,7 @@ class GeoCoordControl extends Component<GeoCoordProps> {
       this.validateMin(min);
       this.validateSec(sec);
     } catch (err) {
-      return;
+      this.error = err;
     }
 
     this.error = undefined;
@@ -172,7 +172,7 @@ class GeoCoordControl extends Component<GeoCoordProps> {
     const maxDeg = isLat ? 90 : 180;
 
     const isDegOnLimit = deg === minDeg || deg === maxDeg;
-    const error = this.error || inputStore.error;
+    const error = inputStore.error || this.error;
 
     return (
       <div className={cx('geo-coord-control', className)}>

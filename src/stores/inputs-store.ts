@@ -77,6 +77,11 @@ export class InputsStore {
     this.inputs.forEach((input) => input.reset());
   }
 
+  refresh() {
+    this.error = undefined;
+    this.isPending = false;
+  }
+
   [Symbol.iterator]() {
     const {inputs} = this;
 

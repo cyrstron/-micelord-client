@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { NewGameStore } from '@scenes/games/stores/new-game-store';
 import { Borderline } from './components/borderline';
 import { PointSetter } from './components/point-setter';
+import {Polygon, Marker} from 'react-google-maps-ts';
 
 export interface EditableBorderlineProps {
   newGameStore?: NewGameStore;
@@ -34,11 +35,27 @@ class EditableBorderline extends Component<EditableBorderlineProps> {
 
     const {
       points, 
-      selectedPointIndex
+      selectedPointIndex,
+      invalidCells,
+      selfIntersections,
     } = newGameStore!.newBorderStore;
 
     return (
       <>
+        {invalidCells.map((cell, index) => (
+          <Polygon 
+            key={index}
+            paths={cell.points}
+            fillColor='#a33'
+          />
+        ))}
+        {selfIntersections.map((point, index) => (
+          <Marker 
+            key={index}
+            position={point}
+            title={`Self intersection #${index}`}
+          />
+        ))}
         {points.map((pointStore, index) => (
           <PointSetter 
             selectPoint={this.selectPoint}

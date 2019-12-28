@@ -9,6 +9,7 @@ import { GeoPointSetter } from './components/geo-point-setter';
 import { MapService } from 'react-google-maps-ts';
 
 import styles from './border-form.scss';
+import { InputError } from '@components/inputs/components/input-error/input-error';
 
 const cx = classnames.bind(styles);
 
@@ -98,7 +99,7 @@ export class BorderForm extends Component<Props> {
   onReset = (e: FormEvent) => {
     e.preventDefault();
     
-    const {history, newGameStore} = this.props;
+    const {history} = this.props;
 
     history.push('/games/new');
   }
@@ -117,6 +118,8 @@ export class BorderForm extends Component<Props> {
       selectedPointIndex,
       isApplied,
       isPending,
+      isValid,
+      error
     } = newGameStore!.newBorderStore;
 
     return (
@@ -158,6 +161,11 @@ export class BorderForm extends Component<Props> {
             </label>
           </div>
         </div>
+        {error && (
+          <InputError 
+            error={error}
+          />
+        )}
         <div className={cx('btns-wrapper')}>
           <div className={cx('left-btn-wrapper')}>
             <CancelBtn
@@ -171,7 +179,7 @@ export class BorderForm extends Component<Props> {
             {!isApplied && (
               <SubmitBtn 
                 onClick={this.onApply}
-                disabled={isPending}
+                disabled={isPending || !isValid}
               >
                 Apply
               </SubmitBtn>

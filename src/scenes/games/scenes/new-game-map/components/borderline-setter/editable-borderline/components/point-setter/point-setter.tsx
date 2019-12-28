@@ -66,7 +66,7 @@ class PointSetterComponent extends Component<Props> {
   }
 
   onDrag = (e: google.maps.MouseEvent) => {
-    const {pointStore} = this.props;
+    const {pointStore, resetBorder} = this.props;
 
     const point = {
       lat: e.latLng.lat(),
@@ -74,6 +74,8 @@ class PointSetterComponent extends Component<Props> {
     };
 
     pointStore.setPoint(point);
+
+    resetBorder();
   }
 
   render() {
