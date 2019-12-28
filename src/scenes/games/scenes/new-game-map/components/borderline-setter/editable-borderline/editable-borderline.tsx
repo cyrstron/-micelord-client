@@ -36,6 +36,7 @@ class EditableBorderline extends Component<EditableBorderlineProps> {
     const {
       points, 
       selectedPointIndex,
+      isPending,
       invalidCells,
       selfIntersections,
     } = newGameStore!.newBorderStore;
@@ -56,7 +57,7 @@ class EditableBorderline extends Component<EditableBorderlineProps> {
             title={`Self intersection #${index}`}
           />
         ))}
-        {points.map((pointStore, index) => (
+        {!isPending && points.map((pointStore, index) => (
           <PointSetter 
             selectPoint={this.selectPoint}
             deletePoint={this.deletePoint}

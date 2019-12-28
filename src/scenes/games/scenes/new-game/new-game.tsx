@@ -9,6 +9,7 @@ import { BorderForm } from './components/border-form';
 import { ProtectedRoute } from '@components/protected-route';
 import { inject, observer } from 'mobx-react';
 import { NewGameStore } from '@scenes/games/stores/new-game-store';
+import { SaveGameForm } from './components/save-game-form';
 
 const cx = classnames.bind(styles);
 
@@ -46,12 +47,11 @@ export class NewGame extends Component<NewGameProps> {
             path='/games/new/border' 
             component={BorderForm}
             redirectTo='/games/new'
-            // isAllowed={!!gridParams}
-            isAllowed={true}
+            isAllowed={!!gridParams}
           />
           <ProtectedRoute 
             path='/games/new/submit' 
-            // component={BorderForm}
+            component={SaveGameForm}
             redirectTo='/games/new/border'
             isAllowed={!!borderFigure}
           />
