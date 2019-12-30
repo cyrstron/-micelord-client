@@ -9,11 +9,13 @@ import { NewGameStore } from '@scenes/games/stores/new-game-store';
 import { InputError } from '@components/inputs/components/input-error/input-error';
 
 import styles from './save-game-form.scss';
+import { GamePayload } from '@state/actions/games-requests/actions';
 
 const cx = classnames.bind(styles);
 
 interface SaveGameFormProps extends RouteComponentProps {
   newGameStore?: NewGameStore;
+  createGame: (game: GamePayload) => Promise<string>;
 }
 
 @inject('newGameStore')
