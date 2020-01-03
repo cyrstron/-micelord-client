@@ -27,11 +27,21 @@ class SaveGameForm extends Component<SaveGameFormProps> {
   onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const {history, newGameStore} = this.props;
+    const {history, newGameStore, createGame} = this.props;
+
+    let gameId: string;
+
+    try {
+      gameId = await createGame(newGameStore!.gamePayload);
+    } catch (err) {
+      this.error = err;
+
+      return;
+    }
 
     newGameStore!.reset();
 
-    history.push('/games');
+    history.push(`/games/${gameId}`);
   }
 
   onReset = (e: FormEvent) => {

@@ -1,6 +1,7 @@
 import { observable, computed, action } from "mobx";
 import { GridParams, IndexatedFigure, GeoPolygon } from "@micelord/grider";
 import { NewBorderStore } from "./new-border-store";
+import { GamePayload } from "@state/actions/games-requests/actions";
 
 export interface NewGameStoreProps {
   name?: string;
@@ -49,6 +50,7 @@ export class NewGameStore {
     this.desc = undefined;
     this.gridConfig = undefined;
     this.borderFigure = undefined;
+    this.newBorderStore.reset();
   }
 
   setBorderFigure(borderFigure: IndexatedFigure) {
@@ -62,5 +64,15 @@ export class NewGameStore {
   @computed
   get gridParams(): GridParams | undefined {
     return this.gridConfig && GridParams.fromConfig(this.gridConfig);
+  }
+
+  @computed
+  get gamePayload(): GamePayload {
+    return {
+      name: this.name!,
+      gridConfig: this.gridConfig!,
+      description: this.desc,
+      border: this.newBorderStore.values,
+    };
   }
 }

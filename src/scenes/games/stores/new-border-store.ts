@@ -137,6 +137,11 @@ export class NewBorderStore {
   @action
   reset() {
     this.setPoints([]);
+
+    this.isApplied = false;
+    this.selfIntersections = [];
+    this.invalidCells = [];
+    this.resetSelection();
   }
 
   validateFigure = async (inputs: FormField<grider.GeoPoint>[]) => {

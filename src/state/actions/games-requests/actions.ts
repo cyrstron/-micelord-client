@@ -4,7 +4,7 @@ import { AppState } from "@state/index";
 export interface GamePayload {
   description?: string;
   gridConfig: grider.GridConfig;
-  border: grider.GeoPoint[][];
+  border: grider.GeoPoint[];
   name: string;
 }
 
@@ -21,7 +21,7 @@ export const getGameById = (gameId: string, getState: () => AppState) => getApiR
   getState
 );
 
-export const getAllGames = (getState: () => AppState) => getApiRequest<Game>(
+export const getAllGames = (getState: () => AppState) => getApiRequest<Game[]>(
   {url: '/api/games'},
   getState
 );

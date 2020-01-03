@@ -11,6 +11,10 @@ export interface GamesListProps {
 }
 
 export class GamesList extends Component<GamesListProps> {
+  componentDidMount() {
+
+  }
+  
   render() {
     const {className} = this.props;
 
