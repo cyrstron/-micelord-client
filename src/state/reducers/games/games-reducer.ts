@@ -44,7 +44,7 @@ export const gamesReducer = (
       return {
         ...state,
         isPending: false,
-        games: payload as Game[],
+        currentGame: payload as Game,
       };
     case FETCH_GAMES_PENDING:
       return {
@@ -62,7 +62,7 @@ export const gamesReducer = (
       return {
         ...state,
         isPending: false,
-        currentGame: payload as Game,
+        games: payload as Game[],
       };
     case RESET_CURRENT_GAME:
       return {
